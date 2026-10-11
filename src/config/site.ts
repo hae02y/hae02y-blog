@@ -20,6 +20,7 @@ export const siteConfig = {
     github: 'https://github.com/hae02y',
     linkedin: 'https://linkedin.com/in/hae02y',
     brunch: 'https://brunch.co.kr/@hae02y',
+    wikidocs: 'https://wikidocs.net/profile/info/book/39209',
   },
   profile: {
     name: 'Haeyoung,Jeong',
@@ -101,6 +102,7 @@ export const siteConfig = {
     { name: 'Email', url: 'mailto:godud1118@gmail.com', icon: 'Mail' },
     { name: 'LinkedIn', url: 'https://linkedin.com/in/hae02y', icon: 'Linkedin' },
     { name: 'Brunch', url: 'https://brunch.co.kr/@hae02y', icon: 'BookOpen' },
+    { name: 'WikiDocs', url: 'https://wikidocs.net/profile/info/book/39209', icon: 'BookOpen' },
   ],
   terminal: {
     helpTitle: 'Available commands',
@@ -114,7 +116,7 @@ export const siteConfig = {
     helpGroups: [
       ['whoami', 'skills', 'experience', 'projects'],
       ['cd', 'open'],
-      ['git', 'blog', 'insight', 'brunch', 'lab'],
+      ['git', 'blog', 'insight', 'brunch', 'wikidocs', 'lab'],
       ['hello', 'clear', 'help'],
     ],
     commands: [
@@ -128,6 +130,7 @@ export const siteConfig = {
       { name: 'blog', usage: 'blog', description: 'TECH 링크' },
       { name: 'insight', usage: 'insight', description: 'ESSAY 링크' },
       { name: 'brunch', usage: 'brunch', description: '브런치스토리 작가 페이지' },
+      { name: 'wikidocs', usage: 'wikidocs', description: '위키독스 저자 페이지' },
       { name: 'lab', usage: 'lab', description: '바이브코딩 연구소 링크' },
       { name: 'hello', usage: 'hello', description: '인사' },
       { name: 'clear', usage: 'clear', description: '터미널 초기화' },

@@ -103,6 +103,7 @@ const jsonLd = {
         siteConfig.links.github,
         siteConfig.links.linkedin,
         `mailto:${siteConfig.author.email}`,
+        siteConfig.links.wikidocs,
       ],
       knowsAbout: [
         'Java', 'Spring Boot', 'Spring Security', 'JPA', 'MyBatis',

@@ -103,6 +103,14 @@ export default function BlogPostContent({ post, dirName, navigation, relatedPost
             <div>
               <p className="brunch-author-name">{siteConfig.author.name}</p>
               <p className="brunch-author-desc">{siteConfig.author.bio}</p>
+              <a
+                href={siteConfig.links.wikidocs}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="brunch-author-link"
+              >
+                위키독스 저자 페이지 ↗
+              </a>
             </div>
           </div>
           <div className="brunch-tags" style={{ justifyContent: 'center', marginTop: '1.5rem' }}>

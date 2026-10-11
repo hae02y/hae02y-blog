@@ -752,6 +752,19 @@
   margin: 0.15rem 0 0;
 }
 
+.brunch-author-link {
+  display: inline-block;
+  margin-top: 0.35rem;
+  color: #64748b;
+  font-size: 0.78rem;
+  text-decoration: none;
+}
+
+.brunch-author-link:hover {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
 .brunch-back {
   display: block;
   margin: 2rem auto 0;
