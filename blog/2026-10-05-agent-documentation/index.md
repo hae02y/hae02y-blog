@@ -1,7 +1,6 @@
 ---
 slug: agent-documentation-over-memory
 title: AI 에이전트에게 필요한 건 기억보다 문서다
-heroImage: ./harness-blog-cover.png
 authors:
   - haeyoung
 tags:
@@ -12,10 +11,6 @@ tags:
   - Codex
   - Development
 ---
-
-![처음 만나는 하네스 블로그 표지](./harness-blog-cover.png)
-
-<figcaption>AI에게 일을 맡기는 구조를 문서, 도구, 승인, 검증으로 설계하는 하네스 개념을 표현한 표지 이미지입니다. AI 생성 이미지.</figcaption>
 
 AI 에이전트와 여러 번 작업하다 보면 비슷한 장면을 만난다. 지난번에 결정한 내용을 다시 설명해야 하고, 이미 고친 문제를 다른 방식으로 되풀이하며, 프로젝트의 규칙을 매번 프롬프트에 붙여 넣는다. 에이전트가 똑똑하지 않아서만 생기는 문제는 아니다. 프로젝트가 무엇을 중요하게 생각하는지 읽을 수 있는 문서가 없기 때문에 생기는 문제다.
 

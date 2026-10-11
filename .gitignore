@@ -41,5 +41,3 @@ public/blog/
 public/Insight/
 .env.local
 .env*.local
-
-output/
