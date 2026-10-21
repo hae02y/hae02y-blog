@@ -480,58 +480,6 @@
   white-space: pre !important;
 }
 
-/* Terminal blocks must win over the page-level light/dark code rules above. */
-.brunch-content .code-block-wrapper.code-block-terminal,
-.brunch-content .code-block-wrapper.code-block-terminal.code-light,
-.brunch-content .code-block-wrapper.code-block-terminal.code-dark {
-  background: #101418 !important;
-  border: 1px solid #30363d !important;
-  border-radius: 12px !important;
-}
-
-.brunch-content .code-block-wrapper.code-block-terminal .code-block-header,
-.brunch-content .code-block-wrapper.code-block-terminal.code-light .code-block-header,
-.brunch-content .code-block-wrapper.code-block-terminal.code-dark .code-block-header {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start !important;
-  gap: 0.55rem;
-  min-height: 38px;
-  padding: 0.45rem 0.95rem;
-  background: linear-gradient(180deg, #30363d 0%, #252a30 100%) !important;
-  border-bottom: 1px solid #171a1f !important;
-  color: #aeb4bd !important;
-}
-
-.brunch-content .code-block-wrapper.code-block-terminal .code-block-title {
-  margin-left: 1.45rem;
-  color: #e6edf3 !important;
-}
-
-.brunch-content .code-block-wrapper.code-block-terminal .code-block-lang {
-  margin-left: auto;
-  color: #8b949e !important;
-}
-
-.brunch-content .code-block-wrapper.code-block-terminal .code-block-body,
-.brunch-content .code-block-wrapper.code-block-terminal .code-block-body pre {
-  background: #101418 !important;
-  color: #e6edf3 !important;
-}
-
-.brunch-content .code-block-wrapper.code-block-terminal .code-block-body pre {
-  padding: 1rem 1.2rem !important;
-}
-
-.brunch-content .code-block-wrapper.code-block-terminal .code-block-body code,
-.brunch-content .code-block-wrapper.code-block-terminal .code-block-body .token.plain {
-  color: #e6edf3 !important;
-}
-
-.brunch-content .code-block-wrapper.code-block-terminal .code-line-number {
-  color: #6e7681 !important;
-}
-
 /* Prevent code blocks from pushing page width */
 .brunch-content .code-block-wrapper {
   overflow: hidden;
