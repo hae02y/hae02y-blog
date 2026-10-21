@@ -713,22 +713,6 @@
         color: #8b949e;
     }
 
-    /* Prism writes token colors inline. Keep the shell surface readable in both themes. */
-    .markdown .code-block-wrapper.code-block-terminal .code-block-body,
-    .markdown .code-block-wrapper.code-block-terminal .code-block-body pre,
-    .markdown .code-block-wrapper.code-block-terminal .code-block-body code,
-    .markdown .code-block-wrapper.code-block-terminal .code-block-body .token.plain {
-        color: #e6edf3 !important;
-    }
-
-    .markdown .code-block-wrapper.code-block-terminal .code-block-body pre {
-        background-color: transparent !important;
-    }
-
-    .markdown .code-block-wrapper.code-block-terminal .code-line-number {
-        color: #6e7681 !important;
-    }
-
     .markdown .code-block-wrapper.code-block-document .code-block-header {
         background: #f2f4f7;
     }

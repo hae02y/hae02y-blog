@@ -65,9 +65,7 @@ const CodeBlock = memo(function CodeBlock({ children, className }: { children: s
   const { theme } = useTheme();
 
   const isDark = theme === 'dark';
-  // Shell snippets should retain a terminal palette even when the site is in light mode.
-  // Otherwise Prism's light-theme inline colors override the terminal surface.
-  const codeTheme = isDark || isTerminal ? themes.oneDark : themes.oneLight;
+  const codeTheme = isDark ? themes.oneDark : themes.oneLight;
 
   const handleCopy = useCallback(async () => {
     await navigator.clipboard.writeText(code);
