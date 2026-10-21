@@ -53,10 +53,6 @@ function safeEmbedSrc(src: string | undefined): string | undefined {
 
 const CodeBlock = memo(function CodeBlock({ children, className }: { children: string; className?: string }) {
   const language = className?.replace('language-', '') || 'text';
-  const normalizedLanguage = language.toLowerCase();
-  const isTerminal = ['bash', 'sh', 'shell', 'zsh', 'fish', 'console', 'terminal'].includes(normalizedLanguage);
-  const isDocument = ['text', 'plaintext', 'plain', 'txt', 'markdown', 'md', 'mdx'].includes(normalizedLanguage);
-  const blockVariant = isTerminal ? 'terminal' : isDocument ? 'document' : 'code';
   const code = String(children).replace(/\n$/, '');
   const lines = code.split('\n');
   const isLong = lines.length > COLLAPSE_THRESHOLD;
@@ -78,27 +74,9 @@ const CodeBlock = memo(function CodeBlock({ children, className }: { children: s
   }, []);
 
   return (
-    <div className={`code-block-wrapper code-block-${blockVariant} ${isDark ? 'code-dark' : 'code-light'}`}>
+    <div className={`code-block-wrapper ${isDark ? 'code-dark' : 'code-light'}`}>
       <div className="code-block-header">
-        {isTerminal ? (
-          <>
-            <span className="code-block-traffic-lights" aria-hidden="true">
-              <i />
-              <i />
-              <i />
-            </span>
-            <span className="code-block-title">terminal</span>
-            <span className="code-block-lang">{language}</span>
-          </>
-        ) : isDocument ? (
-          <>
-            <span className="code-block-file-icon" aria-hidden="true">▤</span>
-            <span className="code-block-title">untitled.{normalizedLanguage === 'text' || normalizedLanguage === 'plaintext' ? 'txt' : normalizedLanguage}</span>
-            <span className="code-block-lang">{language}</span>
-          </>
-        ) : (
-          <span className="code-block-lang">{language}</span>
-        )}
+        <span className="code-block-lang">{language}</span>
         <button onClick={handleCopy} className="code-block-copy">
           {copied ? '✓ 복사됨' : '복사'}
         </button>
