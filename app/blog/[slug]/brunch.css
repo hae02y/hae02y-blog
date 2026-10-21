@@ -417,6 +417,25 @@
 }
 .code-dark .code-block-copy:hover { color: #ccc; border-color: #666; }
 
+/* Keep the language toolbar compact so it does not compete with the code. */
+.code-light .code-block-header,
+.code-dark .code-block-header {
+  min-height: 30px;
+  padding: 0.25rem 0.85rem;
+}
+
+.code-light .code-block-lang,
+.code-dark .code-block-lang {
+  font-size: 0.64rem;
+  letter-spacing: 0.06em;
+}
+
+.code-light .code-block-copy,
+.code-dark .code-block-copy {
+  padding: 0.12rem 0.45rem;
+  font-size: 0.65rem;
+}
+
 .code-dark .code-line-number {
   display: inline-block;
   width: 2.5rem;
@@ -980,7 +999,8 @@
 
   .code-light .code-block-header,
   .code-dark .code-block-header {
-    padding: 0.4rem 0.75rem;
+    min-height: 28px;
+    padding: 0.2rem 0.6rem;
   }
 
   .code-block-body pre {
