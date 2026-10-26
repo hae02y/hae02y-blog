@@ -15,6 +15,7 @@ const MEDIA_EXTS = new Set([
 const SOURCES = [
   { name: 'blog', sourceDir: path.join(process.cwd(), 'blog'), publicDir: path.join(process.cwd(), 'public', 'blog') },
   { name: 'Insight', sourceDir: path.join(process.cwd(), 'Insight'), publicDir: path.join(process.cwd(), 'public', 'Insight') },
+  { name: 'books', sourceDir: path.join(process.cwd(), 'books'), publicDir: path.join(process.cwd(), 'public', 'books') },
 ];
 
 function copyImages({ name, sourceDir, publicDir }) {

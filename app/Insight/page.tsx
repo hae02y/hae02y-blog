@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { getAllInsightPosts } from '@/lib/docs';
+import EssayTabs from '@/components/insight/EssayTabs';
 import { createPageMetadata } from '@/lib/seo';
 import type { Metadata } from 'next';
 
@@ -35,6 +36,8 @@ export default function InsightPage() {
             생각과 책, 여행을 오래 기억하기 위한 기록.
           </p>
         </section>
+
+        <EssayTabs active="essay" />
 
         {featuredPost && (
           <section>

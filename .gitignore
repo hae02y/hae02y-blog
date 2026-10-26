@@ -39,6 +39,7 @@ out/
 .next/
 public/blog/
 public/Insight/
+public/books/
 public/sitemap.xml
 public/rss.xml
 public/atom.xml
