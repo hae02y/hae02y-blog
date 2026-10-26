@@ -3,12 +3,8 @@ import remarkGfm from 'remark-gfm';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // output: 'export' only in production build (CI sets NODE_ENV=production)
-  ...(process.env.NODE_ENV === 'production' ? { output: 'export' } : {}),
+  // Deployed on Vercel — full Next.js runtime (no static export).
   trailingSlash: true,
-  images: {
-    unoptimized: true,
-  },
   pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'md', 'mdx'],
 };
 

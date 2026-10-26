@@ -39,5 +39,8 @@ out/
 .next/
 public/blog/
 public/Insight/
+public/sitemap.xml
+public/rss.xml
+public/atom.xml
 .env.local
 .env*.local

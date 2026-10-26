@@ -1,18 +1,20 @@
-name: Deploy to GitHub Pages
+name: CI
+
+# Deployment is handled by Vercel (auto-deploy on push).
+# This workflow only runs type checks that Vercel does not perform.
 
 on:
   push:
     branches:
       - main
+  pull_request:
 
 jobs:
-  build:
-    name: Build Next.js
+  typecheck:
+    name: Type check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -20,31 +22,6 @@ jobs:
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
-      - name: Build website
-        run: yarn run build
 
-      - name: Add .nojekyll
-        run: touch out/.nojekyll
-
-      - name: Upload Build Artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: out
-
-  deploy:
-    name: Deploy to GitHub Pages
-    needs: build
-
-    permissions:
-      pages: write
-      id-token: write
-
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Type check
+        run: yarn run typecheck

@@ -10,7 +10,7 @@ export default function Comments() {
     <div>
       <Giscus
         id="comments"
-        repo="hae02y/hae02y.github.io"
+        repo="hae02y/hae02y-blog"
         repoId="R_kgDOKoTAvA"
         category="Announcements"
         categoryId="DIC_kwDOKoTAvM4CvOH1"
