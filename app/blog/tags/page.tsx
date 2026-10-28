@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getAllTags } from '@/lib/blog';
+import { getAllTags } from '@/lib/posts';
 import { createPageMetadata } from '@/lib/seo';
 import type { Metadata } from 'next';
 
@@ -15,8 +15,10 @@ export const metadata: Metadata = {
   },
 };
 
-export default function BlogTagsListPage() {
-  const tags = getAllTags();
+export const dynamic = 'force-dynamic';
+
+export default async function BlogTagsListPage() {
+  const tags = await getAllTags();
   const totalPosts = tags.reduce((sum, tag) => sum + tag.count, 0);
   const topTags = [...tags].sort((a, b) => b.count - a.count).slice(0, 3);
 

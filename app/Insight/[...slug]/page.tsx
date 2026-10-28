@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { getAllInsightSlugs, getInsightPage } from '@/lib/docs';
+import { getInsightPage } from '@/lib/posts';
 import InsightPostContent from '@/components/insight/InsightPostContent';
 import { siteConfig } from '@/config/site';
 import { absoluteUrl, serializeJsonLd, socialImages } from '@/lib/seo';
@@ -7,14 +7,11 @@ import type { Metadata } from 'next';
 import readingTime from 'reading-time';
 import '../../blog/[slug]/brunch.css';
 
+export const dynamic = 'force-dynamic';
 
-export function generateStaticParams() {
-  return getAllInsightSlugs().map(slug => ({ slug }));
-}
-
-export function generateMetadata({ params }: { params: { slug: string[] } }): Metadata {
+export async function generateMetadata({ params }: { params: { slug: string[] } }): Promise<Metadata> {
   const decoded = params.slug.map(s => decodeURIComponent(s));
-  const page = getInsightPage(decoded);
+  const page = await getInsightPage(decoded);
   if (!page) return {};
   const url = absoluteUrl(`/Insight/${decoded.map(encodeURIComponent).join('/')}/`);
   const images = socialImages(page.heroImage, `${page.title} 대표 이미지`);
@@ -47,9 +44,9 @@ export function generateMetadata({ params }: { params: { slug: string[] } }): Me
   };
 }
 
-export default function InsightDetailPage({ params }: { params: { slug: string[] } }) {
+export default async function InsightDetailPage({ params }: { params: { slug: string[] } }) {
   const decoded = params.slug.map(s => decodeURIComponent(s));
-  const page = getInsightPage(decoded);
+  const page = await getInsightPage(decoded);
   if (!page) notFound();
   const url = absoluteUrl(`/Insight/${decoded.map(encodeURIComponent).join('/')}/`);
   const image = socialImages(page.heroImage, `${page.title} 대표 이미지`)[0].url;

@@ -1,4 +1,5 @@
-import { pgTable, serial, text, integer, timestamp, index } from 'drizzle-orm/pg-core';
+import { sql } from 'drizzle-orm';
+import { pgTable, serial, text, integer, timestamp, boolean, index, uniqueIndex } from 'drizzle-orm/pg-core';
 
 /**
  * 서재(독서 기록) 테이블.
@@ -32,3 +33,33 @@ export const books = pgTable(
 
 export type BookRow = typeof books.$inferSelect;
 export type NewBookRow = typeof books.$inferInsert;
+
+/**
+ * 블로그 글 + 에세이 통합 테이블. type으로 구분('blog' | 'essay').
+ * URL은 blog → /blog/<slug>, essay → /Insight/<slug>.
+ */
+export const posts = pgTable(
+  'posts',
+  {
+    id: serial('id').primaryKey(),
+    type: text('type').notNull(), // 'blog' | 'essay'
+    slug: text('slug').notNull(),
+    title: text('title').notNull(),
+    description: text('description'),
+    content: text('content').notNull().default(''),
+    tags: text('tags').array().notNull().default(sql`'{}'::text[]`),
+    authors: text('authors').array().notNull().default(sql`'{}'::text[]`),
+    heroImage: text('hero_image'),
+    date: text('date'), // YYYY-MM-DD
+    comments: boolean('comments').notNull().default(true),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  table => ({
+    typeSlugIdx: uniqueIndex('posts_type_slug_idx').on(table.type, table.slug),
+    typeDateIdx: index('posts_type_date_idx').on(table.type, table.date),
+  }),
+);
+
+export type PostRow = typeof posts.$inferSelect;
+export type NewPostRow = typeof posts.$inferInsert;

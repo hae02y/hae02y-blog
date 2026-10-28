@@ -1,18 +1,12 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getAllInsightPosts } from '@/lib/docs';
+import { getAllInsightPosts } from '@/lib/posts';
 import { createPageMetadata } from '@/lib/seo';
 import type { Metadata } from 'next';
 
 const POSTS_PER_PAGE = 6;
 
-export function generateStaticParams() {
-  const total = getAllInsightPosts().length;
-  const totalPages = Math.ceil((total - 1) / POSTS_PER_PAGE);
-  return Array.from({ length: totalPages }, (_, i) => ({
-    page: String(i + 1),
-  }));
-}
+export const dynamic = 'force-dynamic';
 
 export function generateMetadata({ params }: { params: { page: string } }): Metadata {
   const pageNum = Number(params.page);
@@ -31,11 +25,11 @@ export function generateMetadata({ params }: { params: { page: string } }): Meta
   };
 }
 
-export default function InsightPageN({ params }: { params: { page: string } }) {
+export default async function InsightPageN({ params }: { params: { page: string } }) {
   const pageNum = Number(params.page);
   if (Number.isNaN(pageNum) || pageNum < 1) notFound();
 
-  const allPosts = getAllInsightPosts();
+  const allPosts = await getAllInsightPosts();
   const postsWithoutFeatured = allPosts.slice(1);
   const totalPages = Math.ceil(postsWithoutFeatured.length / POSTS_PER_PAGE);
   const start = (pageNum - 1) * POSTS_PER_PAGE;

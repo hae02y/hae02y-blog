@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import BlogSearch from '@/components/blog/BlogSearch';
-import { getBlogSearchDocuments } from '@/lib/blog';
+import { getBlogSearchDocuments } from '@/lib/posts';
 
 export const metadata: Metadata = {
   title: 'TECH 검색',
@@ -11,8 +11,10 @@ export const metadata: Metadata = {
   robots: { index: false, follow: true },
 };
 
-export default function SearchPage() {
-  const documents = getBlogSearchDocuments();
+export const dynamic = 'force-dynamic';
+
+export default async function SearchPage() {
+  const documents = await getBlogSearchDocuments();
 
   return (
     <div className="mx-auto mt-6 px-4 md:mt-10">

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getAllInsightPosts } from '@/lib/docs';
+import { getAllInsightPosts } from '@/lib/posts';
 import EssayTabs from '@/components/insight/EssayTabs';
 import { createPageMetadata } from '@/lib/seo';
 import type { Metadata } from 'next';
@@ -13,8 +13,10 @@ export const metadata: Metadata = createPageMetadata({
   path: '/Insight/',
 });
 
-export default function InsightPage() {
-  const allPosts = getAllInsightPosts();
+export const dynamic = 'force-dynamic';
+
+export default async function InsightPage() {
+  const allPosts = await getAllInsightPosts();
   const [featuredPost, ...rest] = allPosts;
   const posts = rest.slice(0, POSTS_PER_PAGE);
   const totalPages = Math.ceil((allPosts.length - 1) / POSTS_PER_PAGE);

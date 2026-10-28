@@ -1,20 +1,11 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getAllPostsMeta, getPaginatedPosts } from '@/lib/blog';
+import { getPaginatedPosts } from '@/lib/posts';
 import BlogPaginator from '@/components/blog/BlogPaginator';
 import { createPageMetadata } from '@/lib/seo';
 import type { Metadata } from 'next';
 
-const POSTS_PER_PAGE = 10;
-
-
-export function generateStaticParams() {
-  const allPosts = getAllPostsMeta();
-  const totalPages = Math.ceil(allPosts.length / POSTS_PER_PAGE);
-  return Array.from({ length: totalPages }, (_, i) => ({
-    page: String(i + 1),
-  }));
-}
+export const dynamic = 'force-dynamic';
 
 export function generateMetadata({ params }: { params: { page: string } }): Metadata {
   const pageNum = Number(params.page);
@@ -33,11 +24,11 @@ export function generateMetadata({ params }: { params: { page: string } }): Meta
   };
 }
 
-export default function BlogPageN({ params }: { params: { page: string } }) {
+export default async function BlogPageN({ params }: { params: { page: string } }) {
   const pageNum = Number(params.page);
   if (Number.isNaN(pageNum) || pageNum < 1) notFound();
 
-  const { posts, totalPages, currentPage } = getPaginatedPosts(pageNum);
+  const { posts, totalPages, currentPage } = await getPaginatedPosts(pageNum);
   if (posts.length === 0) notFound();
 
   const dateFormatter = new Intl.DateTimeFormat('ko-KR', {

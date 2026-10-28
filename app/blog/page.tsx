@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getPaginatedPosts } from '@/lib/blog';
+import { getPaginatedPosts } from '@/lib/posts';
 import BlogPaginator from '@/components/blog/BlogPaginator';
 import { createPageMetadata } from '@/lib/seo';
 import type { Metadata } from 'next';
@@ -11,8 +11,10 @@ export const metadata: Metadata = createPageMetadata({
   path: '/blog/',
 });
 
-export default function BlogListPage() {
-  const { posts, totalPages, currentPage } = getPaginatedPosts(1);
+export const dynamic = 'force-dynamic';
+
+export default async function BlogListPage() {
+  const { posts, totalPages, currentPage } = await getPaginatedPosts(1);
 
   const dateFormatter = new Intl.DateTimeFormat('ko-KR', {
     year: 'numeric',

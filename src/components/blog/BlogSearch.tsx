@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import type { FormEvent } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import type { BlogSearchDocument } from '@/lib/blog';
+import type { BlogSearchDocument } from '@/lib/posts';
 
 interface BlogSearchProps {
   documents: BlogSearchDocument[];

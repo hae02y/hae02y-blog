@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import type { BlogPost, BlogPostMeta, BlogPostNavigation } from '@/lib/blog';
+import type { BlogPost, BlogPostMeta, BlogPostNavigation } from '@/lib/posts';
 import { MarkdownRenderer } from '@/lib/markdown-renderer';
 import Comments from '@/components/Comments';
 import ReadingProgress from './ReadingProgress';

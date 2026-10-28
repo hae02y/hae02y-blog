@@ -1,18 +1,16 @@
 import { notFound } from 'next/navigation';
-import { getAdjacentPosts, getAllPosts, getPostBySlug, getPostDirName, getRelatedPosts } from '@/lib/blog';
+import { getAdjacentPosts, getPostBySlug, getRelatedPosts } from '@/lib/posts';
 import BlogPostContent from '@/components/blog/BlogPostContent';
 import { siteConfig } from '@/config/site';
 import { absoluteUrl, serializeJsonLd, socialImages } from '@/lib/seo';
 import type { Metadata } from 'next';
 import './brunch.css';
 
-export function generateStaticParams() {
-  return getAllPosts().map(post => ({ slug: post.slug }));
-}
+export const dynamic = 'force-dynamic';
 
-export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const slug = decodeURIComponent(params.slug);
-  const post = getPostBySlug(slug);
+  const post = await getPostBySlug(slug);
   if (!post) return {};
   const url = absoluteUrl(`/blog/${post.slug}/`);
   const images = socialImages(post.image, `${post.title} 대표 이미지`);
@@ -45,14 +43,12 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
   };
 }
 
-export default function BlogPostPage({ params }: { params: { slug: string } }) {
+export default async function BlogPostPage({ params }: { params: { slug: string } }) {
   const slug = decodeURIComponent(params.slug);
-  const post = getPostBySlug(slug);
+  const post = await getPostBySlug(slug);
   if (!post) notFound();
 
-  const dirName = getPostDirName(slug);
-  const navigation = getAdjacentPosts(slug);
-  const relatedPosts = getRelatedPosts(slug);
+  const [navigation, relatedPosts] = await Promise.all([getAdjacentPosts(slug), getRelatedPosts(slug)]);
   const url = absoluteUrl(`/blog/${post.slug}/`);
   const image = socialImages(post.image, `${post.title} 대표 이미지`)[0].url;
   const jsonLd = {
@@ -88,7 +84,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
-      <BlogPostContent post={post} dirName={dirName} navigation={navigation} relatedPosts={relatedPosts} />
+      <BlogPostContent post={post} navigation={navigation} relatedPosts={relatedPosts} />
     </>
   );
 }

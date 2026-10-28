@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { siteConfig } from '@/config/site';
-import { getAllPosts } from '@/lib/blog';
+import { getAllPosts } from '@/lib/posts';
 import HomeClient from './HomeClient';
 
 export const metadata: Metadata = {
@@ -10,8 +10,10 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Home() {
-  const recentPosts = getAllPosts().slice(0, 6);
+export const dynamic = 'force-dynamic';
+
+export default async function Home() {
+  const recentPosts = (await getAllPosts()).slice(0, 6);
 
   return (
     <main className="mx-auto max-w-5xl px-4 pb-20 text-[var(--primary)]">

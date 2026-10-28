@@ -1,15 +1,10 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getAllTags, getPostsByTag } from '@/lib/blog';
+import { getPostsByTag } from '@/lib/posts';
 import { createPageMetadata } from '@/lib/seo';
 import type { Metadata } from 'next';
 
-
-export function generateStaticParams() {
-  return getAllTags().map(tag => ({
-    tag: tag.label,
-  }));
-}
+export const dynamic = 'force-dynamic';
 
 export function generateMetadata({ params }: { params: { tag: string } }): Metadata {
   const tag = decodeURIComponent(params.tag);
@@ -26,9 +21,9 @@ export function generateMetadata({ params }: { params: { tag: string } }): Metad
   };
 }
 
-export default function BlogTagPostsPage({ params }: { params: { tag: string } }) {
+export default async function BlogTagPostsPage({ params }: { params: { tag: string } }) {
   const tagLabel = decodeURIComponent(params.tag);
-  const posts = getPostsByTag(tagLabel);
+  const posts = await getPostsByTag(tagLabel);
   if (posts.length === 0) notFound();
 
   const dateFormatter = new Intl.DateTimeFormat('ko-KR', {
