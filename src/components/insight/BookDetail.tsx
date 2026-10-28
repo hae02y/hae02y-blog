@@ -35,8 +35,15 @@ export default function BookDetail({ book }: BookDetailProps) {
           </div>
 
           <div className="flex flex-col">
-            <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-black/40 dark:text-white/40">
-              BOOK
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-[10px] uppercase tracking-[0.24em] text-black/40 dark:text-white/40">
+                BOOK
+              </span>
+              {book.status === 'reading' && (
+                <span className="rounded-full bg-emerald-600/90 px-2 py-0.5 text-[10px] font-medium text-white">
+                  읽는 중
+                </span>
+              )}
             </div>
             <h1 className="mt-3 text-2xl font-semibold leading-tight tracking-[-0.04em] text-black break-keep dark:text-white md:text-3xl">
               {book.title}
@@ -55,12 +62,17 @@ export default function BookDetail({ book }: BookDetailProps) {
                   </dd>
                 </div>
               ) : null}
-              {book.date && (
+              {book.status === 'reading' ? (
+                <div className="flex items-center gap-2">
+                  <dt className="text-black/40 dark:text-white/40">상태</dt>
+                  <dd className="text-emerald-600 dark:text-emerald-400">읽는 중</dd>
+                </div>
+              ) : book.date ? (
                 <div className="flex items-center gap-2">
                   <dt className="text-black/40 dark:text-white/40">읽은 날</dt>
                   <dd className="font-mono text-black/60 dark:text-white/60">{formatDate(book.date)}</dd>
                 </div>
-              )}
+              ) : null}
             </dl>
 
             {book.link && (

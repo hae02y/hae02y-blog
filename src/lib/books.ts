@@ -1,8 +1,9 @@
-import fs from 'fs';
-import path from 'path';
-import matter from 'gray-matter';
+import 'server-only';
+import { eq } from 'drizzle-orm';
+import { getDb, schema } from '@/db';
+import type { BookRow } from '@/db/schema';
 
-const BOOKS_DIR = path.join(process.cwd(), 'books');
+export type BookStatus = 'reading' | 'finished';
 
 export type BookMeta = {
   slug: string;
@@ -15,110 +16,89 @@ export type BookMeta = {
   year: string;
   rating?: number;
   description?: string;
+  status: BookStatus;
 };
 
 export type BookDetail = BookMeta & {
   content: string;
-  assetBasePath: string;
+  assetBasePath?: string;
 };
 
 const UNDATED = '미분류';
+const READING_GROUP = '읽는 중';
 
-function normalizeDate(value: unknown): string | undefined {
-  if (!value) return undefined;
-  if (value instanceof Date) {
-    // gray-matter/js-yaml parses `2026-10-26` as a UTC-midnight Date.
-    return value.toISOString().slice(0, 10);
-  }
-  const str = String(value).trim();
-  const parsed = new Date(str);
-  if (!Number.isNaN(parsed.getTime())) return parsed.toISOString().slice(0, 10);
-  return str;
+function normalizeStatus(value: string | null): BookStatus {
+  return value === 'reading' ? 'reading' : 'finished';
 }
 
-function resolveCover(cover: unknown, slug: string): string | undefined {
-  if (typeof cover !== 'string' || !cover) return undefined;
-  if (cover.startsWith('http') || cover.startsWith('/')) return cover;
-  return `/books/${encodeURIComponent(slug)}/${cover}`;
-}
-
-function parseRating(value: unknown): number | undefined {
-  if (value === undefined || value === null || value === '') return undefined;
-  const num = Number(value);
-  if (!Number.isFinite(num)) return undefined;
-  return Math.max(0, Math.min(5, num));
-}
-
-function getBookDirs(): string[] {
-  if (!fs.existsSync(BOOKS_DIR)) return [];
-  return fs
-    .readdirSync(BOOKS_DIR, { withFileTypes: true })
-    .filter(entry => entry.isDirectory() && !entry.name.startsWith('.'))
-    .filter(entry => fs.existsSync(path.join(BOOKS_DIR, entry.name, 'index.md')))
-    .map(entry => entry.name);
-}
-
-function readBook(slug: string): BookDetail | undefined {
-  const filePath = path.join(BOOKS_DIR, slug, 'index.md');
-  if (!fs.existsSync(filePath)) return undefined;
-
-  const raw = fs.readFileSync(filePath, 'utf-8');
-  const { data, content } = matter(raw);
-  const date = normalizeDate(data.date);
-
+function rowToMeta(row: BookRow): BookMeta {
+  const date = row.readDate || undefined;
   return {
-    slug,
-    href: `/Insight/books/${encodeURIComponent(slug)}/`,
-    title: data.title ? String(data.title) : slug,
-    author: data.author ? String(data.author) : undefined,
-    cover: resolveCover(data.cover || data.heroImage || data.image, slug),
-    link: data.link ? String(data.link) : undefined,
+    slug: row.slug,
+    href: `/Insight/books/${encodeURIComponent(row.slug)}/`,
+    title: row.title,
+    author: row.author || undefined,
+    cover: row.cover || undefined,
+    link: row.link || undefined,
     date,
     year: date ? date.slice(0, 4) : UNDATED,
-    rating: parseRating(data.rating),
-    description: data.description ? String(data.description) : undefined,
-    content,
-    assetBasePath: `/books/${encodeURIComponent(slug)}`,
+    rating: row.rating ?? undefined,
+    description: row.description || undefined,
+    status: normalizeStatus(row.status),
   };
 }
 
-function byDateDesc(a: BookMeta, b: BookMeta): number {
+function rowToDetail(row: BookRow): BookDetail {
+  return {
+    ...rowToMeta(row),
+    content: row.content ?? '',
+  };
+}
+
+function compareMeta(a: BookMeta, b: BookMeta): number {
+  // Currently-reading books surface first, then finished ones by read date desc.
+  if (a.status !== b.status) return a.status === 'reading' ? -1 : 1;
   if (a.date && b.date) return b.date.localeCompare(a.date);
   if (a.date) return -1;
   if (b.date) return 1;
   return a.title.localeCompare(b.title, 'ko');
 }
 
-export function getAllBookSlugs(): string[] {
-  return getBookDirs();
+export async function getAllBooks(): Promise<BookMeta[]> {
+  const rows = await getDb().select().from(schema.books);
+  return rows.map(rowToMeta).sort(compareMeta);
 }
 
-export function getBook(slug: string): BookDetail | undefined {
-  return readBook(slug);
+export async function getBook(slug: string): Promise<BookDetail | undefined> {
+  const rows = await getDb()
+    .select()
+    .from(schema.books)
+    .where(eq(schema.books.slug, slug))
+    .limit(1);
+  return rows[0] ? rowToDetail(rows[0]) : undefined;
 }
 
-export function getAllBooks(): BookMeta[] {
-  return getBookDirs()
-    .map(readBook)
-    .filter((book): book is BookDetail => Boolean(book))
-    .map(({ content, assetBasePath, ...meta }) => meta)
-    .sort(byDateDesc);
-}
+export async function getBooksByYear(): Promise<{ year: string; books: BookMeta[] }[]> {
+  const all = await getAllBooks();
+  const reading = all.filter(book => book.status === 'reading');
+  const finished = all.filter(book => book.status === 'finished');
 
-export function getBooksByYear(): { year: string; books: BookMeta[] }[] {
   const grouped = new Map<string, BookMeta[]>();
-
-  for (const book of getAllBooks()) {
+  for (const book of finished) {
     const list = grouped.get(book.year) ?? [];
     list.push(book);
     grouped.set(book.year, list);
   }
 
-  return Array.from(grouped.entries())
+  const yearGroups = Array.from(grouped.entries())
     .sort((a, b) => {
       if (a[0] === UNDATED) return 1;
       if (b[0] === UNDATED) return -1;
       return b[0].localeCompare(a[0]);
     })
     .map(([year, books]) => ({ year, books }));
+
+  return reading.length > 0
+    ? [{ year: READING_GROUP, books: reading }, ...yearGroups]
+    : yearGroups;
 }

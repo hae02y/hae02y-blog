@@ -1,17 +1,16 @@
 import { notFound } from 'next/navigation';
-import { getAllBookSlugs, getBook } from '@/lib/books';
+import { getBook } from '@/lib/books';
 import BookDetail from '@/components/insight/BookDetail';
 import { createPageMetadata } from '@/lib/seo';
 import type { Metadata } from 'next';
 import '../../../blog/[slug]/brunch.css';
 
-export function generateStaticParams() {
-  return getAllBookSlugs().map(slug => ({ slug }));
-}
+// Reads from the database at request time.
+export const dynamic = 'force-dynamic';
 
-export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const slug = decodeURIComponent(params.slug);
-  const book = getBook(slug);
+  const book = await getBook(slug);
   if (!book) return {};
 
   const descriptionParts = [book.author, book.description].filter(Boolean);
@@ -26,9 +25,9 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
   });
 }
 
-export default function BookDetailPage({ params }: { params: { slug: string } }) {
+export default async function BookDetailPage({ params }: { params: { slug: string } }) {
   const slug = decodeURIComponent(params.slug);
-  const book = getBook(slug);
+  const book = await getBook(slug);
   if (!book) notFound();
 
   return <BookDetail book={book} />;

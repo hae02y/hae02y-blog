@@ -11,9 +11,11 @@ export const metadata: Metadata = createPageMetadata({
   path: '/Insight/books/',
 });
 
-export default function BooksPage() {
-  const books = getAllBooks();
-  const booksByYear = getBooksByYear();
+// Reads from the database at request time.
+export const dynamic = 'force-dynamic';
+
+export default async function BooksPage() {
+  const [books, booksByYear] = await Promise.all([getAllBooks(), getBooksByYear()]);
 
   return (
     <div className="relative mx-auto min-h-screen overflow-hidden px-4 pt-7 md:pt-14">
@@ -31,6 +33,12 @@ export default function BooksPage() {
         <EssayTabs active="books" />
 
         <BooksView books={books} booksByYear={booksByYear} />
+
+        <div className="mt-12 text-center">
+          <a href="/Insight/books/admin" className="font-mono text-[11px] uppercase tracking-[0.2em] text-black/30 transition hover:text-black/60 dark:text-white/30 dark:hover:text-white/60">
+            ✎ 기록 추가 · 관리
+          </a>
+        </div>
       </main>
       <footer className="h-[72px]" />
     </div>

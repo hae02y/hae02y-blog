@@ -45,6 +45,11 @@ function BookCard({ book }: { book: BookMeta }) {
             {book.title}
           </div>
         )}
+        {book.status === 'reading' && (
+          <span className="absolute left-2 top-2 rounded-full bg-emerald-600/90 px-2 py-0.5 text-[10px] font-medium text-white backdrop-blur">
+            읽는 중
+          </span>
+        )}
       </div>
       <div className="flex min-w-0 flex-1 flex-col p-3 md:p-4">
         <h3 className="line-clamp-2 text-sm font-semibold leading-snug tracking-[-0.02em] text-black break-keep dark:text-white md:text-base">
@@ -55,11 +60,15 @@ function BookCard({ book }: { book: BookMeta }) {
         )}
         <div className="mt-auto flex items-center justify-between gap-2 pt-3">
           <StarRating rating={book.rating} />
-          {book.date && (
+          {book.status === 'reading' ? (
+            <span className="font-mono text-[10px] tracking-[0.1em] text-emerald-600 dark:text-emerald-400">
+              읽는 중
+            </span>
+          ) : book.date ? (
             <span className="font-mono text-[10px] tracking-[0.1em] text-black/35 dark:text-white/35">
               {formatDate(book.date)}
             </span>
-          )}
+          ) : null}
         </div>
       </div>
     </Link>
