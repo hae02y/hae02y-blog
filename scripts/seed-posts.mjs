@@ -153,6 +153,14 @@ async function main() {
   try {
     await client.query(DDL);
 
+    // DB가 원본(source of truth). 최초 1회만 md에서 시드하고,
+    // 이후엔 스킵 → 어드민에서 삭제한 글이 재삽입되지 않음.
+    const existing = await client.query('SELECT count(*)::int AS n FROM posts');
+    if ((existing.rows[0]?.n ?? 0) > 0) {
+      console.log(`seed-posts: posts에 이미 ${existing.rows[0].n}개 존재 → 시드 스킵`);
+      return;
+    }
+
     const rows = [...collectBlog(), ...collectEssay()];
     let inserted = 0;
     for (const r of rows) {
