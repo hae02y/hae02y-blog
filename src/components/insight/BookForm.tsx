@@ -1,4 +1,6 @@
 import type { BookRow } from '@/db/schema';
+import MarkdownEditor from '@/components/admin/MarkdownEditor';
+import ImageUploadField from '@/components/admin/ImageUploadField';
 
 interface BookFormProps {
   action: (formData: FormData) => Promise<void>;
@@ -25,10 +27,7 @@ export default function BookForm({ action, defaults, submitLabel }: BookFormProp
         </div>
       </div>
 
-      <div>
-        <label htmlFor="cover" className={labelCls}>표지 이미지 URL</label>
-        <input id="cover" name="cover" type="url" defaultValue={d.cover ?? ''} className={inputCls} placeholder="https://… (비우면 제목만 표시)" />
-      </div>
+      <ImageUploadField name="cover" label="표지 이미지" defaultValue={d.cover ?? ''} placeholder="https://… 또는 파일 업로드 (비우면 제목만 표시)" />
 
       <div>
         <label htmlFor="link" className={labelCls}>출처/인증 링크</label>
@@ -66,8 +65,10 @@ export default function BookForm({ action, defaults, submitLabel }: BookFormProp
       </div>
 
       <div>
-        <label htmlFor="content" className={labelCls}>내 생각 (마크다운)</label>
-        <textarea id="content" name="content" rows={12} defaultValue={d.content ?? ''} className={`${inputCls} font-mono leading-6`} placeholder="이 책을 읽고 느낀 점을 자유롭게…" />
+        <label className={labelCls}>내 생각 (마크다운)</label>
+        <div className="mt-1.5">
+          <MarkdownEditor name="content" defaultValue={d.content ?? ''} rows={12} placeholder="이 책을 읽고 느낀 점을 자유롭게… (🖼 이미지 업로드 가능)" />
+        </div>
       </div>
 
       <div className="flex items-center gap-3 pt-2">

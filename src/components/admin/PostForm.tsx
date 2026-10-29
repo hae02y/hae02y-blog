@@ -1,4 +1,6 @@
 import type { PostRow } from '@/db/schema';
+import MarkdownEditor from './MarkdownEditor';
+import ImageUploadField from './ImageUploadField';
 
 interface PostFormProps {
   action: (formData: FormData) => Promise<void>;
@@ -47,10 +49,7 @@ export default function PostForm({ action, type, defaults, submitLabel, isNew }:
       </div>
 
       <div className="grid gap-5 sm:grid-cols-2">
-        <div>
-          <label htmlFor="heroImage" className={labelCls}>대표 이미지 URL</label>
-          <input id="heroImage" name="heroImage" type="url" defaultValue={d.heroImage ?? ''} className={inputCls} placeholder="https://… 또는 /blog/…" />
-        </div>
+        <ImageUploadField name="heroImage" label="대표 이미지" defaultValue={d.heroImage ?? ''} placeholder="https://… 또는 파일 업로드" />
         {type === 'blog' && (
           <div>
             <label htmlFor="authors" className={labelCls}>저자 (쉼표로 구분)</label>
@@ -67,8 +66,10 @@ export default function PostForm({ action, type, defaults, submitLabel, isNew }:
       )}
 
       <div>
-        <label htmlFor="content" className={labelCls}>본문 (마크다운)</label>
-        <textarea id="content" name="content" rows={20} defaultValue={d.content ?? ''} className={`${inputCls} font-mono leading-6`} placeholder="# 제목\n\n내용을 마크다운으로…" />
+        <label className={labelCls}>본문 (마크다운)</label>
+        <div className="mt-1.5">
+          <MarkdownEditor name="content" defaultValue={d.content ?? ''} placeholder="내용을 마크다운으로… (🖼 이미지 버튼이나 드래그로 업로드)" />
+        </div>
       </div>
 
       <div className="flex items-center gap-3 pt-2">
