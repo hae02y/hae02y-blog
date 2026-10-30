@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "node scripts/copy-blog-images.mjs && next dev",
-    "build": "node scripts/copy-blog-images.mjs && node scripts/generate-feeds.mjs && node scripts/seed-posts.mjs && next build",
+    "build": "node scripts/copy-blog-images.mjs && node scripts/seed-posts.mjs && next build",
     "start": "next start",
     "typecheck": "tsc --noEmit"
   },

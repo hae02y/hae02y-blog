@@ -24,6 +24,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       description: post.description,
       type: 'article',
       publishedTime: new Date(post.date).toISOString(),
+      modifiedTime: post.updatedAt,
       authors: ['정해영'],
       tags: post.tags,
       url,
@@ -60,7 +61,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
     description: post.description,
     image: [image],
     datePublished: new Date(post.date).toISOString(),
-    dateModified: new Date(post.date).toISOString(),
+    dateModified: post.updatedAt,
     inLanguage: 'ko-KR',
     keywords: post.tags,
     author: {

@@ -11,6 +11,7 @@ export type BlogPost = {
   slug: string;
   title: string;
   date: string;
+  updatedAt: string;
   description: string;
   authors: string[];
   tags: string[];
@@ -36,6 +37,7 @@ function rowToBlogPost(row: PostRow): BlogPost {
     slug: row.slug,
     title: row.title,
     date: row.date ?? '',
+    updatedAt: row.updatedAt.toISOString(),
     description: row.description ?? '',
     authors: row.authors ?? [],
     tags: row.tags ?? [],
