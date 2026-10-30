@@ -131,13 +131,15 @@ export const MarkdownRenderer = memo(function MarkdownRenderer({ content, dirNam
           if (width || height) {
             const safe = safeMediaSrc(resolved, true);
             if (!safe) return null;
+            // Inline style wins over the content CSS (which sets img width: 100%),
+            // so authored sizes actually stick (good for logos/icons).
+            const toCss = (v: unknown) =>
+              v == null ? undefined : /^\d+$/.test(String(v)) ? `${v}px` : String(v);
             return (
               <img
                 src={safe}
                 alt={alt || ''}
-                width={width as number | string | undefined}
-                height={height as number | string | undefined}
-                style={{ maxWidth: '100%', height: 'auto' }}
+                style={{ width: toCss(width), height: toCss(height) || 'auto', maxWidth: '100%' }}
                 loading="lazy"
               />
             );
