@@ -47,11 +47,27 @@ async function uniqueSlug(type: string, title: string, providedSlug: string): Pr
   }
 }
 
+function deriveDescription(content: string): string | null {
+  const text = content
+    .replace(/```[\s\S]*?```/g, '')
+    .replace(/`([^`]+)`/g, '$1')
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, '')
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+    .replace(/^#{1,6}\s+/gm, '')
+    .replace(/\*{1,3}([^*]+)\*{1,3}/g, '$1')
+    .replace(/<[^>]+>/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+  return text ? `${text.slice(0, 100)}…` : null;
+}
+
 function parseForm(formData: FormData) {
+  const content = String(formData.get('content') ?? '');
+  const description = String(formData.get('description') ?? '').trim() || deriveDescription(content);
   return {
     type: normalizeType(formData.get('type')),
     title: String(formData.get('title') ?? '').trim(),
-    description: String(formData.get('description') ?? '').trim() || null,
+    description,
     tags: parseList(formData.get('tags')),
     authors: parseList(formData.get('authors')),
     heroImage: String(formData.get('heroImage') ?? '').trim() || null,
