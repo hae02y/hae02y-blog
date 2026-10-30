@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
+import { MarkdownRenderer } from '@/lib/markdown-renderer';
 
 interface MarkdownEditorProps {
   name: string;
@@ -17,6 +18,12 @@ export default function MarkdownEditor({ name, defaultValue, rows = 18, placehol
   const fileRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
+  const [preview, setPreview] = useState(defaultValue ?? '');
+  const [showPreview, setShowPreview] = useState(true);
+
+  function sync() {
+    if (ref.current) setPreview(ref.current.value);
+  }
 
   function wrap(pre: string, post = pre) {
     const ta = ref.current;
@@ -25,6 +32,7 @@ export default function MarkdownEditor({ name, defaultValue, rows = 18, placehol
     const sel = value.slice(s, e);
     ta.setRangeText(`${pre}${sel}${post}`, s, e, 'end');
     ta.focus();
+    sync();
   }
 
   function linePrefix(prefix: string) {
@@ -34,6 +42,7 @@ export default function MarkdownEditor({ name, defaultValue, rows = 18, placehol
     const lineStart = value.lastIndexOf('\n', s - 1) + 1;
     ta.setRangeText(prefix, lineStart, lineStart, 'end');
     ta.focus();
+    sync();
   }
 
   function insert(text: string) {
@@ -42,6 +51,7 @@ export default function MarkdownEditor({ name, defaultValue, rows = 18, placehol
     const { selectionStart: s, selectionEnd: e } = ta;
     ta.setRangeText(text, s, e, 'end');
     ta.focus();
+    sync();
   }
 
   async function handleFiles(files: FileList | null) {
@@ -82,30 +92,40 @@ export default function MarkdownEditor({ name, defaultValue, rows = 18, placehol
         <button type="button" className={btnCls} onClick={() => fileRef.current?.click()} disabled={uploading}>
           {uploading ? '업로드 중…' : '🖼 이미지'}
         </button>
-        <input
-          ref={fileRef}
-          type="file"
-          accept="image/*"
-          multiple
-          className="hidden"
-          onChange={e => handleFiles(e.target.files)}
-        />
+        <button type="button" className={`${btnCls} ml-auto`} onClick={() => setShowPreview(v => !v)}>
+          {showPreview ? '프리뷰 끄기' : '프리뷰 켜기'}
+        </button>
+        <input ref={fileRef} type="file" accept="image/*" multiple className="hidden" onChange={e => handleFiles(e.target.files)} />
       </div>
       {error && <p className="px-3 pt-2 text-xs text-red-500">{error}</p>}
-      <textarea
-        ref={ref}
-        name={name}
-        defaultValue={defaultValue}
-        rows={rows}
-        placeholder={placeholder}
-        onDrop={e => {
-          if (e.dataTransfer.files?.length) {
-            e.preventDefault();
-            handleFiles(e.dataTransfer.files);
-          }
-        }}
-        className="w-full resize-y bg-transparent px-3.5 py-3 font-mono text-sm leading-6 text-black outline-none dark:text-white"
-      />
+      <div className={showPreview ? 'grid md:grid-cols-2 md:divide-x md:divide-black/10 md:dark:divide-white/10' : ''}>
+        <textarea
+          ref={ref}
+          name={name}
+          defaultValue={defaultValue}
+          rows={rows}
+          placeholder={placeholder}
+          onChange={e => setPreview(e.target.value)}
+          onDrop={e => {
+            if (e.dataTransfer.files?.length) {
+              e.preventDefault();
+              handleFiles(e.dataTransfer.files);
+            }
+          }}
+          className="w-full resize-y bg-transparent px-3.5 py-3 font-mono text-sm leading-6 text-black outline-none dark:text-white"
+        />
+        {showPreview && (
+          <div className="hidden overflow-auto px-4 py-3 md:block" style={{ maxHeight: `${rows * 1.5 + 2}rem` }}>
+            {preview.trim() ? (
+              <div className="text-sm leading-6 text-black dark:text-white [&_a]:underline [&_blockquote]:border-l-2 [&_blockquote]:border-black/20 [&_blockquote]:pl-3 [&_blockquote]:text-black/60 [&_code]:rounded [&_code]:bg-black/5 [&_code]:px-1 [&_code]:font-mono [&_code]:text-[13px] dark:[&_code]:bg-white/10 [&_h2]:mt-4 [&_h2]:text-lg [&_h2]:font-bold [&_h3]:mt-3 [&_h3]:font-semibold [&_img]:my-2 [&_img]:rounded-lg [&_li]:ml-4 [&_li]:list-disc [&_p]:my-2 [&_pre]:overflow-auto [&_pre]:rounded-lg [&_pre]:bg-black/90 [&_pre]:p-3 [&_pre]:text-xs [&_pre_code]:bg-transparent [&_pre_code]:text-white">
+                <MarkdownRenderer content={preview} />
+              </div>
+            ) : (
+              <p className="text-sm text-black/35 dark:text-white/35">여기에 미리보기가 표시됩니다.</p>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
