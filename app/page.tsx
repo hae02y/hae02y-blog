@@ -20,7 +20,7 @@ export default async function Home() {
       <section aria-labelledby="home-title" className="grid items-center gap-4 pt-12 md:grid-cols-2 md:gap-12 md:pt-20">
         <div>
           <p className="mb-4 font-mono text-sm text-[var(--secondary)]">HAE02Y / SOFTWARE WEAVER</p>
-          <h1 id="home-title" className="text-3xl leading-tight md:text-4xl">정해영 기술블로그</h1>
+          <h1 id="home-title" className="text-3xl leading-tight md:text-4xl">hae02y · 정해영 기술블로그</h1>
           <p className="max-w-xl leading-relaxed text-[var(--secondary)]">
             코드와 인프라, 사람과 제품 사이를 엮습니다. 정해영(hae02y)이 Java, Spring Boot, AWS, Kubernetes, DevOps, AI로 제품을 만들고 운영하며 얻은 경험과 프로젝트를 기록합니다.
           </p>

@@ -8,10 +8,10 @@ import './globals.css';
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: '정해영 | Software Weaver 기술블로그 — Hae02y Devlog',
+    default: 'hae02y | 정해영 기술블로그',
     template: `%s | ${siteConfig.title}`,
   },
-  description: '정해영 Software Weaver 블로그. Software, Backend, AI, Infra, DevOps, Cloud.',
+  description: 'hae02y(정해영)의 기술블로그. Java, Spring Boot, 백엔드, 인프라, DevOps와 AI를 다루며 직접 개발하고 운영한 경험을 기록합니다.',
   keywords: [
     '정해영', '개발자 정해영', '정해영 개발자', '정해영 백엔드', '백엔드 정해영', '정해영 백엔드 개발자', '정해영 이력서', '정해영 포트폴리오',
     'hae02y', 'hae02y 개발자', 'hae02y blog', 'hae02y developer', 'hae02y portfolio',
@@ -38,14 +38,14 @@ export const metadata: Metadata = {
     locale: 'ko_KR',
     url: `${siteConfig.url}/`,
     siteName: siteConfig.title,
-    title: '정해영 | Software Weaver 기술블로그',
-    description: '정해영 개발자 블로그. Software, Backend, AI, Infra, DevOps, Cloud.',
+    title: 'hae02y | 정해영 기술블로그',
+    description: 'hae02y(정해영)의 기술블로그. 백엔드, 인프라, DevOps, AI를 직접 개발하고 운영하며 얻은 경험을 기록합니다.',
     images: [defaultSocialImage],
   },
   twitter: {
     card: 'summary_large_image',
-    title: '정해영 | Software Weaver 기술블로그',
-    description: '정해영(hae02y)의 Software Weaver 기술 블로그.',
+    title: 'hae02y | 정해영 기술블로그',
+    description: 'hae02y(정해영)의 기술블로그. 백엔드, 인프라, DevOps, AI 개발과 운영 경험을 기록합니다.',
     images: [defaultSocialImage.url],
   },
   robots: {
@@ -71,8 +71,8 @@ const jsonLd = {
       '@type': 'WebSite',
       '@id': `${siteConfig.url}#website`,
       url: `${siteConfig.url}/`,
-      name: '정해영 기술블로그 | Hae02y Devlog',
-      alternateName: ['정해영 블로그', '개발자 정해영', '정해영 개발자', 'hae02y', 'Hae02y Devlog'],
+      name: 'Hae02y Devlog',
+      alternateName: ['hae02y', '정해영 기술블로그'],
       description: '정해영(hae02y)의 Software Weaver 기술 블로그와 ABOUT, Portfolio',
       inLanguage: 'ko',
       publisher: { '@id': `${siteConfig.url}#person` },
@@ -114,7 +114,7 @@ const jsonLd = {
     {
       '@type': 'Blog',
       '@id': `${siteConfig.url}#blog`,
-      name: '정해영 기술블로그',
+      name: 'Hae02y Devlog',
       description: '백엔드, 인프라, DevOps 기술 블로그',
       url: `${siteConfig.url}/blog/`,
       inLanguage: 'ko',
