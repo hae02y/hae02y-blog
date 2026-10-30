@@ -124,12 +124,26 @@ export const MarkdownRenderer = memo(function MarkdownRenderer({ content, dirNam
       // The components below still validate external media URLs before rendering.
       rehypePlugins={[rehypeRaw]}
       components={{
-        img: ({ src, alt }) => (
-          <ImageViewer
-            src={rewriteImageSrc(src, dirName, assetBasePath)}
-            alt={alt || ''}
-          />
-        ),
+        img: ({ src, alt, width, height }) => {
+          const resolved = rewriteImageSrc(src, dirName, assetBasePath);
+          // When an explicit size is authored (e.g. <img width="110">), render a
+          // plain sized image (good for logos/icons) instead of the full viewer.
+          if (width || height) {
+            const safe = safeMediaSrc(resolved, true);
+            if (!safe) return null;
+            return (
+              <img
+                src={safe}
+                alt={alt || ''}
+                width={width as number | string | undefined}
+                height={height as number | string | undefined}
+                style={{ maxWidth: '100%', height: 'auto' }}
+                loading="lazy"
+              />
+            );
+          }
+          return <ImageViewer src={resolved} alt={alt || ''} />;
+        },
         iframe: ({ src, title, ...props }) => {
           const safeSrc = safeEmbedSrc(src);
           if (!safeSrc) return null;
