@@ -30,6 +30,9 @@ export default async function AppsPage() {
         </div>
       </div>
       <PhoneLauncher apps={launcherApps} />
+      <p className="mt-3 text-center font-mono text-[10px] text-[var(--secondary)]">
+        배경화면: <a href="https://www.iclarified.com/86246/download-the-official-ios-16-wallpaper-for-iphone" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2">Apple iOS 16 Astronomy</a>
+      </p>
 
       <section aria-labelledby="apps-list-title" className="mt-16 border-t border-black/10 pt-10 dark:border-white/10">
         <p className="mb-2 font-mono text-xs tracking-[0.22em] text-[var(--secondary)]">DIRECT LINKS</p>

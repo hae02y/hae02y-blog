@@ -36,9 +36,11 @@
   width: var(--leaf);
   overflow: hidden;
   color: #fff;
-  background: radial-gradient(circle at 85% 16%, #708acc 0, transparent 37%),
-    radial-gradient(circle at 10% 88%, #9f6aa3 0, transparent 46%),
-    linear-gradient(155deg, #172846, #2d3e77 56%, #523e76);
+  background-color: #030812;
+  background-image: linear-gradient(#00000012, #00000026), url('/ios-astronomy-earth.jpg');
+  background-size: 100% 100%, 100% auto;
+  background-position: center, center;
+  background-repeat: no-repeat;
   touch-action: pan-y;
   overscroll-behavior: contain;
   user-select: none;
@@ -51,6 +53,8 @@
 
 .isOpen .coverScreen {
   border-radius: 34px 0 0 34px;
+  background-size: 100% 100%, 200% auto;
+  background-position: center, left center;
 }
 
 .innerScreen {
@@ -62,6 +66,8 @@
   backface-visibility: hidden;
   box-shadow: inset 18px 0 24px -20px #000;
   transition: transform .82s cubic-bezier(.22,.8,.18,1), visibility 0s .82s;
+  background-size: 100% 100%, 200% auto;
+  background-position: center, right center;
 }
 
 .innerScreen::after {
@@ -134,7 +140,7 @@
 }
 
 .coverContent {
-  padding: 74px 22px 28px;
+  padding: 13px 19px 19px;
   opacity: 1;
   visibility: visible;
   transition: opacity .28s .3s, visibility 0s .3s;
@@ -148,7 +154,7 @@
 
 .openContent,
 .innerContent {
-  padding: 68px 22px 28px;
+  padding: 13px 19px 19px;
 }
 
 .openContent {
@@ -173,45 +179,76 @@
   transition: opacity .36s .28s;
 }
 
-.kicker,
-.openHeader {
-  margin: 0 0 12px !important;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace !important;
-  font-size: 10px !important;
-  font-weight: 700 !important;
-  letter-spacing: .18em;
-  color: #dbe4ff !important;
+.statusBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 26px;
+  flex: none;
+  padding: 0 11px;
+  color: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13px;
+  font-weight: 650;
+  text-shadow: 0 1px 3px #0008;
 }
 
-.coverContent h2,
-.openContent h2,
-.innerContent h2 {
-  margin: 0 !important;
-  font-family: Pretendard, -apple-system, BlinkMacSystemFont, sans-serif !important;
-  font-size: 27px !important;
-  line-height: 1.2 !important;
-  letter-spacing: -.05em;
-  color: #fff !important;
+.rightStatus {
+  justify-content: flex-end;
 }
 
-.count {
-  margin-left: 9px;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 12px;
-  letter-spacing: 0;
-  color: #e0e7ff;
+.statusIcons {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.cellular {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 12px;
+}
+
+.cellular i {
+  display: block;
+  width: 3px;
+  border-radius: 2px;
+  background: currentColor;
+}
+
+.cellular i:nth-child(1) { height: 5px; }
+.cellular i:nth-child(2) { height: 7px; }
+.cellular i:nth-child(3) { height: 9px; }
+.cellular i:nth-child(4) { height: 11px; }
+
+.homeIndicator {
+  display: block;
+  width: 82px;
+  height: 4px;
+  flex: none;
+  margin: 14px auto 9px;
+  border-radius: 99px;
+  background: #fff;
+  box-shadow: 0 1px 4px #0008;
 }
 
 .searchBox {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-top: 19px;
-  border: 1px solid #ffffff30;
-  border-radius: 12px;
-  background: #ffffff1b;
-  padding: 9px 11px;
-  color: #e6eaff;
+  width: 190px;
+  max-width: 100%;
+  height: 34px;
+  flex: none;
+  margin: 14px auto 0;
+  border: 1px solid #ffffff38;
+  border-radius: 999px;
+  background: #6e78846b;
+  padding: 7px 14px;
+  color: #fff;
+  box-shadow: 0 2px 12px #0004;
+  backdrop-filter: blur(18px);
 }
 
 .searchBox input {
@@ -225,18 +262,24 @@
 }
 
 .searchBox input::placeholder {
-  color: #d3dcf0;
+  color: #fff;
+}
+
+.searchBox:focus-within {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+  background: #697789a8;
 }
 
 .appGrid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   align-content: start;
-  gap: 20px 7px;
+  gap: 24px 7px;
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  margin-top: 22px;
+  margin-top: 39px;
   padding: 5px 2px 15px;
   scrollbar-color: #ffffff66 transparent;
   scrollbar-width: thin;
@@ -244,8 +287,7 @@
 
 .openContent .appGrid,
 .innerContent .appGrid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 22px 10px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .appTile {
@@ -314,9 +356,9 @@
   font-weight: 550;
   line-height: 1.25;
   overflow-wrap: anywhere;
+  text-shadow: 0 1px 4px #000, 0 2px 8px #0009;
 }
 
-.coverHint,
 .empty {
   font-size: 11px !important;
   line-height: 1.5 !important;
@@ -326,36 +368,6 @@
 .empty {
   grid-column: 1 / -1;
   margin: 0 !important;
-}
-
-.coverHint {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  margin: auto 0 0 !important;
-  padding-top: 18px;
-}
-
-.mobileHint {
-  display: none;
-}
-
-.openHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.openHeader strong {
-  font-size: 10px;
-  letter-spacing: .06em;
-}
-
-.innerCount {
-  margin: 20px 0 0 !important;
-  font-size: 11px !important;
-  color: #dfe6ff !important;
 }
 
 .foldToggle {
@@ -425,7 +437,7 @@
     width: 100vw;
     height: 100dvh;
     gap: 0;
-    background: #172846;
+    background: #030812;
   }
 
   .device,
@@ -474,8 +486,8 @@
   .coverContent,
   .openContent,
   .innerContent {
-    padding-top: max(72px, calc(env(safe-area-inset-top) + 58px));
-    padding-bottom: max(28px, calc(env(safe-area-inset-bottom) + 22px));
+    padding-top: max(13px, calc(env(safe-area-inset-top) + 7px));
+    padding-bottom: max(19px, calc(env(safe-area-inset-bottom) + 10px));
   }
 
   .foldToggle,
@@ -483,31 +495,19 @@
     display: none;
   }
 
-  .desktopHint {
-    display: none;
-  }
-
-  .mobileHint {
-    display: inline;
-  }
 }
 
 @media (max-width: 900px) and (max-height: 500px) and (orientation: landscape) {
   .openContent,
   .innerContent {
-    padding: 45px 20px 18px;
-  }
-
-  .openContent h2,
-  .innerContent h2 {
-    font-size: 20px !important;
+    padding: max(8px, env(safe-area-inset-top)) 20px 9px;
   }
 
   .openContent .appGrid,
   .innerContent .appGrid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 12px 8px;
-    margin-top: 12px;
+    margin-top: 11px;
   }
 
   .openContent .iconWrap,

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { ArrowUpRight, ChevronsLeft, ChevronsRight, Search } from 'lucide-react';
+import { ArrowUpRight, BatteryFull, ChevronsLeft, ChevronsRight, Search, Wifi } from 'lucide-react';
 import AppIcon from './AppIcon';
 import styles from './PhoneLauncher.module.css';
 
@@ -23,9 +23,8 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
   const [query, setQuery] = useState('');
   const gestureStart = useRef<GestureStart | null>(null);
   const filteredApps = apps.filter(app => `${app.name} ${app.shortName} ${app.category} ${app.description}`.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()));
-  const splitIndex = Math.ceil(filteredApps.length / 2);
-  const leftApps = filteredApps.slice(0, splitIndex);
-  const rightApps = filteredApps.slice(splitIndex);
+  const leftApps = filteredApps.filter((_, index) => index % 8 < 4);
+  const rightApps = filteredApps.filter((_, index) => index % 8 >= 4);
 
   useEffect(() => {
     const landscape = window.matchMedia('(max-width: 900px) and (orientation: landscape)');
@@ -90,38 +89,42 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
     </label>
   );
 
+  const statusIcons = (
+    <span className={styles.statusIcons} aria-hidden="true">
+      <span className={styles.cellular}><i /><i /><i /><i /></span>
+      <Wifi size={15} strokeWidth={2.5} />
+      <BatteryFull size={19} strokeWidth={2.3} />
+    </span>
+  );
+
   return (
-    <section className={styles.stage} aria-label="접이식 앱 목록">
+    <section className={styles.stage} aria-label={`접이식 앱 목록, 앱 ${apps.length}개`}>
       <div className={`${styles.device}${isUnfolded ? ` ${styles.isOpen}` : ''}`}>
         <div className={styles.camera} aria-hidden="true" />
         <div className={styles.coverScreen} {...gestureHandlers()}>
           <div className={`${styles.coverContent}${isUnfolded ? ` ${styles.contentHidden}` : ''}`} aria-hidden={isUnfolded}>
-            <p className={styles.kicker}>HAE02Y / APPS</p>
-            <h2>만든 앱들<span className={styles.count}>{apps.length}</span></h2>
-            {searchBox('접힌 화면에서 앱 검색', !isUnfolded)}
+            <div className={styles.statusBar} aria-hidden="true"><span>9:41</span>{statusIcons}</div>
             <div className={styles.appGrid}>
               {filteredApps.map(app => appTile(app, !isUnfolded))}
               {filteredApps.length === 0 && <p className={styles.empty}>{apps.length === 0 ? '아직 공개된 앱이 없습니다.' : '검색 결과가 없습니다.'}</p>}
             </div>
-            <p className={styles.coverHint}><span className={styles.desktopHint}>화면을 오른쪽으로 밀어 펼치기</span><span className={styles.mobileHint}>가로로 돌려 펼치기</span><ChevronsRight size={16} aria-hidden="true" /></p>
+            {searchBox('접힌 화면에서 앱 검색', !isUnfolded)}
           </div>
           <div className={`${styles.openContent}${isUnfolded ? ` ${styles.contentVisible}` : ''}`} aria-hidden={!isUnfolded}>
-            <div className={styles.openHeader}><span>HAE02Y / APPS</span><strong>{filteredApps.length} APPS</strong></div>
-            <h2>만든 앱들</h2>
-            {searchBox('펼친 화면에서 앱 검색', isUnfolded)}
+            <div className={styles.statusBar} aria-hidden="true"><span>9:41</span></div>
             <div className={styles.appGrid}>
               {leftApps.map(app => appTile(app, isUnfolded))}
               {filteredApps.length === 0 && <p className={styles.empty}>{apps.length === 0 ? '아직 공개된 앱이 없습니다.' : '검색 결과가 없습니다.'}</p>}
             </div>
+            {searchBox('펼친 화면에서 앱 검색', isUnfolded)}
           </div>
         </div>
         <div className={styles.hinge} aria-hidden="true" />
         <div className={styles.innerScreen} aria-hidden={!isUnfolded} {...gestureHandlers()}>
           <div className={styles.innerContent}>
-            <div className={styles.openHeader}><span>APP COLLECTION</span><ArrowUpRight size={16} aria-hidden="true" /></div>
-            <h2>앱 목록</h2>
-            <p className={styles.innerCount}>{filteredApps.length}개 앱을 둘러보세요.</p>
+            <div className={`${styles.statusBar} ${styles.rightStatus}`} aria-hidden="true">{statusIcons}</div>
             <div className={styles.appGrid}>{rightApps.map(app => appTile(app, isUnfolded))}</div>
+            <span className={styles.homeIndicator} aria-hidden="true" />
           </div>
         </div>
         <button
