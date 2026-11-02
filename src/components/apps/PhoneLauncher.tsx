@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { Plane, BatteryFull, Bluetooth, Check, ChevronRight, Flashlight, Focus, LockKeyhole, Moon, Search, Signal, Sun, Volume2, Wifi, X } from 'lucide-react';
+import { Plane, BatteryFull, Bluetooth, ChevronRight, Flashlight, Focus, LockKeyhole, Search, Signal, Sun, Volume2, Wifi, X } from 'lucide-react';
 import AppIcon from './AppIcon';
 import styles from './PhoneLauncher.module.css';
 
@@ -39,7 +39,7 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
   const [brightness, setBrightness] = useState(76);
   const [volume, setVolume] = useState(48);
   const [flashlight, setFlashlight] = useState(false);
-  const touchStart = useRef<{ x: number; y: number } | null>(null);
+  const gestureStart = useRef<{ x: number; y: number; screen: Screen; interactive: boolean } | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -59,16 +59,30 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
 
   const filteredApps = apps.filter(app => `${app.name} ${app.shortName} ${app.description} ${app.category}`.toLocaleLowerCase().includes(query.toLocaleLowerCase()));
 
-  function onTouchEnd(event: React.TouchEvent) {
-    if (!touchStart.current) return;
-    const dx = event.changedTouches[0].clientX - touchStart.current.x;
-    const dy = event.changedTouches[0].clientY - touchStart.current.y;
-    touchStart.current = null;
-    if (screen === 'locked' && dy < -55) setScreen('home');
-    else if (screen === 'home' && dx < -65) setScreen('library');
-    else if (screen === 'library' && dx > 65) setScreen('home');
-    else if (screen === 'home' && dy > 65) setScreen('search');
-    else if ((screen === 'search' || screen === 'control') && dy > 65) setScreen('home');
+  function onGestureEnd(x: number, y: number) {
+    const start = gestureStart.current;
+    gestureStart.current = null;
+    if (!start || start.interactive) return;
+
+    const dx = x - start.x;
+    const dy = y - start.y;
+    if (Math.max(Math.abs(dx), Math.abs(dy)) < 55) return;
+
+    if (Math.abs(dx) > Math.abs(dy) * 1.25) {
+      if (start.screen === 'home' && dx < 0) setScreen('library');
+      if (start.screen === 'library' && dx > 0) setScreen('home');
+      return;
+    }
+
+    if (dy < 0) {
+      if (start.screen !== 'home') setScreen('home');
+    } else if (start.y < 90 && start.x > 180 && start.screen !== 'locked') {
+      setScreen('control');
+    } else if (start.screen === 'home' || start.screen === 'library') {
+      setScreen('search');
+    } else if (start.screen === 'search' || start.screen === 'control') {
+      setScreen('home');
+    }
   }
 
   const appLink = (app: LauncherApp, compact = false) => (
@@ -83,7 +97,37 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
       <div className={styles.device}>
         <button type="button" className={styles.powerButton} onClick={() => setScreen(screen === 'locked' ? 'home' : 'locked')} aria-label={screen === 'locked' ? '잠금 해제' : '화면 잠금'} title={screen === 'locked' ? '잠금 해제' : '화면 잠금'} />
         <div className={styles.volumeButtons} aria-hidden="true"><i /><i /></div>
-        <div className={styles.screen} onTouchStart={event => { touchStart.current = { x: event.touches[0].clientX, y: event.touches[0].clientY }; }} onTouchEnd={onTouchEnd}>
+        <div
+          className={styles.screen}
+          onPointerDown={event => {
+            if (event.pointerType !== 'mouse') return;
+            const bounds = event.currentTarget.getBoundingClientRect();
+            gestureStart.current = {
+              x: event.clientX - bounds.left,
+              y: event.clientY - bounds.top,
+              screen,
+              interactive: Boolean((event.target as HTMLElement).closest('a, button, input, label')) && !(event.target as HTMLElement).classList.contains(styles.controlHotspot),
+            };
+          }}
+          onPointerUp={event => {
+            if (event.pointerType !== 'mouse') return;
+            const bounds = event.currentTarget.getBoundingClientRect();
+            onGestureEnd(event.clientX - bounds.left, event.clientY - bounds.top);
+          }}
+          onTouchStart={event => {
+            const bounds = event.currentTarget.getBoundingClientRect();
+            gestureStart.current = {
+              x: event.touches[0].clientX - bounds.left,
+              y: event.touches[0].clientY - bounds.top,
+              screen,
+              interactive: Boolean((event.target as HTMLElement).closest('a, button, input, label')) && !(event.target as HTMLElement).classList.contains(styles.controlHotspot),
+            };
+          }}
+          onTouchEnd={event => {
+            const bounds = event.currentTarget.getBoundingClientRect();
+            onGestureEnd(event.changedTouches[0].clientX - bounds.left, event.changedTouches[0].clientY - bounds.top);
+          }}
+        >
           <div className={styles.wallpaper} aria-hidden="true"><div className={styles.orbOne} /><div className={styles.orbTwo} /><div className={styles.glow} /></div>
           <div className={styles.island} aria-hidden="true"><span /></div>
           <div className={styles.statusBar}>
@@ -107,9 +151,9 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
           {screen === 'home' && (
             <div className={styles.homeScreen}>
               <div className={styles.heroWidget}>
-                <div className={styles.widgetTop}><span className={styles.widgetLogo}>h.</span><span>MY SPACE <span className={styles.widgetSparkle}>✳</span></span></div>
-                <div><span className={styles.widgetEyebrow}>THINGS I MAKE</span><strong>작은 아이디어가<br />하나의 앱이 되는 곳.</strong></div>
-                <span className={styles.widgetBottom}>{String(apps.length).padStart(2, '0')} APPS <ChevronRight size={14} /></span>
+                <div className={styles.widgetTop}><span>HAE02Y SPACE</span><span className={styles.widgetSparkle}>✳</span></div>
+                <div><span className={styles.widgetDate}>{dateLabel}</span><strong className={styles.widgetTime}>{time}</strong></div>
+                <span className={styles.widgetBottom}>내가 만든 앱 {apps.length}개 <ChevronRight size={14} /></span>
               </div>
               <div className={styles.appGrid}>
                 {apps.slice(0, 10).map(app => appLink(app))}
@@ -174,7 +218,7 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
           <button type="button" className={styles.homeIndicator} onClick={() => setScreen('home')} aria-label={screen === 'locked' ? '잠금 해제하고 홈으로' : '홈 화면으로'} />
         </div>
       </div>
-      <div className={styles.phoneHints}><span><Check size={14} /> 아이콘으로 실행</span><span><Moon size={14} /> 실제 시각 표시</span><span><Sun size={14} /> 제어 센터 조작</span></div>
+      <div className={styles.phoneHints}>← 앱 보관함 · 화면 아래로 검색 · 오른쪽 위에서 아래로 제어 센터 · 위로 홈</div>
     </section>
   );
 }
