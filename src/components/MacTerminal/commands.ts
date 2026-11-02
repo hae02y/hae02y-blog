@@ -151,6 +151,15 @@ const labCmd: CommandDef = {
   }),
 };
 
+const appsCmd: CommandDef = {
+  name: 'apps',
+  description: commandDescription('apps'),
+  handler: (_args, ctx) => {
+    ctx.term.writeln(green('  Opening apps...'));
+    setTimeout(() => ctx.navigate('/apps/'), 300);
+  },
+};
+
 // ── New: Info commands ──
 
 const whoamiCmd: CommandDef = {
@@ -295,6 +304,7 @@ const allCommands: CommandDef[] = [
   insightCmd,
   brunchCmd,
   labCmd,
+  appsCmd,
   whoamiCmd,
   skillsCmd,
   experienceCmd,
