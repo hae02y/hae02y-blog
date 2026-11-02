@@ -10,7 +10,7 @@ export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: 'Apps by hae02y',
-  description: 'hae02y가 만든 앱을 인터랙티브한 홈 화면에서 둘러보고 바로 열어보세요.',
+  description: 'hae02y가 만든 앱을 접이식 화면에서 둘러보고 바로 열어보세요.',
   alternates: { canonical: `${siteConfig.url}/apps/` },
 };
 
@@ -19,22 +19,19 @@ export default async function AppsPage() {
   const launcherApps = apps.map(({ id, name, shortName, description, href, category, icon, iconImage }) => ({ id, name, shortName, description, href, category, icon, iconImage }));
 
   return (
-    <main className="mx-auto max-w-6xl px-4 pb-24 pt-14 text-[var(--primary)] md:pt-20">
-      <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(320px,660px)] lg:gap-8">
-        <div className="mx-auto max-w-xl text-center lg:mx-0 lg:text-left">
-          <p className="mb-4 font-mono text-xs font-semibold tracking-[0.24em] text-[var(--secondary)]">HAE02Y / APP COLLECTION</p>
-          <h1 className="mb-5 text-4xl font-bold tracking-tight sm:text-5xl">만든 앱들</h1>
-          <p className="text-base leading-8 text-[var(--secondary)]">접힌 화면에 마우스를 올려 나타나는 화살표를 누르면, 듀오처럼 펼쳐져 앱들이 넓은 화면에 나타납니다. 모바일에서는 화면만 표시하고, 가로로 돌리면 펼쳐진 화면으로 전환됩니다.</p>
-          <div className="mt-8 flex flex-wrap justify-center gap-5 font-mono text-xs font-semibold tracking-wide lg:justify-start">
+    <main className="mx-auto max-w-6xl px-4 pb-24 pt-14 text-[var(--primary)] md:pt-16">
+      <div className="mx-auto mb-10 max-w-xl text-center">
+        <p className="mb-4 font-mono text-xs font-semibold tracking-[0.24em] text-[var(--secondary)]">HAE02Y / APP COLLECTION</p>
+        <h1 className="mb-4 text-4xl font-bold tracking-tight sm:text-5xl">만든 앱들</h1>
+        <p className="text-sm leading-7 text-[var(--secondary)]">앱을 둘러보고 바로 열어보세요. 화면을 펼치면 각 앱을 더 자세히 볼 수 있습니다.</p>
+        <div className="mt-5 flex flex-wrap justify-center gap-5 font-mono text-xs font-semibold tracking-wide">
             <Link href="/about/?tab=portfolio" className="underline underline-offset-4 hover:opacity-70">프로젝트 자세히 보기</Link>
             <Link href="/blog/" className="underline underline-offset-4 hover:opacity-70">개발 기록 읽기</Link>
-          </div>
-          <p className="mt-9 text-xs text-[var(--secondary)]">화살표로 펼치기 · 좌우 스와이프 · 앱 실행 · 위로 홈</p>
         </div>
-        <PhoneLauncher apps={launcherApps} />
       </div>
+      <PhoneLauncher apps={launcherApps} />
 
-      <section aria-labelledby="apps-list-title" className="mt-20 border-t border-black/10 pt-10 dark:border-white/10">
+      <section aria-labelledby="apps-list-title" className="mt-16 border-t border-black/10 pt-10 dark:border-white/10">
         <p className="mb-2 font-mono text-xs tracking-[0.22em] text-[var(--secondary)]">DIRECT LINKS</p>
         <h2 id="apps-list-title" className="mb-7 text-2xl font-bold">앱 바로가기</h2>
         <div className="grid gap-4 sm:grid-cols-2">

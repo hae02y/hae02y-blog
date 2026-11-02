@@ -1,205 +1,590 @@
-.stage{width:100%;max-width:390px;margin-inline:auto;display:flex;align-items:center;flex-direction:column;gap:15px;transition:max-width .7s cubic-bezier(.2,.75,.2,1)}
-.stageOpen{max-width:660px}
-.device{position:relative;width:min(100%,320px);height:560px;border:3px solid #878f9e;border-radius:53px;background:#171a21;padding:7px;box-shadow:0 0 0 1px #1b202b,0 24px 52px -16px rgba(6,9,28,.38),0 54px 110px -40px rgba(12,14,35,.45),inset 0 0 0 2px #3a4150;perspective:1200px;transition:width .75s cubic-bezier(.22,.72,.19,1),border-radius .75s cubic-bezier(.22,.72,.19,1),box-shadow .75s}
-.duoOpen{width:min(100%,640px);border-radius:42px;box-shadow:0 0 0 1px #12141b,0 32px 65px -16px rgba(6,9,28,.32),0 60px 120px -40px rgba(12,14,35,.3),inset 0 0 0 2px #3a4150}
-.device:before{content:"";position:absolute;inset:3px;border:1px solid rgba(255,255,255,.15);border-radius:54px;pointer-events:none;z-index:20}
-.duoOpen:before{border-radius:40px}
-.powerButton{position:absolute;right:-6px;top:22%;width:4px;height:75px;border-radius:0 4px 4px 0;background:linear-gradient(#8f96a3,#303641);cursor:pointer}
-.volumeButtons{position:absolute;left:-6px;top:18%;display:grid;gap:16px}
-.volumeButtons i{display:block;width:4px;height:46px;border-radius:4px 0 0 4px;background:linear-gradient(#8f96a3,#303641)}
-.screen{position:relative;width:100%;height:100%;overflow:hidden;border-radius:43px;background:#071122;color:#fff;isolation:isolate;touch-action:pan-y;overscroll-behavior:contain;user-select:none}
-.duoOpen .screen{width:calc(50% - 1px);border-radius:34px 0 0 34px}
-.foldToggle{position:absolute;z-index:30;top:50%;right:-26px;display:flex;align-items:center;gap:7px;transform:translate(-7px,-50%) scale(.88);border:1px solid #d9deec;border-radius:999px;background:#fff;padding:10px 11px;color:#1c2852;box-shadow:0 12px 28px #0c163454;opacity:0;pointer-events:none;cursor:pointer;transition:opacity .2s,transform .25s ease}
-.foldToggle span{max-width:0;overflow:hidden;white-space:nowrap;font-size:11px;font-weight:700;transition:max-width .25s}
-.device:hover .foldToggle,.foldToggle:focus-visible{opacity:1;pointer-events:auto;transform:translate(0,-50%) scale(1)}
-.device:hover .foldToggle span,.foldToggle:focus-visible span{max-width:40px}
-.innerPanel{position:absolute;top:7px;right:7px;bottom:7px;width:calc(50% - 7px);overflow:hidden;border-radius:0 34px 34px 0;background:linear-gradient(155deg,#162444,#2d3b76 56%,#503c77);color:#fff;opacity:0;visibility:hidden;transform:rotateY(-88deg);transform-origin:left center;backface-visibility:hidden;pointer-events:none;box-shadow:inset 12px 0 18px -14px #000;transition:transform .72s cubic-bezier(.22,.72,.19,1),opacity .15s .45s,visibility 0s .72s}
-.duoOpen .innerPanel{opacity:1;visibility:visible;transform:rotateY(0);pointer-events:auto;transition:transform .72s cubic-bezier(.22,.72,.19,1),opacity .15s,visibility 0s}
-.innerGlow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 84% 8%,#7694de77,transparent 37%),radial-gradient(circle at 20% 88%,#a267aa66,transparent 48%)}
-.innerContent{position:relative;height:100%;overflow-y:auto;padding:66px 26px 38px;scrollbar-width:none}
-.innerContent::-webkit-scrollbar{display:none}
-.innerKicker{margin:0 0 12px!important;font-family:ui-monospace,SFMono-Regular,Menlo,monospace!important;font-size:10px!important;font-weight:700!important;letter-spacing:.19em;color:#d8e1ff!important}
-.innerContent h2{margin:0!important;font-family:Pretendard,-apple-system,BlinkMacSystemFont,sans-serif!important;font-size:30px!important;line-height:1.18!important;letter-spacing:-.05em;color:#fff!important}
-.innerIntro{margin:14px 0 30px!important;font-size:12px!important;line-height:1.65!important;color:#d9e1f7!important}
-.innerAppList{display:flex;flex-direction:column;gap:8px}
-.innerApp{display:flex;align-items:center;gap:12px;border:1px solid #ffffff2d;border-radius:17px;background:#ffffff19;padding:10px;text-decoration:none!important;transition:background .2s,transform .2s}
-.innerApp:hover,.innerApp:focus-visible{background:#ffffff30;transform:translateX(3px)}
-.innerAppIcon{width:45px;height:45px;flex:none;display:grid;place-items:center;border-radius:12px}
-.innerApp span:nth-child(2){min-width:0;flex:1}
-.innerApp strong{display:block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:13px;color:#fff}
-.innerApp small{display:block;margin-top:3px;font-size:9px;letter-spacing:.12em;color:#d8dffc}
-.innerApp svg:last-child{flex:none;color:#e2e9ff}
-.hinge{position:absolute;z-index:10;top:9px;bottom:9px;left:50%;width:3px;transform:translateX(-50%);border-radius:5px;background:linear-gradient(90deg,#050713,#596276,#141b2d);box-shadow:-3px 0 6px #0005,3px 0 8px #fff2;opacity:0;pointer-events:none;transition:opacity .2s}
-.duoOpen .hinge{opacity:1;transition-delay:.35s}
-.screen *{box-sizing:border-box}
-.screen p,.screen a,.screen button{color:inherit}
-.screen button{cursor:pointer}
-.screen a:hover{color:#fff}
-.wallpaper{position:absolute;inset:0;z-index:-1;overflow:hidden;background:radial-gradient(ellipse 85% 52% at 12% 105%,#ed9f9a 0%,transparent 70%),radial-gradient(ellipse 90% 70% at 100% 42%,#8b83d8 0%,transparent 70%),linear-gradient(160deg,#142440 3%,#283e75 40%,#563e8c 72%,#b66d8b 100%)}
-.wallpaper:before{content:"";position:absolute;inset:-22% -85% 24% 5%;border-radius:48%;transform:rotate(-34deg);background:linear-gradient(100deg,transparent 20%,rgba(80,132,215,.2) 29%,rgba(144,193,244,.57) 40%,rgba(45,78,161,.42) 53%,rgba(15,27,65,.16) 70%,transparent 78%);filter:blur(3px)}
-.wallpaper:after{content:"";position:absolute;inset:37% 8% -28% -80%;border-radius:50%;transform:rotate(28deg);background:linear-gradient(90deg,transparent 8%,rgba(255,171,182,.23) 34%,rgba(135,106,218,.53) 51%,rgba(34,71,139,.25) 70%,transparent 84%);filter:blur(5px)}
-.orbOne{position:absolute;right:-25%;top:7%;width:72%;height:43%;border-radius:50%;background:#345dbe;filter:blur(80px);opacity:.27}
-.orbTwo{position:absolute;left:-27%;bottom:-20%;width:90%;height:46%;border-radius:50%;background:#d788ad;filter:blur(80px);opacity:.42}
-.glow{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,4,17,.22),transparent 28%,rgba(2,3,15,.18) 75%,rgba(5,6,16,.45));pointer-events:none}
-.island{position:absolute;z-index:11;top:10px;left:50%;width:116px;height:30px;transform:translateX(-50%);border-radius:30px;background:#05070a;box-shadow:0 1px 2px rgba(255,255,255,.12),inset 0 0 3px rgba(255,255,255,.12)}
-.island span{position:absolute;right:12px;top:12px;width:6px;height:6px;border-radius:50%;background:#1a2234;box-shadow:inset 0 0 2px #5271ab}
-.statusBar{position:absolute;z-index:10;top:13px;left:28px;right:24px;height:24px;display:flex;align-items:center;justify-content:space-between;font-family:-apple-system,BlinkMacSystemFont,'Pretendard',sans-serif;font-size:14px;font-weight:700;letter-spacing:-.02em;text-shadow:0 1px 8px rgba(0,0,0,.35)}
-.statusRight{display:flex;align-items:center;gap:5px}
-.dimmed{opacity:.35}
-.controlHotspot{position:absolute;z-index:12;top:4px;right:12px;width:95px;height:42px;background:transparent;border:0}
-.homeScreen,.libraryScreen,.searchScreen,.controlScreen{position:absolute;inset:0;padding:67px 24px 145px;overflow-y:auto;scrollbar-width:none}
-.homeScreen::-webkit-scrollbar,.libraryScreen::-webkit-scrollbar,.searchScreen::-webkit-scrollbar,.controlScreen::-webkit-scrollbar{display:none}
-.homeScreen{display:flex;flex-direction:column;gap:27px}
-.heroWidget{min-height:166px;padding:17px 20px 15px;border:1px solid rgba(255,255,255,.4);border-radius:26px;background:linear-gradient(135deg,rgba(255,255,255,.31),rgba(216,225,255,.17) 48%,rgba(116,121,188,.2));box-shadow:0 14px 34px rgba(5,10,33,.16),inset 0 1px rgba(255,255,255,.25);backdrop-filter:blur(28px);display:flex;flex-direction:column;justify-content:space-between}
-.widgetTop,.widgetBottom{display:flex;align-items:center;justify-content:space-between;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10px;font-weight:700;letter-spacing:.15em;color:rgba(255,255,255,.88)}
-.widgetSparkle{font-size:15px;vertical-align:-1px}
-.widgetDate{display:block;margin-bottom:1px;font-size:13px;font-weight:600;color:rgba(255,255,255,.84)}
-.heroWidget .widgetTime{display:block;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:48px;line-height:1.02;letter-spacing:-.055em;font-weight:600}
-.widgetEyebrow{display:block;margin-bottom:7px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:9px;letter-spacing:.21em;color:rgba(255,255,255,.72)}
-.heroWidget strong{display:block;font-size:21px;line-height:1.3;letter-spacing:-.04em;font-weight:700}
-.widgetBottom{justify-content:flex-start;gap:3px;color:rgba(255,255,255,.86);font-family: Pretendard,-apple-system,BlinkMacSystemFont,sans-serif;font-size:11px;letter-spacing:0}
-.appGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));column-gap:15px;row-gap:22px}
-.app{min-width:0;width:100%;display:flex;flex-direction:column;align-items:center;gap:7px;border:0;background:none;padding:0;text-align:center;text-decoration:none!important;cursor:pointer}
-.iconWrap{position:relative;display:block;width:min(100%,60px);aspect-ratio:1;flex:none}
-.appIcon{width:min(100%,60px);aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:16px;box-shadow:0 6px 13px rgba(0,0,0,.2),inset 0 1px rgba(255,255,255,.26);font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:29px;font-weight:750;letter-spacing:-.07em;transition:transform .2s ease}
-.app:active .appIcon{transform:scale(.9)}
-.app:hover .appIcon,.app:focus-visible .appIcon,.libraryApp:hover .appIcon,.libraryApp:focus-visible .appIcon{transform:scale(1.07)}
-.openArrow{position:absolute;top:-7px;right:-7px;width:27px;height:27px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.78);border-radius:50%;background:#fff;color:#1b2b53;box-shadow:0 4px 12px #1118;opacity:0;transform:translate(-5px,5px) scale(.72);transition:opacity .2s ease,transform .28s cubic-bezier(.2,.9,.2,1);pointer-events:none}
-.app:hover .openArrow,.app:focus-visible .openArrow,.libraryApp:hover .openArrow,.libraryApp:focus-visible .openArrow{opacity:1;transform:translate(0,0) scale(1)}
-.appName{max-width:100%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-family:-apple-system,BlinkMacSystemFont,'Pretendard',sans-serif;font-size:11px;font-weight:500;text-shadow:0 2px 5px #0007}
-.blog{background:linear-gradient(140deg,#141c31,#3b507b);color:#fff}
-.about{background:linear-gradient(140deg,#f9f4eb,#e9d8c5);color:#273147}
-.bottomArea{position:absolute;z-index:5;left:0;right:0;bottom:24px;display:flex;flex-direction:column;align-items:center;gap:12px}
-.pageDots{display:flex;gap:7px;align-items:center}
-.pageDots button{width:6px;height:6px;padding:0;border:0;border-radius:50%;background:rgba(255,255,255,.38)}
-.pageDots .currentDot{background:#fff;width:7px;height:7px}
-.searchPill{display:flex;align-items:center;gap:5px;border:0;border-radius:14px;padding:5px 11px;background:rgba(255,255,255,.18);backdrop-filter:blur(20px);font-size:11px;font-weight:600;color:#fff}
-.dock{width:calc(100% - 27px);height:73px;display:flex;align-items:center;justify-content:space-around;gap:8px;padding:8px 12px;border:1px solid rgba(255,255,255,.35);border-radius:27px;background:rgba(238,241,255,.25);backdrop-filter:blur(28px) saturate(1.5);box-shadow:0 7px 28px rgba(0,0,0,.12)}
-.dockIcon{width:51px;height:51px;display:flex;align-items:center;justify-content:center;border:0;border-radius:15px;text-decoration:none!important;font-size:27px;font-weight:850;letter-spacing:-.08em;box-shadow:0 4px 12px #0003;transition:transform .2s}
-.dockIcon:hover,.dockIcon:active{transform:translateY(-3px)}
-.dockHome{background:#f5f1ea;color:#161b30!important}
-.dockBlog{background:#222c44;color:#fff!important}
-.dockAbout{background:#e8c26a;color:#222536!important}
-.dockSearch{background:linear-gradient(135deg,#959ec9,#665c97);color:#fff!important}
-.homeIndicator{position:absolute;z-index:15;bottom:8px;left:50%;width:116px;height:5px;transform:translateX(-50%);border:0;border-radius:6px;background:#fff;box-shadow:0 0 8px #0005;padding:0}
-.libraryScreen,.searchScreen,.controlScreen{background:linear-gradient(160deg,rgba(15,23,50,.88),rgba(23,25,63,.87) 55%,rgba(53,33,74,.84));backdrop-filter:blur(35px)}
-.panelHeading{display:flex;align-items:center;justify-content:space-between;font-size:27px;font-weight:700;letter-spacing:-.04em}
-.panelHeading button{width:31px;height:31px;display:grid;place-items:center;border:0;border-radius:50%;background:rgba(255,255,255,.15)}
-.librarySearch{width:100%;margin-top:21px;display:flex;align-items:center;gap:8px;border:0;border-radius:12px;padding:10px 13px;background:rgba(255,255,255,.15);text-align:left;font-size:14px;color:rgba(255,255,255,.72)!important}
-.libraryCaption{margin:24px 0 12px!important;font-family:ui-monospace,SFMono-Regular,Menlo,monospace!important;font-size:10px!important;font-weight:700!important;letter-spacing:.15em;color:rgba(255,255,255,.65)!important}
-.libraryList{display:flex;flex-direction:column;gap:7px}
-.libraryApp{width:100%;display:flex;align-items:center;gap:13px;border:0;background:none;padding:7px;border-radius:15px;text-align:left;text-decoration:none!important;cursor:pointer}
-.libraryApp:hover{background:rgba(255,255,255,.1)}
-.libraryApp .iconWrap,.libraryApp .appIcon{width:49px;flex:none;border-radius:13px}
-.libraryName{font-size:14px;font-weight:650}
-.libraryName small{display:block;margin-top:2px;font-size:9px;letter-spacing:.1em;color:rgba(255,255,255,.55)}
-.empty{font-size:13px;color:rgba(255,255,255,.65)}
-.searchTop{display:flex;align-items:center;gap:10px}
-.searchTop button{border:0;background:none;white-space:nowrap;font-size:13px}
-.searchInputWrap{flex:1;display:flex;align-items:center;gap:8px;border-radius:12px;background:rgba(255,255,255,.17);padding:8px 11px}
-.searchInputWrap input{width:100%;min-width:0;background:none;border:0;outline:none;color:#fff;font-size:14px}
-.searchInputWrap input::placeholder{color:#ffffffa8}
-.controlDate{margin:3px 0 24px!important;color:#fffc!important;font-size:12px!important}
-.controlGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.connectivity{display:grid;grid-template-columns:1fr 1fr;gap:7px;border-radius:22px;background:rgba(255,255,255,.12);padding:9px}
-.connectivity button{min-height:72px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:8px;border:0;border-radius:16px;background:rgba(255,255,255,.13);padding:10px}
-.connectivity button svg{padding:6px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.19)}
-.connectivity button span{font-size:9px;white-space:nowrap}
-.connectivity button.active svg,.controlBottom button.active{background:#277bff}
-.sliderGroup{display:flex;gap:7px}
-.sliderTile{height:100%;min-width:0;flex:1;display:flex;align-items:center;justify-content:flex-end;flex-direction:column;gap:8px;border-radius:21px;background:linear-gradient(0deg,rgba(255,255,255,.32),rgba(255,255,255,.12));padding:11px 5px}
-.sliderTile span{font-size:9px;white-space:nowrap}
-.sliderTile input{width:100%;accent-color:#fff}
-.controlBottom{display:flex;gap:10px;margin-top:13px}
-.controlBottom button{display:flex;align-items:center;gap:8px;border:0;border-radius:16px;background:rgba(255,255,255,.15);padding:13px 16px;font-size:12px}
-.controlNote{margin-top:20px!important;font-size:10px!important;color:#ffffff9c!important}
-.lockScreen{position:absolute;inset:0;display:flex;align-items:center;flex-direction:column;padding-top:102px;background:linear-gradient(180deg,rgba(0,9,25,.2),rgba(0,0,0,.1))}
-.lockDate{margin-top:17px;font-size:17px;font-weight:500}
-.lockTime{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:84px;line-height:1.12;font-weight:600;letter-spacing:-.085em}
-.unlockButton{position:absolute;bottom:70px;display:flex;align-items:center;gap:3px;border:0;background:none;font-size:12px;font-weight:550;color:#fff}
-.phoneHints{text-align:center;color:var(--secondary);font-size:10px;line-height:1.5}
-.phoneHints span{display:flex;align-items:center;gap:4px}
-.appWindow{position:absolute;z-index:9;inset:0;overflow:hidden;border-radius:inherit;background:radial-gradient(circle at 82% 18%,#748fda 0,transparent 31%),radial-gradient(circle at 15% 84%,#8d5aa5 0,transparent 38%),linear-gradient(155deg,#172443,#26366d 55%,#29224f);transform-origin:var(--origin-x) var(--origin-y);box-shadow:0 0 45px #070e2b77}
-.appWindowOpening{animation:appOpen .55s cubic-bezier(.18,.78,.2,1) both}
-.appWindowClosing{animation:appClose .4s cubic-bezier(.64,.02,.82,.35) both}
-.appWindowContent{height:100%;display:flex;flex-direction:column;padding:62px 26px 52px;opacity:1}
-.appWindowOpening .appWindowContent{animation:appContentIn .35s .17s both}
-.appWindowClosing .appWindowContent{animation:appContentOut .15s both}
-.appBack{align-self:flex-start;display:flex;align-items:center;gap:2px;border:0;background:none;padding:5px 0;font-size:14px;font-weight:600;color:#fff}
-.appPreview{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center}
-.previewIcon{width:82px;height:82px;display:grid;place-items:center;border-radius:23px;box-shadow:0 14px 32px #06122e77,inset 0 1px #fff5}
-.previewCategory{margin:27px 0 7px!important;font-family:ui-monospace,SFMono-Regular,Menlo,monospace!important;font-size:10px!important;font-weight:700!important;letter-spacing:.2em;color:#d4dcff!important}
-.appPreview h2{margin:0!important;font-family:Pretendard,-apple-system,BlinkMacSystemFont,sans-serif!important;font-size:25px!important;line-height:1.25!important;letter-spacing:-.04em;color:#fff!important}
-.previewDescription{max-width:235px;margin:12px 0 0!important;font-size:13px!important;line-height:1.65!important;color:#e1e7ff!important}
-.launchButton{width:100%;display:flex;align-items:center;justify-content:center;gap:9px;border-radius:17px;background:#fff;padding:15px 18px;color:#1c2852!important;font-size:14px;font-weight:750;text-decoration:none!important;box-shadow:0 12px 28px #07112d55;transition:transform .2s ease,box-shadow .2s ease}
-.launchButton:hover,.launchButton:focus-visible{transform:translateY(-3px);box-shadow:0 16px 32px #07112d77;color:#1c2852!important}
-.appSwipeHint{margin-top:13px;text-align:center;font-size:10px;color:#d9e0ffb3}
-@keyframes appOpen{from{transform:scale(var(--scale-x),var(--scale-y));border-radius:90px;opacity:.92}to{transform:scale(1);border-radius:inherit;opacity:1}}
-@keyframes appClose{from{transform:scale(1);border-radius:inherit;opacity:1}to{transform:scale(var(--scale-x),var(--scale-y));border-radius:90px;opacity:.78}}
-@keyframes appContentIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
-@keyframes appContentOut{from{opacity:1}to{opacity:0}}
-@media(max-width:440px){.stage{max-width:360px}
-.device{width:min(100%,340px);border-radius:53px}
-.screen{border-radius:43px}
-.homeScreen,.libraryScreen,.searchScreen,.controlScreen{padding-left:21px;padding-right:21px}
-.heroWidget{min-height:170px}
-.homeScreen{gap:26px}
-.heroWidget strong{font-size:19px}
-.appGrid{column-gap:10px}
-.appIcon{max-width:58px}
-.dock{height:75px}
-.dockIcon{width:52px;height:52px}
-.lockTime{font-size:70px}
-}
-@media(max-width:767px), (max-width:900px) and (max-height:500px) and (orientation:landscape){
-.stage{position:fixed;z-index:1000;inset:0;max-width:none;width:100vw;height:100dvh;gap:0;background:#071122}
-.device{width:100%;height:100%;aspect-ratio:auto;border:0;border-radius:0;padding:0;box-shadow:none}
-.device:before,.powerButton,.volumeButtons,.phoneHints,.foldToggle{display:none}
-.screen{border-radius:0}
-.duoOpen .screen{width:50%;border-radius:0}
-.innerPanel{top:0;right:0;bottom:0;width:50%;border-radius:0}
-.hinge{top:0;bottom:0}
-.island{top:max(10px,env(safe-area-inset-top))}
-.statusBar{top:max(13px,env(safe-area-inset-top))}
-.homeScreen,.libraryScreen,.searchScreen,.controlScreen{padding-top:max(67px,calc(env(safe-area-inset-top) + 55px));padding-bottom:calc(145px + env(safe-area-inset-bottom))}
-.bottomArea{bottom:calc(24px + env(safe-area-inset-bottom))}
-.homeIndicator{bottom:calc(8px + env(safe-area-inset-bottom))}
-.appWindowContent{padding-top:max(62px,calc(env(safe-area-inset-top) + 52px));padding-bottom:calc(52px + env(safe-area-inset-bottom))}
-}
-@media(max-width:900px) and (max-height:500px) and (orientation:landscape){
-.homeScreen{display:grid;grid-template-columns:minmax(165px,36%) minmax(0,1fr);align-content:start;gap:18px;padding:55px 28px 92px}
-.duoOpen .homeScreen{display:flex;gap:14px;padding:48px 18px 80px}
-.duoOpen .heroWidget{min-height:120px}
-.duoOpen .appGrid{column-gap:8px;row-gap:10px}
-.duoOpen .appIcon{max-width:45px}
-.duoOpen .appName{font-size:9px}
-.heroWidget{min-height:145px}
-.heroWidget .widgetTime{font-size:38px}
-.appGrid{align-content:start;column-gap:12px;row-gap:17px}
-.bottomArea{bottom:10px;gap:5px}
-.pageDots,.searchPill{display:none}
-.dock{width:min(400px,calc(100% - 40px));height:58px;padding:5px 12px}
-.dockIcon{width:43px;height:43px;font-size:22px}
-.homeIndicator{bottom:3px}
-.appWindowContent{padding:48px 34px 24px}
-.appPreview{position:absolute;inset:45px 28% 32px 28%}
-.previewIcon{width:58px;height:58px;border-radius:17px}
-.previewCategory{margin-top:10px!important}
-.appPreview h2{font-size:20px!important}
-.previewDescription{margin-top:5px!important;font-size:11px!important}
-.launchButton{width:170px;margin-left:auto;margin-top:auto;padding:11px}
-.appSwipeHint{display:none}
-.innerContent{padding:52px 20px 20px}
-.innerContent h2{font-size:22px!important}
-.innerIntro{margin:8px 0 14px!important;font-size:11px!important}
-.innerAppList{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
-.innerApp{gap:6px;padding:7px}
-.innerAppIcon{width:32px;height:32px;border-radius:9px}
-.innerApp strong{font-size:10px}
-.innerApp small{font-size:8px}
-.innerApp svg:last-child{width:13px}
-}
-@media(prefers-reduced-motion:reduce){.stage,.device,.innerPanel,.hinge,.foldToggle,.appIcon,.dockIcon,.openArrow,.launchButton{transition:none}.appWindow,.appWindowContent{animation:none!important}
+.stage {
+  width: 100%;
+  max-width: 660px;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
 }
 
-.brightnessShade{position:absolute;z-index:13;inset:0;background:#000;pointer-events:none;transition:opacity .18s ease}
+.device {
+  --leaf: 300px;
+  --edge: 7px;
+  position: relative;
+  width: 320px;
+  height: 540px;
+  flex: none;
+  border: 3px solid #778294;
+  border-radius: 43px;
+  background: #161b27;
+  box-shadow: 0 0 0 1px #121722, 0 32px 70px -25px #131a3970, inset 0 0 0 2px #3d4659;
+  perspective: 1200px;
+  transition: width .82s cubic-bezier(.22,.8,.18,1), box-shadow .82s;
+}
+
+.isOpen {
+  width: 620px;
+  box-shadow: 0 0 0 1px #121722, 0 36px 85px -22px #131a3960, inset 0 0 0 2px #3d4659;
+}
+
+.coverScreen,
+.innerScreen {
+  position: absolute;
+  top: var(--edge);
+  bottom: var(--edge);
+  width: var(--leaf);
+  overflow: hidden;
+  color: #fff;
+  background: radial-gradient(circle at 85% 16%, #708acc 0, transparent 37%),
+    radial-gradient(circle at 10% 88%, #9f6aa3 0, transparent 46%),
+    linear-gradient(155deg, #172846, #2d3e77 56%, #523e76);
+  touch-action: pan-y;
+  overscroll-behavior: contain;
+  user-select: none;
+}
+
+.coverScreen {
+  left: var(--edge);
+  border-radius: 34px;
+}
+
+.isOpen .coverScreen {
+  border-radius: 34px 0 0 34px;
+}
+
+.innerScreen {
+  left: calc(var(--edge) + var(--leaf));
+  border-radius: 0 34px 34px 0;
+  visibility: hidden;
+  transform: rotateY(-89deg);
+  transform-origin: left center;
+  backface-visibility: hidden;
+  box-shadow: inset 18px 0 24px -20px #000;
+  transition: transform .82s cubic-bezier(.22,.8,.18,1), visibility 0s .82s;
+}
+
+.innerScreen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #030714a8, #0f183c70 45%, transparent);
+  opacity: .85;
+  pointer-events: none;
+  transition: opacity .62s cubic-bezier(.22,.8,.18,1);
+}
+
+.isOpen .innerScreen {
+  visibility: visible;
+  transform: rotateY(0);
+  transition: transform .82s cubic-bezier(.22,.8,.18,1), visibility 0s;
+}
+
+.isOpen .innerScreen::after {
+  opacity: 0;
+}
+
+.hinge {
+  position: absolute;
+  z-index: 5;
+  top: 9px;
+  bottom: 9px;
+  left: calc(var(--edge) + var(--leaf) - 1px);
+  width: 3px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #11192b, #7b8497 48%, #1a2438);
+  box-shadow: -3px 0 7px #0007, 3px 0 7px #ffffff24;
+  opacity: .35;
+  pointer-events: none;
+  transition: opacity .4s;
+}
+
+.isOpen .hinge {
+  opacity: 1;
+}
+
+.camera {
+  position: absolute;
+  z-index: 6;
+  top: 17px;
+  left: 128px;
+  width: 64px;
+  height: 17px;
+  border-radius: 12px;
+  background: #080d19;
+  box-shadow: inset 0 1px 2px #000, 0 1px 1px #ffffff22;
+  pointer-events: none;
+}
+
+.coverContent,
+.openContent,
+.innerContent {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.coverContent::-webkit-scrollbar,
+.openContent::-webkit-scrollbar,
+.innerContent::-webkit-scrollbar {
+  display: none;
+}
+
+.coverContent {
+  padding: 74px 22px 28px;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity .28s .3s, visibility 0s .3s;
+}
+
+.contentHidden {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .2s, visibility 0s .2s;
+}
+
+.openContent,
+.innerContent {
+  padding: 68px 22px 28px;
+}
+
+.openContent {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .24s, visibility 0s .24s;
+}
+
+.contentVisible {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity .36s .28s, visibility 0s;
+}
+
+.innerContent {
+  opacity: 0;
+  transition: opacity .3s;
+}
+
+.isOpen .innerContent {
+  opacity: 1;
+  transition: opacity .36s .28s;
+}
+
+.kicker,
+.openHeader {
+  margin: 0 0 12px !important;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  letter-spacing: .18em;
+  color: #dbe4ff !important;
+}
+
+.coverContent h2,
+.openContent h2,
+.innerContent h2 {
+  margin: 0 !important;
+  font-family: Pretendard, -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-size: 27px !important;
+  line-height: 1.2 !important;
+  letter-spacing: -.05em;
+  color: #fff !important;
+}
+
+.count {
+  margin-left: 9px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  letter-spacing: 0;
+  color: #e0e7ff;
+}
+
+.coverGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-content: start;
+  gap: 15px 12px;
+  margin-top: 34px;
+}
+
+.coverApp {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  border: 1px solid #ffffff3a;
+  border-radius: 22px;
+  background: #ffffff1a;
+  padding: 18px 8px 14px;
+  color: #fff !important;
+  text-align: center;
+  text-decoration: none !important;
+  box-shadow: inset 0 1px #ffffff24;
+  transition: background .2s, transform .25s;
+}
+
+.coverApp:hover,
+.coverApp:focus-visible {
+  background: #ffffff2e;
+  transform: translateY(-4px);
+}
+
+.coverIconWrap {
+  position: relative;
+  display: block;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 11px;
+}
+
+.coverIcon {
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  box-shadow: 0 8px 16px #08133160;
+}
+
+.coverArrow {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #fff;
+  padding: 4px;
+  color: #263966;
+  opacity: 0;
+  transform: translate(-4px, 4px) scale(.7);
+  transition: opacity .2s, transform .25s;
+}
+
+.coverApp:hover .coverArrow,
+.coverApp:focus-visible .coverArrow {
+  opacity: 1;
+  transform: translate(0, 0) scale(1);
+}
+
+.coverApp strong {
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 12px;
+}
+
+.coverApp small {
+  margin-top: 4px;
+  font-size: 9px;
+  letter-spacing: .1em;
+  color: #d9e0fa;
+}
+
+.moreApps,
+.coverHint,
+.empty {
+  font-size: 11px !important;
+  line-height: 1.5 !important;
+  color: #e0e6fa !important;
+}
+
+.moreApps {
+  margin: 16px 0 0 !important;
+  text-align: center;
+}
+
+.coverHint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: auto 0 0 !important;
+  padding-top: 18px;
+}
+
+.mobileHint {
+  display: none;
+}
+
+.openHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.openHeader strong {
+  font-size: 10px;
+  letter-spacing: .06em;
+}
+
+.appList {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  gap: 14px;
+  min-height: 0;
+  padding-block: 18px;
+}
+
+.appCard {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid #ffffff4a;
+  border-radius: 20px;
+  background: #ffffff20;
+  padding: 15px 12px;
+  color: #fff !important;
+  text-decoration: none !important;
+  box-shadow: 0 12px 24px #0b173a25, inset 0 1px #ffffff2b;
+  transition: background .2s, transform .25s, box-shadow .25s;
+}
+
+.appCard:hover,
+.appCard:focus-visible {
+  background: #ffffff32;
+  transform: translateY(-3px);
+  box-shadow: 0 18px 28px #0b173a40, inset 0 1px #ffffff42;
+}
+
+.cardIcon {
+  width: 56px;
+  height: 56px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: 15px;
+}
+
+.cardCopy {
+  min-width: 0;
+  flex: 1;
+}
+
+.cardCopy small,
+.cardCopy strong,
+.cardCopy span {
+  display: block;
+}
+
+.cardCopy small {
+  margin-bottom: 4px;
+  font-size: 9px;
+  letter-spacing: .12em;
+  color: #dce3ff;
+}
+
+.cardCopy strong {
+  font-size: 13px;
+  line-height: 1.25;
+  color: #fff;
+}
+
+.cardCopy span {
+  display: -webkit-box;
+  overflow: hidden;
+  margin-top: 5px;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  font-size: 10px;
+  line-height: 1.45;
+  color: #e5eafb;
+}
+
+.cardArrow {
+  align-self: flex-start;
+  flex: none;
+  color: #f4f6ff;
+}
+
+.foldToggle {
+  position: absolute;
+  z-index: 10;
+  top: 50%;
+  right: -28px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transform: translate(-8px, -50%) scale(.88);
+  border: 1px solid #d8dfeb;
+  border-radius: 999px;
+  background: #fff;
+  padding: 10px 11px;
+  color: #263966;
+  box-shadow: 0 12px 28px #0b173a50;
+  opacity: 0;
+  pointer-events: none;
+  cursor: pointer;
+  transition: opacity .2s, transform .25s;
+}
+
+.foldToggle span {
+  max-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 11px;
+  font-weight: 700;
+  transition: max-width .2s;
+}
+
+.device:hover .foldToggle,
+.foldToggle:focus-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(0, -50%) scale(1);
+}
+
+.device:hover .foldToggle span,
+.foldToggle:focus-visible span {
+  max-width: 40px;
+}
+
+.instructions {
+  margin: 0 !important;
+  color: var(--secondary) !important;
+  text-align: center;
+  font-size: 11px !important;
+  line-height: 1.5 !important;
+}
+
+@media (hover: none) {
+  .foldToggle {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate(0, -50%) scale(1);
+  }
+}
+
+@media (max-width: 767px), (max-width: 900px) and (max-height: 500px) and (orientation: landscape) {
+  .stage {
+    position: fixed;
+    z-index: 1000;
+    inset: 0;
+    max-width: none;
+    width: 100vw;
+    height: 100dvh;
+    gap: 0;
+    background: #172846;
+  }
+
+  .device,
+  .isOpen {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .coverScreen {
+    inset: 0;
+    width: 100%;
+    border-radius: 0;
+  }
+
+  .isOpen .coverScreen {
+    width: 50%;
+    border-radius: 0;
+  }
+
+  .innerScreen {
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 50%;
+    border-radius: 0;
+  }
+
+  .hinge {
+    top: 0;
+    bottom: 0;
+    left: 50%;
+  }
+
+  .camera {
+    top: max(13px, env(safe-area-inset-top));
+    left: calc(50% - 32px);
+  }
+
+  .isOpen .camera {
+    left: calc(25% - 32px);
+  }
+
+  .coverContent,
+  .openContent,
+  .innerContent {
+    padding-top: max(72px, calc(env(safe-area-inset-top) + 58px));
+    padding-bottom: max(28px, calc(env(safe-area-inset-bottom) + 22px));
+  }
+
+  .foldToggle,
+  .instructions {
+    display: none;
+  }
+
+  .desktopHint {
+    display: none;
+  }
+
+  .mobileHint {
+    display: inline;
+  }
+}
+
+@media (max-width: 900px) and (max-height: 500px) and (orientation: landscape) {
+  .openContent,
+  .innerContent {
+    padding: 45px 20px 18px;
+  }
+
+  .openContent h2,
+  .innerContent h2 {
+    font-size: 20px !important;
+  }
+
+  .appList {
+    gap: 8px;
+    padding-block: 10px;
+  }
+
+  .appCard {
+    gap: 9px;
+    padding: 9px;
+  }
+
+  .cardIcon {
+    width: 41px;
+    height: 41px;
+    border-radius: 11px;
+  }
+
+  .cardCopy span {
+    -webkit-line-clamp: 1;
+  }
+
+  .camera {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .device,
+  .innerScreen,
+  .innerScreen::after,
+  .hinge,
+  .coverContent,
+  .openContent,
+  .innerContent,
+  .coverApp,
+  .coverArrow,
+  .appCard,
+  .foldToggle {
+    transition: none !important;
+  }
+}
