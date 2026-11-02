@@ -24,12 +24,12 @@ export default async function AppsPage() {
         <div className="mx-auto max-w-xl text-center lg:mx-0 lg:text-left">
           <p className="mb-4 font-mono text-xs font-semibold tracking-[0.24em] text-[var(--secondary)]">HAE02Y / APP COLLECTION</p>
           <h1 className="mb-5 text-4xl font-bold tracking-tight sm:text-5xl">만든 앱들</h1>
-          <p className="text-base leading-8 text-[var(--secondary)]">아이폰 홈 화면처럼 앱을 둘러보고, 아이콘을 눌러 바로 실행해 보세요. 왼쪽으로 밀면 앱 보관함, 아래로 내리면 검색, 오른쪽 상단을 내리면 제어 센터가 열립니다.</p>
+          <p className="text-base leading-8 text-[var(--secondary)]">아이폰 홈 화면처럼 앱을 둘러보세요. 아이콘에 마우스를 올리면 실행 화살표가 나타나고, 누르면 앱 화면이 열립니다. 모바일에서는 화면을 가득 채우고 가로 방향에서도 사용할 수 있습니다.</p>
           <div className="mt-8 flex flex-wrap justify-center gap-5 font-mono text-xs font-semibold tracking-wide lg:justify-start">
             <Link href="/about/?tab=portfolio" className="underline underline-offset-4 hover:opacity-70">프로젝트 자세히 보기</Link>
             <Link href="/blog/" className="underline underline-offset-4 hover:opacity-70">개발 기록 읽기</Link>
           </div>
-          <p className="mt-9 text-xs text-[var(--secondary)]">아이콘 실행 · 좌우 스와이프 · 아래로 검색 · 오른쪽 상단에서 제어 센터 · 위로 홈</p>
+          <p className="mt-9 text-xs text-[var(--secondary)]">아이콘 열기 · 좌우 스와이프 · 아래로 검색 · 오른쪽 상단에서 제어 센터 · 위로 홈</p>
         </div>
         <PhoneLauncher apps={launcherApps} />
       </div>
