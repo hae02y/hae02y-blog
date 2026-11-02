@@ -20,16 +20,16 @@ export default async function AppsPage() {
 
   return (
     <main className="mx-auto max-w-6xl px-4 pb-24 pt-14 text-[var(--primary)] md:pt-20">
-      <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_430px] lg:gap-16">
+      <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(320px,660px)] lg:gap-8">
         <div className="mx-auto max-w-xl text-center lg:mx-0 lg:text-left">
           <p className="mb-4 font-mono text-xs font-semibold tracking-[0.24em] text-[var(--secondary)]">HAE02Y / APP COLLECTION</p>
           <h1 className="mb-5 text-4xl font-bold tracking-tight sm:text-5xl">만든 앱들</h1>
-          <p className="text-base leading-8 text-[var(--secondary)]">아이폰 홈 화면처럼 앱을 둘러보세요. 아이콘에 마우스를 올리면 실행 화살표가 나타나고, 누르면 앱 화면이 열립니다. 모바일에서는 화면을 가득 채우고 가로 방향에서도 사용할 수 있습니다.</p>
+          <p className="text-base leading-8 text-[var(--secondary)]">접힌 화면에 마우스를 올려 나타나는 화살표를 누르면, 듀오처럼 펼쳐져 앱들이 넓은 화면에 나타납니다. 모바일에서는 화면만 표시하고, 가로로 돌리면 펼쳐진 화면으로 전환됩니다.</p>
           <div className="mt-8 flex flex-wrap justify-center gap-5 font-mono text-xs font-semibold tracking-wide lg:justify-start">
             <Link href="/about/?tab=portfolio" className="underline underline-offset-4 hover:opacity-70">프로젝트 자세히 보기</Link>
             <Link href="/blog/" className="underline underline-offset-4 hover:opacity-70">개발 기록 읽기</Link>
           </div>
-          <p className="mt-9 text-xs text-[var(--secondary)]">아이콘 열기 · 좌우 스와이프 · 아래로 검색 · 오른쪽 상단에서 제어 센터 · 위로 홈</p>
+          <p className="mt-9 text-xs text-[var(--secondary)]">화살표로 펼치기 · 좌우 스와이프 · 앱 실행 · 위로 홈</p>
         </div>
         <PhoneLauncher apps={launcherApps} />
       </div>

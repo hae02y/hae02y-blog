@@ -1,10 +1,36 @@
-.stage{width:100%;max-width:390px;margin-inline:auto;display:flex;align-items:center;flex-direction:column;gap:15px}
-.device{position:relative;width:min(100%,320px);aspect-ratio:390/824;border:3px solid #878f9e;border-radius:53px;background:#171a21;padding:7px;box-shadow:0 0 0 1px #1b202b,0 24px 52px -16px rgba(6,9,28,.38),0 54px 110px -40px rgba(12,14,35,.45),inset 0 0 0 2px #3a4150}
+.stage{width:100%;max-width:390px;margin-inline:auto;display:flex;align-items:center;flex-direction:column;gap:15px;transition:max-width .7s cubic-bezier(.2,.75,.2,1)}
+.stageOpen{max-width:660px}
+.device{position:relative;width:min(100%,320px);height:560px;border:3px solid #878f9e;border-radius:53px;background:#171a21;padding:7px;box-shadow:0 0 0 1px #1b202b,0 24px 52px -16px rgba(6,9,28,.38),0 54px 110px -40px rgba(12,14,35,.45),inset 0 0 0 2px #3a4150;perspective:1200px;transition:width .75s cubic-bezier(.22,.72,.19,1),border-radius .75s cubic-bezier(.22,.72,.19,1),box-shadow .75s}
+.duoOpen{width:min(100%,640px);border-radius:42px;box-shadow:0 0 0 1px #12141b,0 32px 65px -16px rgba(6,9,28,.32),0 60px 120px -40px rgba(12,14,35,.3),inset 0 0 0 2px #3a4150}
 .device:before{content:"";position:absolute;inset:3px;border:1px solid rgba(255,255,255,.15);border-radius:54px;pointer-events:none;z-index:20}
+.duoOpen:before{border-radius:40px}
 .powerButton{position:absolute;right:-6px;top:22%;width:4px;height:75px;border-radius:0 4px 4px 0;background:linear-gradient(#8f96a3,#303641);cursor:pointer}
 .volumeButtons{position:absolute;left:-6px;top:18%;display:grid;gap:16px}
 .volumeButtons i{display:block;width:4px;height:46px;border-radius:4px 0 0 4px;background:linear-gradient(#8f96a3,#303641)}
-.screen{position:relative;height:100%;overflow:hidden;border-radius:43px;background:#071122;color:#fff;isolation:isolate;touch-action:pan-y;overscroll-behavior:contain;user-select:none}
+.screen{position:relative;width:100%;height:100%;overflow:hidden;border-radius:43px;background:#071122;color:#fff;isolation:isolate;touch-action:pan-y;overscroll-behavior:contain;user-select:none}
+.duoOpen .screen{width:calc(50% - 1px);border-radius:34px 0 0 34px}
+.foldToggle{position:absolute;z-index:30;top:50%;right:-26px;display:flex;align-items:center;gap:7px;transform:translate(-7px,-50%) scale(.88);border:1px solid #d9deec;border-radius:999px;background:#fff;padding:10px 11px;color:#1c2852;box-shadow:0 12px 28px #0c163454;opacity:0;pointer-events:none;cursor:pointer;transition:opacity .2s,transform .25s ease}
+.foldToggle span{max-width:0;overflow:hidden;white-space:nowrap;font-size:11px;font-weight:700;transition:max-width .25s}
+.device:hover .foldToggle,.foldToggle:focus-visible{opacity:1;pointer-events:auto;transform:translate(0,-50%) scale(1)}
+.device:hover .foldToggle span,.foldToggle:focus-visible span{max-width:40px}
+.innerPanel{position:absolute;top:7px;right:7px;bottom:7px;width:calc(50% - 7px);overflow:hidden;border-radius:0 34px 34px 0;background:linear-gradient(155deg,#162444,#2d3b76 56%,#503c77);color:#fff;opacity:0;visibility:hidden;transform:rotateY(-88deg);transform-origin:left center;backface-visibility:hidden;pointer-events:none;box-shadow:inset 12px 0 18px -14px #000;transition:transform .72s cubic-bezier(.22,.72,.19,1),opacity .15s .45s,visibility 0s .72s}
+.duoOpen .innerPanel{opacity:1;visibility:visible;transform:rotateY(0);pointer-events:auto;transition:transform .72s cubic-bezier(.22,.72,.19,1),opacity .15s,visibility 0s}
+.innerGlow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 84% 8%,#7694de77,transparent 37%),radial-gradient(circle at 20% 88%,#a267aa66,transparent 48%)}
+.innerContent{position:relative;height:100%;overflow-y:auto;padding:66px 26px 38px;scrollbar-width:none}
+.innerContent::-webkit-scrollbar{display:none}
+.innerKicker{margin:0 0 12px!important;font-family:ui-monospace,SFMono-Regular,Menlo,monospace!important;font-size:10px!important;font-weight:700!important;letter-spacing:.19em;color:#d8e1ff!important}
+.innerContent h2{margin:0!important;font-family:Pretendard,-apple-system,BlinkMacSystemFont,sans-serif!important;font-size:30px!important;line-height:1.18!important;letter-spacing:-.05em;color:#fff!important}
+.innerIntro{margin:14px 0 30px!important;font-size:12px!important;line-height:1.65!important;color:#d9e1f7!important}
+.innerAppList{display:flex;flex-direction:column;gap:8px}
+.innerApp{display:flex;align-items:center;gap:12px;border:1px solid #ffffff2d;border-radius:17px;background:#ffffff19;padding:10px;text-decoration:none!important;transition:background .2s,transform .2s}
+.innerApp:hover,.innerApp:focus-visible{background:#ffffff30;transform:translateX(3px)}
+.innerAppIcon{width:45px;height:45px;flex:none;display:grid;place-items:center;border-radius:12px}
+.innerApp span:nth-child(2){min-width:0;flex:1}
+.innerApp strong{display:block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:13px;color:#fff}
+.innerApp small{display:block;margin-top:3px;font-size:9px;letter-spacing:.12em;color:#d8dffc}
+.innerApp svg:last-child{flex:none;color:#e2e9ff}
+.hinge{position:absolute;z-index:10;top:9px;bottom:9px;left:50%;width:3px;transform:translateX(-50%);border-radius:5px;background:linear-gradient(90deg,#050713,#596276,#141b2d);box-shadow:-3px 0 6px #0005,3px 0 8px #fff2;opacity:0;pointer-events:none;transition:opacity .2s}
+.duoOpen .hinge{opacity:1;transition-delay:.35s}
 .screen *{box-sizing:border-box}
 .screen p,.screen a,.screen button{color:inherit}
 .screen button{cursor:pointer}
@@ -128,8 +154,11 @@
 @media(max-width:767px), (max-width:900px) and (max-height:500px) and (orientation:landscape){
 .stage{position:fixed;z-index:1000;inset:0;max-width:none;width:100vw;height:100dvh;gap:0;background:#071122}
 .device{width:100%;height:100%;aspect-ratio:auto;border:0;border-radius:0;padding:0;box-shadow:none}
-.device:before,.powerButton,.volumeButtons,.phoneHints{display:none}
+.device:before,.powerButton,.volumeButtons,.phoneHints,.foldToggle{display:none}
 .screen{border-radius:0}
+.duoOpen .screen{width:50%;border-radius:0}
+.innerPanel{top:0;right:0;bottom:0;width:50%;border-radius:0}
+.hinge{top:0;bottom:0}
 .island{top:max(10px,env(safe-area-inset-top))}
 .statusBar{top:max(13px,env(safe-area-inset-top))}
 .homeScreen,.libraryScreen,.searchScreen,.controlScreen{padding-top:max(67px,calc(env(safe-area-inset-top) + 55px));padding-bottom:calc(145px + env(safe-area-inset-bottom))}
@@ -139,6 +168,11 @@
 }
 @media(max-width:900px) and (max-height:500px) and (orientation:landscape){
 .homeScreen{display:grid;grid-template-columns:minmax(165px,36%) minmax(0,1fr);align-content:start;gap:18px;padding:55px 28px 92px}
+.duoOpen .homeScreen{display:flex;gap:14px;padding:48px 18px 80px}
+.duoOpen .heroWidget{min-height:120px}
+.duoOpen .appGrid{column-gap:8px;row-gap:10px}
+.duoOpen .appIcon{max-width:45px}
+.duoOpen .appName{font-size:9px}
 .heroWidget{min-height:145px}
 .heroWidget .widgetTime{font-size:38px}
 .appGrid{align-content:start;column-gap:12px;row-gap:17px}
@@ -155,8 +189,17 @@
 .previewDescription{margin-top:5px!important;font-size:11px!important}
 .launchButton{width:170px;margin-left:auto;margin-top:auto;padding:11px}
 .appSwipeHint{display:none}
+.innerContent{padding:52px 20px 20px}
+.innerContent h2{font-size:22px!important}
+.innerIntro{margin:8px 0 14px!important;font-size:11px!important}
+.innerAppList{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.innerApp{gap:6px;padding:7px}
+.innerAppIcon{width:32px;height:32px;border-radius:9px}
+.innerApp strong{font-size:10px}
+.innerApp small{font-size:8px}
+.innerApp svg:last-child{width:13px}
 }
-@media(prefers-reduced-motion:reduce){.appIcon,.dockIcon,.openArrow,.launchButton{transition:none}.appWindow,.appWindowContent{animation:none!important}
+@media(prefers-reduced-motion:reduce){.stage,.device,.innerPanel,.hinge,.foldToggle,.appIcon,.dockIcon,.openArrow,.launchButton{transition:none}.appWindow,.appWindowContent{animation:none!important}
 }
 
 .brightnessShade{position:absolute;z-index:13;inset:0;background:#000;pointer-events:none;transition:opacity .18s ease}
