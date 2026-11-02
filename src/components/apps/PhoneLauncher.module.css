@@ -202,59 +202,92 @@
   color: #e0e7ff;
 }
 
-.coverGrid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  align-content: start;
-  gap: 15px 12px;
-  margin-top: 34px;
+.searchBox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 19px;
+  border: 1px solid #ffffff30;
+  border-radius: 12px;
+  background: #ffffff1b;
+  padding: 9px 11px;
+  color: #e6eaff;
 }
 
-.coverApp {
+.searchBox input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #fff;
+  font-size: 12px;
+}
+
+.searchBox input::placeholder {
+  color: #d3dcf0;
+}
+
+.appGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-content: start;
+  gap: 20px 7px;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  margin-top: 22px;
+  padding: 5px 2px 15px;
+  scrollbar-color: #ffffff66 transparent;
+  scrollbar-width: thin;
+}
+
+.openContent .appGrid,
+.innerContent .appGrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px 10px;
+}
+
+.appTile {
   min-width: 0;
   display: flex;
   align-items: center;
   flex-direction: column;
-  border: 1px solid #ffffff3a;
-  border-radius: 22px;
-  background: #ffffff1a;
-  padding: 18px 8px 14px;
+  gap: 7px;
   color: #fff !important;
   text-align: center;
   text-decoration: none !important;
-  box-shadow: inset 0 1px #ffffff24;
-  transition: background .2s, transform .25s;
 }
 
-.coverApp:hover,
-.coverApp:focus-visible {
-  background: #ffffff2e;
-  transform: translateY(-4px);
-}
-
-.coverIconWrap {
+.iconWrap {
   position: relative;
   display: block;
-  width: 64px;
-  height: 64px;
-  margin-bottom: 11px;
+  width: min(100%, 55px);
+  aspect-ratio: 1;
+  flex: none;
 }
 
-.coverIcon {
-  width: 64px;
-  height: 64px;
+.appIcon {
+  width: 100%;
+  height: 100%;
   display: grid;
   place-items: center;
-  border-radius: 18px;
-  box-shadow: 0 8px 16px #08133160;
+  border-radius: 15px;
+  box-shadow: 0 7px 15px #08133160, inset 0 1px #ffffff55;
+  transition: transform .2s;
 }
 
-.coverArrow {
+.appTile:hover .appIcon,
+.appTile:focus-visible .appIcon {
+  transform: scale(1.07);
+}
+
+.appArrow {
   position: absolute;
-  top: -7px;
-  right: -7px;
-  width: 25px;
-  height: 25px;
+  top: -6px;
+  right: -6px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   background: #fff;
   padding: 4px;
@@ -264,28 +297,25 @@
   transition: opacity .2s, transform .25s;
 }
 
-.coverApp:hover .coverArrow,
-.coverApp:focus-visible .coverArrow {
+.appTile:hover .appArrow,
+.appTile:focus-visible .appArrow {
   opacity: 1;
   transform: translate(0, 0) scale(1);
 }
 
-.coverApp strong {
-  max-width: 100%;
+.appTile strong {
+  display: -webkit-box;
   overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  font-size: 12px;
+  max-width: 100%;
+  min-height: 2.5em;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  font-size: 11px;
+  font-weight: 550;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
 }
 
-.coverApp small {
-  margin-top: 4px;
-  font-size: 9px;
-  letter-spacing: .1em;
-  color: #d9e0fa;
-}
-
-.moreApps,
 .coverHint,
 .empty {
   font-size: 11px !important;
@@ -293,9 +323,9 @@
   color: #e0e6fa !important;
 }
 
-.moreApps {
-  margin: 16px 0 0 !important;
-  text-align: center;
+.empty {
+  grid-column: 1 / -1;
+  margin: 0 !important;
 }
 
 .coverHint {
@@ -322,85 +352,10 @@
   letter-spacing: .06em;
 }
 
-.appList {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  justify-content: center;
-  gap: 14px;
-  min-height: 0;
-  padding-block: 18px;
-}
-
-.appCard {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  border: 1px solid #ffffff4a;
-  border-radius: 20px;
-  background: #ffffff20;
-  padding: 15px 12px;
-  color: #fff !important;
-  text-decoration: none !important;
-  box-shadow: 0 12px 24px #0b173a25, inset 0 1px #ffffff2b;
-  transition: background .2s, transform .25s, box-shadow .25s;
-}
-
-.appCard:hover,
-.appCard:focus-visible {
-  background: #ffffff32;
-  transform: translateY(-3px);
-  box-shadow: 0 18px 28px #0b173a40, inset 0 1px #ffffff42;
-}
-
-.cardIcon {
-  width: 56px;
-  height: 56px;
-  flex: none;
-  display: grid;
-  place-items: center;
-  border-radius: 15px;
-}
-
-.cardCopy {
-  min-width: 0;
-  flex: 1;
-}
-
-.cardCopy small,
-.cardCopy strong,
-.cardCopy span {
-  display: block;
-}
-
-.cardCopy small {
-  margin-bottom: 4px;
-  font-size: 9px;
-  letter-spacing: .12em;
-  color: #dce3ff;
-}
-
-.cardCopy strong {
-  font-size: 13px;
-  line-height: 1.25;
-  color: #fff;
-}
-
-.cardCopy span {
-  display: -webkit-box;
-  overflow: hidden;
-  margin-top: 5px;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  font-size: 10px;
-  line-height: 1.45;
-  color: #e5eafb;
-}
-
-.cardArrow {
-  align-self: flex-start;
-  flex: none;
-  color: #f4f6ff;
+.innerCount {
+  margin: 20px 0 0 !important;
+  font-size: 11px !important;
+  color: #dfe6ff !important;
 }
 
 .foldToggle {
@@ -548,24 +503,21 @@
     font-size: 20px !important;
   }
 
-  .appList {
-    gap: 8px;
-    padding-block: 10px;
+  .openContent .appGrid,
+  .innerContent .appGrid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px 8px;
+    margin-top: 12px;
   }
 
-  .appCard {
-    gap: 9px;
-    padding: 9px;
+  .openContent .iconWrap,
+  .innerContent .iconWrap {
+    width: min(100%, 44px);
   }
 
-  .cardIcon {
-    width: 41px;
-    height: 41px;
-    border-radius: 11px;
-  }
-
-  .cardCopy span {
-    -webkit-line-clamp: 1;
+  .openContent .appTile strong,
+  .innerContent .appTile strong {
+    font-size: 10px;
   }
 
   .camera {
@@ -581,9 +533,8 @@
   .coverContent,
   .openContent,
   .innerContent,
-  .coverApp,
-  .coverArrow,
-  .appCard,
+  .appIcon,
+  .appArrow,
   .foldToggle {
     transition: none !important;
   }

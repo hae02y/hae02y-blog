@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { ArrowUpRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
+import { ArrowUpRight, ChevronsLeft, ChevronsRight, Search } from 'lucide-react';
 import AppIcon from './AppIcon';
 import styles from './PhoneLauncher.module.css';
 
@@ -20,10 +20,12 @@ type GestureStart = { x: number; y: number; interactive: boolean };
 
 export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
   const [isUnfolded, setIsUnfolded] = useState(false);
+  const [query, setQuery] = useState('');
   const gestureStart = useRef<GestureStart | null>(null);
-  const splitIndex = Math.ceil(apps.length / 2);
-  const leftApps = apps.slice(0, splitIndex);
-  const rightApps = apps.slice(splitIndex);
+  const filteredApps = apps.filter(app => `${app.name} ${app.shortName} ${app.category} ${app.description}`.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()));
+  const splitIndex = Math.ceil(filteredApps.length / 2);
+  const leftApps = filteredApps.slice(0, splitIndex);
+  const rightApps = filteredApps.slice(splitIndex);
 
   useEffect(() => {
     const landscape = window.matchMedia('(max-width: 900px) and (orientation: landscape)');
@@ -51,7 +53,7 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
         gestureStart.current = {
           x: event.clientX,
           y: event.clientY,
-          interactive: Boolean((event.target as HTMLElement).closest('a, button')),
+          interactive: Boolean((event.target as HTMLElement).closest('a, button, input, label')),
         };
       },
       onPointerUp: (event: React.PointerEvent<HTMLDivElement>) => {
@@ -61,7 +63,7 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
         gestureStart.current = {
           x: event.touches[0].clientX,
           y: event.touches[0].clientY,
-          interactive: Boolean((event.target as HTMLElement).closest('a, button')),
+          interactive: Boolean((event.target as HTMLElement).closest('a, button, input, label')),
         };
       },
       onTouchEnd: (event: React.TouchEvent<HTMLDivElement>) => {
@@ -70,16 +72,22 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
     };
   }
 
-  const appCard = (app: LauncherApp) => (
-    <a key={app.id} className={styles.appCard} href={app.href} target="_blank" rel="noopener noreferrer" aria-label={`${app.name} 열기 (새 탭)`}>
-      <AppIcon icon={app.icon} image={app.iconImage} iconSize={26} className={styles.cardIcon} />
-      <span className={styles.cardCopy}>
-        <small>{app.category}</small>
-        <strong>{app.name}</strong>
-        <span>{app.description}</span>
+  const appTile = (app: LauncherApp, visible: boolean) => (
+    <a key={app.id} className={styles.appTile} href={app.href} target="_blank" rel="noopener noreferrer" aria-label={`${app.name} 열기 (새 탭)`} title={app.name} tabIndex={visible ? 0 : -1}>
+      <span className={styles.iconWrap}>
+        <AppIcon icon={app.icon} image={app.iconImage} iconSize={30} className={styles.appIcon} />
+        <ArrowUpRight className={styles.appArrow} size={16} aria-hidden="true" />
       </span>
-      <ArrowUpRight className={styles.cardArrow} size={18} aria-hidden="true" />
+      <strong>{app.shortName || app.name}</strong>
     </a>
+  );
+
+  const searchBox = (label: string, visible: boolean) => (
+    <label className={styles.searchBox}>
+      <Search size={15} aria-hidden="true" />
+      <span className="sr-only">{label}</span>
+      <input value={query} onChange={event => setQuery(event.target.value)} placeholder="앱 검색" aria-label={label} tabIndex={visible ? 0 : -1} />
+    </label>
   );
 
   return (
@@ -90,36 +98,30 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
           <div className={`${styles.coverContent}${isUnfolded ? ` ${styles.contentHidden}` : ''}`} aria-hidden={isUnfolded}>
             <p className={styles.kicker}>HAE02Y / APPS</p>
             <h2>만든 앱들<span className={styles.count}>{apps.length}</span></h2>
-            <div className={styles.coverGrid}>
-              {apps.slice(0, 6).map(app => (
-                <a key={app.id} className={styles.coverApp} href={app.href} target="_blank" rel="noopener noreferrer" aria-label={`${app.name} 열기 (새 탭)`}>
-                  <span className={styles.coverIconWrap}>
-                    <AppIcon icon={app.icon} image={app.iconImage} iconSize={31} className={styles.coverIcon} />
-                    <ArrowUpRight className={styles.coverArrow} size={17} aria-hidden="true" />
-                  </span>
-                  <strong>{app.shortName || app.name}</strong>
-                  <small>{app.category}</small>
-                </a>
-              ))}
-              {apps.length === 0 && <p className={styles.empty}>아직 공개된 앱이 없습니다.</p>}
+            {searchBox('접힌 화면에서 앱 검색', !isUnfolded)}
+            <div className={styles.appGrid}>
+              {filteredApps.map(app => appTile(app, !isUnfolded))}
+              {filteredApps.length === 0 && <p className={styles.empty}>{apps.length === 0 ? '아직 공개된 앱이 없습니다.' : '검색 결과가 없습니다.'}</p>}
             </div>
-            {apps.length > 6 && <p className={styles.moreApps}>펼치면 모든 앱을 볼 수 있습니다.</p>}
             <p className={styles.coverHint}><span className={styles.desktopHint}>화면을 오른쪽으로 밀어 펼치기</span><span className={styles.mobileHint}>가로로 돌려 펼치기</span><ChevronsRight size={16} aria-hidden="true" /></p>
           </div>
           <div className={`${styles.openContent}${isUnfolded ? ` ${styles.contentVisible}` : ''}`} aria-hidden={!isUnfolded}>
-            <div className={styles.openHeader}><span>01 / APPS</span><strong>{apps.length} APPS</strong></div>
-            <h2>앱을 펼쳐보다.</h2>
-            <div className={styles.appList}>{leftApps.map(appCard)}</div>
-            {apps.length === 0 && <p className={styles.empty}>아직 공개된 앱이 없습니다.</p>}
+            <div className={styles.openHeader}><span>HAE02Y / APPS</span><strong>{filteredApps.length} APPS</strong></div>
+            <h2>만든 앱들</h2>
+            {searchBox('펼친 화면에서 앱 검색', isUnfolded)}
+            <div className={styles.appGrid}>
+              {leftApps.map(app => appTile(app, isUnfolded))}
+              {filteredApps.length === 0 && <p className={styles.empty}>{apps.length === 0 ? '아직 공개된 앱이 없습니다.' : '검색 결과가 없습니다.'}</p>}
+            </div>
           </div>
         </div>
         <div className={styles.hinge} aria-hidden="true" />
         <div className={styles.innerScreen} aria-hidden={!isUnfolded} {...gestureHandlers()}>
           <div className={styles.innerContent}>
-            <div className={styles.openHeader}><span>02 / COLLECTION</span><ArrowUpRight size={16} aria-hidden="true" /></div>
-            <h2>지금 열어볼 앱.</h2>
-            <div className={styles.appList}>{rightApps.map(appCard)}</div>
-            {rightApps.length === 0 && <p className={styles.empty}>왼쪽 화면에서 앱을 살펴보세요.</p>}
+            <div className={styles.openHeader}><span>APP COLLECTION</span><ArrowUpRight size={16} aria-hidden="true" /></div>
+            <h2>앱 목록</h2>
+            <p className={styles.innerCount}>{filteredApps.length}개 앱을 둘러보세요.</p>
+            <div className={styles.appGrid}>{rightApps.map(app => appTile(app, isUnfolded))}</div>
           </div>
         </div>
         <button

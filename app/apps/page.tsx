@@ -23,7 +23,7 @@ export default async function AppsPage() {
       <div className="mx-auto mb-10 max-w-xl text-center">
         <p className="mb-4 font-mono text-xs font-semibold tracking-[0.24em] text-[var(--secondary)]">HAE02Y / APP COLLECTION</p>
         <h1 className="mb-4 text-4xl font-bold tracking-tight sm:text-5xl">만든 앱들</h1>
-        <p className="text-sm leading-7 text-[var(--secondary)]">앱을 둘러보고 바로 열어보세요. 화면을 펼치면 각 앱을 더 자세히 볼 수 있습니다.</p>
+        <p className="text-sm leading-7 text-[var(--secondary)]">모든 앱을 아이콘으로 둘러보고 바로 열어보세요. 화면을 펼치거나 검색해서 앱을 찾을 수 있습니다.</p>
         <div className="mt-5 flex flex-wrap justify-center gap-5 font-mono text-xs font-semibold tracking-wide">
             <Link href="/about/?tab=portfolio" className="underline underline-offset-4 hover:opacity-70">프로젝트 자세히 보기</Link>
             <Link href="/blog/" className="underline underline-offset-4 hover:opacity-70">개발 기록 읽기</Link>
