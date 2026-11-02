@@ -1,7 +1,11 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowUpRight, Dices, FlaskConical } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
+import AppIcon from '@/components/apps/AppIcon';
 import { siteConfig } from '@/config/site';
+import { getPublishedApps } from '@/lib/apps';
+
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: 'Apps by hae02y',
@@ -9,28 +13,8 @@ export const metadata: Metadata = {
   alternates: { canonical: `${siteConfig.url}/apps/` },
 };
 
-const apps = [
-  {
-    name: 'HundredApp',
-    shortName: 'Hundred',
-    description: '룰렛과 랜덤 선택 기능을 담은 멀티테넌트 웹앱',
-    href: 'https://hundred-app.vercel.app/',
-    category: 'WEB APP',
-    icon: Dices,
-    iconColor: 'from-violet-500 via-fuchsia-500 to-pink-500',
-  },
-  {
-    name: 'Hae02y Lab',
-    shortName: 'Lab',
-    description: '바이브코딩 아이디어를 만들고 시험하는 연구소',
-    href: 'https://ground.hae02y.me/',
-    category: 'LAB',
-    icon: FlaskConical,
-    iconColor: 'from-cyan-400 via-sky-500 to-indigo-600',
-  },
-] as const;
-
-export default function AppsPage() {
+export default async function AppsPage() {
+  const apps = await getPublishedApps();
   return (
     <main className="mx-auto max-w-5xl px-4 pb-24 pt-16 text-[var(--primary)] md:pt-24">
       <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_390px] lg:gap-20">
@@ -66,16 +50,14 @@ export default function AppsPage() {
 
               <div className="relative z-10 mt-9 grid grid-cols-4 gap-x-3 gap-y-7">
                 {apps.map(app => {
-                  const Icon = app.icon;
                   return (
-                    <a key={app.href} href={app.href} target="_blank" rel="noopener noreferrer" aria-label={`${app.name} 열기 (새 탭)`} className="group flex min-w-0 flex-col items-center gap-2 text-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">
-                      <span className={`flex aspect-square w-full max-w-16 items-center justify-center rounded-[1.35rem] bg-gradient-to-br ${app.iconColor} text-white shadow-lg transition-transform duration-200 group-hover:-translate-y-1 group-active:scale-95`}>
-                        <Icon size={30} strokeWidth={1.8} aria-hidden="true" />
-                      </span>
+                    <a key={app.id} href={app.href} target="_blank" rel="noopener noreferrer" aria-label={`${app.name} 열기 (새 탭)`} className="group flex min-w-0 flex-col items-center gap-2 text-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">
+                      <AppIcon icon={app.icon} image={app.iconImage} iconSize={30} className="flex aspect-square w-full max-w-16 items-center justify-center rounded-[1.35rem] shadow-lg transition-transform duration-200 group-hover:-translate-y-1 group-active:scale-95" />
                       <span className="w-full truncate text-[11px] font-medium !text-white drop-shadow">{app.shortName}</span>
                     </a>
                   );
                 })}
+                {apps.length === 0 && <p className="col-span-4 text-center text-sm !text-white/70">곧 새로운 앱을 소개할게요.</p>}
               </div>
 
               <div className="relative z-10 mt-auto pt-10">
@@ -97,10 +79,9 @@ export default function AppsPage() {
         <h2 id="apps-list-title" className="mb-7 text-2xl font-bold">앱 바로가기</h2>
         <div className="grid gap-4 sm:grid-cols-2">
           {apps.map(app => {
-            const Icon = app.icon;
             return (
-              <a key={app.href} href={app.href} target="_blank" rel="noopener noreferrer" className="group flex items-start gap-4 rounded-2xl border border-black/10 p-5 transition-colors hover:bg-black/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 dark:border-white/15 dark:hover:bg-white/5">
-                <span className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br text-white ${app.iconColor}`}><Icon size={26} aria-hidden="true" /></span>
+              <a key={app.id} href={app.href} target="_blank" rel="noopener noreferrer" className="group flex items-start gap-4 rounded-2xl border border-black/10 p-5 transition-colors hover:bg-black/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 dark:border-white/15 dark:hover:bg-white/5">
+                <AppIcon icon={app.icon} image={app.iconImage} iconSize={26} className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl" />
                 <span className="min-w-0 flex-1">
                   <span className="block font-mono text-[10px] tracking-[0.15em] text-[var(--secondary)]">{app.category}</span>
                   <span className="mt-1 block font-semibold">{app.name}</span>

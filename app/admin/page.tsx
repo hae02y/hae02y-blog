@@ -13,7 +13,8 @@ async function counts() {
   const [blog] = await db.select({ c: count() }).from(schema.posts).where(eq(schema.posts.type, 'blog'));
   const [essay] = await db.select({ c: count() }).from(schema.posts).where(eq(schema.posts.type, 'essay'));
   const [books] = await db.select({ c: count() }).from(schema.books);
-  return { blog: blog?.c ?? 0, essay: essay?.c ?? 0, books: books?.c ?? 0 };
+  const [apps] = await db.select({ c: count() }).from(schema.apps);
+  return { blog: blog?.c ?? 0, essay: essay?.c ?? 0, books: books?.c ?? 0, apps: apps?.c ?? 0 };
 }
 
 export default async function AdminHome() {
@@ -24,6 +25,7 @@ export default async function AdminHome() {
     { href: '/admin/posts?type=blog', label: '기술 글 (블로그)', count: c.blog },
     { href: '/admin/posts?type=essay', label: '에세이', count: c.essay },
     { href: '/Insight/books/admin', label: '서재 (책)', count: c.books },
+    { href: '/admin/apps', label: '앱', count: c.apps },
   ];
 
   return (
@@ -35,7 +37,7 @@ export default async function AdminHome() {
         </form>
       </div>
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-3">
+      <div className="mt-8 grid gap-4 sm:grid-cols-2">
         {cards.map(card => (
           <Link key={card.href} href={card.href} className="rounded-2xl border border-black/10 bg-white/55 p-5 backdrop-blur transition hover:-translate-y-0.5 hover:border-black/20 dark:border-white/10 dark:bg-white/[0.04] dark:hover:border-white/25">
             <p className="text-sm font-medium text-black dark:text-white">{card.label}</p>

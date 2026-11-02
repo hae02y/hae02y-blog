@@ -63,3 +63,28 @@ export const posts = pgTable(
 
 export type PostRow = typeof posts.$inferSelect;
 export type NewPostRow = typeof posts.$inferInsert;
+
+/** Terminal app launcher entries, managed through /admin/apps. */
+export const apps = pgTable(
+  'apps',
+  {
+    id: serial('id').primaryKey(),
+    name: text('name').notNull(),
+    shortName: text('short_name').notNull(),
+    description: text('description').notNull().default(''),
+    href: text('href').notNull(),
+    category: text('category').notNull().default('WEB APP'),
+    icon: text('icon').notNull().default('app'),
+    iconImage: text('icon_image'),
+    sortOrder: integer('sort_order').notNull().default(0),
+    published: boolean('published').notNull().default(true),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  table => ({
+    hrefIdx: uniqueIndex('apps_href_idx').on(table.href),
+    orderIdx: index('apps_sort_order_idx').on(table.sortOrder),
+  }),
+);
+
+export type AppRow = typeof apps.$inferSelect;
