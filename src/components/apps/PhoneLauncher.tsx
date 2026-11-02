@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { ArrowUpRight, BatteryFull, ChevronsLeft, ChevronsRight, Search, Wifi } from 'lucide-react';
+import { ArrowUpRight, BatteryFull, Check, ChevronsLeft, ChevronsRight, Copy, Search, Wifi } from 'lucide-react';
 import AppIcon from './AppIcon';
 import styles from './PhoneLauncher.module.css';
 
@@ -17,52 +17,214 @@ type LauncherApp = {
 };
 
 type GestureStart = { x: number; y: number; interactive: boolean };
+type MenuPosition = { x: number; y: number };
+const STORAGE_KEY = 'hae02y-app-order';
 
 export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
   const [isUnfolded, setIsUnfolded] = useState(false);
   const [query, setQuery] = useState('');
+  const [pageIndex, setPageIndex] = useState(0);
+  const [pageDirection, setPageDirection] = useState(1);
+  const [clock, setClock] = useState('9:41');
+  const [appsPerScreen, setAppsPerScreen] = useState(16);
+  const [orderedIds, setOrderedIds] = useState(() => apps.map(app => app.id));
+  const [isEditing, setIsEditing] = useState(false);
+  const [menuAppId, setMenuAppId] = useState<number | null>(null);
+  const [menuPosition, setMenuPosition] = useState<MenuPosition>({ x: 0, y: 0 });
+  const [copied, setCopied] = useState(false);
+  const [draggedId, setDraggedId] = useState<number | null>(null);
+  const [dropId, setDropId] = useState<number | null>(null);
   const gestureStart = useRef<GestureStart | null>(null);
-  const filteredApps = apps.filter(app => `${app.name} ${app.shortName} ${app.category} ${app.description}`.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()));
-  const leftApps = filteredApps.filter((_, index) => index % 8 < 4);
-  const rightApps = filteredApps.filter((_, index) => index % 8 >= 4);
+  const deviceRef = useRef<HTMLDivElement>(null);
+  const holdTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const appPointer = useRef<{ x: number; y: number; id: number } | null>(null);
+  const backgroundPointer = useRef<{ x: number; y: number } | null>(null);
+  const dragIdRef = useRef<number | null>(null);
+  const dropIdRef = useRef<number | null>(null);
+  const suppressClick = useRef(false);
+  const order = new Map(orderedIds.map((id, index) => [id, index]));
+  const orderedApps = [...apps].sort((a, b) => (order.get(a.id) ?? Number.MAX_SAFE_INTEGER) - (order.get(b.id) ?? Number.MAX_SAFE_INTEGER));
+  const filteredApps = orderedApps.filter(app => `${app.name} ${app.shortName} ${app.category} ${app.description}`.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()));
+  const pageSize = appsPerScreen * (isUnfolded ? 2 : 1);
+  const pageCount = Math.max(1, Math.ceil(filteredApps.length / pageSize));
+  const currentPage = Math.min(pageIndex, pageCount - 1);
+  const visibleApps = filteredApps.slice(currentPage * pageSize, (currentPage + 1) * pageSize);
+  const leftApps = visibleApps.slice(0, appsPerScreen);
+  const rightApps = visibleApps.slice(appsPerScreen);
+  const menuApp = apps.find(app => app.id === menuAppId);
+
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '[]') as unknown;
+      if (Array.isArray(saved)) {
+        const validIds = [...new Set(saved.filter((id): id is number => typeof id === 'number' && apps.some(app => app.id === id)))];
+        setOrderedIds([...validIds, ...apps.map(app => app.id).filter(id => !validIds.includes(id))]);
+      }
+    } catch {
+      // Keep the published order if local storage is unavailable.
+    }
+  }, [apps]);
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return;
+      if (menuAppId !== null) setMenuAppId(null);
+      else if (isEditing) setIsEditing(false);
+      else if (query) setQuery('');
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [isEditing, menuAppId, query]);
 
   useEffect(() => {
     const landscape = window.matchMedia('(max-width: 900px) and (orientation: landscape)');
-    const syncFold = () => setIsUnfolded(landscape.matches);
+    const syncFold = () => { setIsUnfolded(landscape.matches); setMenuAppId(null); };
+    const syncPageSize = () => {
+      if (window.matchMedia('(max-width: 900px) and (max-height: 500px) and (orientation: landscape)').matches) setAppsPerScreen(12);
+      else if (window.matchMedia('(max-width: 767px) and (min-height: 760px) and (orientation: portrait)').matches) setAppsPerScreen(24);
+      else setAppsPerScreen(16);
+    };
     syncFold();
+    syncPageSize();
     landscape.addEventListener('change', syncFold);
-    return () => landscape.removeEventListener('change', syncFold);
+    window.addEventListener('resize', syncPageSize);
+    return () => { landscape.removeEventListener('change', syncFold); window.removeEventListener('resize', syncPageSize); };
   }, []);
+
+  useEffect(() => {
+    const syncClock = () => setClock(new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: false }));
+    syncClock();
+    const interval = window.setInterval(syncClock, 30_000);
+    return () => window.clearInterval(interval);
+  }, []);
+
+  function clearHold() {
+    if (holdTimer.current !== null) clearTimeout(holdTimer.current);
+    holdTimer.current = null;
+  }
+
+  function blockNextClick() {
+    suppressClick.current = true;
+    window.setTimeout(() => { suppressClick.current = false; }, 700);
+  }
+
+  function moveApp(fromId: number, toId: number) {
+    if (fromId === toId) return;
+    const next = [...orderedIds];
+    const fromIndex = next.indexOf(fromId);
+    const toIndex = next.indexOf(toId);
+    if (fromIndex < 0 || toIndex < 0) return;
+    next.splice(fromIndex, 1);
+    next.splice(toIndex, 0, fromId);
+    setOrderedIds(next);
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); } catch { /* Storage may be disabled. */ }
+  }
+
+  function changePage(index: number) {
+    setPageDirection(index >= currentPage ? 1 : -1);
+    setPageIndex(index);
+    setMenuAppId(null);
+  }
+
+  function startAppPointer(event: React.PointerEvent<HTMLAnchorElement>, id: number) {
+    appPointer.current = { x: event.clientX, y: event.clientY, id };
+    if (isEditing) {
+      dragIdRef.current = id;
+      setDraggedId(id);
+      event.currentTarget.setPointerCapture(event.pointerId);
+      return;
+    }
+    clearHold();
+    holdTimer.current = setTimeout(() => {
+      setIsEditing(true);
+      setMenuAppId(null);
+      blockNextClick();
+      if (navigator.vibrate) navigator.vibrate(12);
+    }, 520);
+  }
+
+  function moveAppPointer(event: React.PointerEvent<HTMLAnchorElement>) {
+    const start = appPointer.current;
+    if (!start) return;
+    const distance = Math.hypot(event.clientX - start.x, event.clientY - start.y);
+    if (distance > 10) clearHold();
+    if (!isEditing || dragIdRef.current === null || distance < 8) return;
+    const target = document.elementFromPoint(event.clientX, event.clientY)?.closest<HTMLElement>('[data-app-id]');
+    const id = target ? Number(target.dataset.appId) : null;
+    dropIdRef.current = id;
+    setDropId(id);
+  }
+
+  function endAppPointer() {
+    clearHold();
+    if (dragIdRef.current !== null && dropIdRef.current !== null) moveApp(dragIdRef.current, dropIdRef.current);
+    if (dragIdRef.current !== null) blockNextClick();
+    dragIdRef.current = null;
+    dropIdRef.current = null;
+    appPointer.current = null;
+    setDraggedId(null);
+    setDropId(null);
+  }
+
+  function openMenu(event: React.MouseEvent<HTMLAnchorElement>, id: number) {
+    event.preventDefault();
+    clearHold();
+    if (window.matchMedia('(hover: none)').matches) {
+      setIsEditing(true);
+      blockNextClick();
+      return;
+    }
+    const bounds = deviceRef.current?.getBoundingClientRect();
+    if (!bounds) return;
+    setMenuPosition({
+      x: Math.min(Math.max(event.clientX - bounds.left, 10), bounds.width - 195),
+      y: Math.min(Math.max(event.clientY - bounds.top, 10), Math.max(10, bounds.height - 210)),
+    });
+    setMenuAppId(id);
+    setCopied(false);
+  }
 
   function finishGesture(x: number, y: number) {
     const start = gestureStart.current;
     gestureStart.current = null;
-    if (!start || start.interactive) return;
+    if (!start || start.interactive || isEditing || menuAppId !== null) return;
     const dx = x - start.x;
     const dy = y - start.y;
     if (Math.abs(dx) < 68 || Math.abs(dx) < Math.abs(dy) * 1.25) return;
-    if (window.matchMedia('(max-width: 767px) and (orientation: portrait)').matches) return;
-    setIsUnfolded(dx > 0);
+    blockNextClick();
+    if (dx < 0 && currentPage < pageCount - 1) changePage(currentPage + 1);
+    else if (dx > 0 && currentPage > 0) changePage(currentPage - 1);
+    else if (!window.matchMedia('(max-width: 767px) and (orientation: portrait)').matches && dx > 0) setIsUnfolded(value => !value);
   }
 
   function gestureHandlers() {
     return {
       onPointerDown: (event: React.PointerEvent<HTMLDivElement>) => {
-        if (event.pointerType !== 'mouse') return;
-        gestureStart.current = {
-          x: event.clientX,
-          y: event.clientY,
-          interactive: Boolean((event.target as HTMLElement).closest('a, button, input, label')),
-        };
+        const interactive = Boolean((event.target as HTMLElement).closest('a, button, input, label'));
+        if (event.pointerType === 'mouse') gestureStart.current = { x: event.clientX, y: event.clientY, interactive };
+        if (interactive || isEditing) return;
+        backgroundPointer.current = { x: event.clientX, y: event.clientY };
+        clearHold();
+        holdTimer.current = setTimeout(() => { setIsEditing(true); blockNextClick(); }, 520);
+      },
+      onPointerMove: (event: React.PointerEvent<HTMLDivElement>) => {
+        const start = backgroundPointer.current;
+        if (start && Math.hypot(event.clientX - start.x, event.clientY - start.y) > 10) {
+          clearHold();
+          backgroundPointer.current = null;
+        }
       },
       onPointerUp: (event: React.PointerEvent<HTMLDivElement>) => {
+        clearHold();
+        backgroundPointer.current = null;
         if (event.pointerType === 'mouse') finishGesture(event.clientX, event.clientY);
       },
+      onPointerCancel: () => { clearHold(); backgroundPointer.current = null; },
       onTouchStart: (event: React.TouchEvent<HTMLDivElement>) => {
         gestureStart.current = {
           x: event.touches[0].clientX,
           y: event.touches[0].clientY,
-          interactive: Boolean((event.target as HTMLElement).closest('a, button, input, label')),
+          interactive: Boolean((event.target as HTMLElement).closest('button, input, label')),
         };
       },
       onTouchEnd: (event: React.TouchEvent<HTMLDivElement>) => {
@@ -72,7 +234,36 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
   }
 
   const appTile = (app: LauncherApp, visible: boolean) => (
-    <a key={app.id} className={styles.appTile} href={app.href} target="_blank" rel="noopener noreferrer" aria-label={`${app.name} 열기 (새 탭)`} title={app.name} tabIndex={visible ? 0 : -1}>
+    <a
+      key={app.id}
+      data-app-id={app.id}
+      className={`${styles.appTile}${isEditing ? ` ${styles.jiggling}` : ''}${draggedId === app.id ? ` ${styles.dragged}` : ''}${dropId === app.id && draggedId !== app.id ? ` ${styles.dropTarget}` : ''}`}
+      href={app.href}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={`${app.name} 열기 (새 탭)`}
+      title={app.name}
+      tabIndex={visible ? 0 : -1}
+      draggable={false}
+      onClick={event => {
+        if (isEditing || suppressClick.current) event.preventDefault();
+        suppressClick.current = false;
+      }}
+      onContextMenu={event => openMenu(event, app.id)}
+      onKeyDown={event => {
+        if (!isEditing) return;
+        const offset = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -4, ArrowDown: 4 }[event.key];
+        if (offset === undefined) return;
+        event.preventDefault();
+        const index = orderedIds.indexOf(app.id);
+        const target = orderedIds[index + offset];
+        if (target !== undefined) moveApp(app.id, target);
+      }}
+      onPointerDown={event => startAppPointer(event, app.id)}
+      onPointerMove={moveAppPointer}
+      onPointerUp={endAppPointer}
+      onPointerCancel={endAppPointer}
+    >
       <span className={styles.iconWrap}>
         <AppIcon icon={app.icon} image={app.iconImage} iconSize={30} className={styles.appIcon} />
         <ArrowUpRight className={styles.appArrow} size={16} aria-hidden="true" />
@@ -85,8 +276,16 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
     <label className={styles.searchBox}>
       <Search size={15} aria-hidden="true" />
       <span className="sr-only">{label}</span>
-      <input value={query} onChange={event => setQuery(event.target.value)} placeholder="앱 검색" aria-label={label} tabIndex={visible ? 0 : -1} />
+      <input value={query} onFocus={() => { setIsEditing(false); setMenuAppId(null); }} onChange={event => { setQuery(event.target.value); setPageIndex(0); }} placeholder="앱 검색" aria-label={label} tabIndex={visible ? 0 : -1} />
     </label>
+  );
+
+  const pageDots = pageCount > 1 && (
+    <div className={styles.pageDots} aria-label="앱 페이지">
+      {Array.from({ length: pageCount }, (_, index) => (
+        <button key={index} type="button" className={index === currentPage ? styles.activeDot : ''} onClick={() => changePage(index)} aria-label={`${index + 1}페이지`} aria-current={index === currentPage ? 'page' : undefined} />
+      ))}
+    </div>
   );
 
   const statusIcons = (
@@ -99,23 +298,25 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
 
   return (
     <section className={styles.stage} aria-label={`접이식 앱 목록, 앱 ${apps.length}개`}>
-      <div className={`${styles.device}${isUnfolded ? ` ${styles.isOpen}` : ''}`}>
+      <div ref={deviceRef} className={`${styles.device}${isUnfolded ? ` ${styles.isOpen}` : ''}`} onPointerDownCapture={event => { if (menuAppId !== null && !(event.target as HTMLElement).closest('[role="menu"]')) setMenuAppId(null); }} onClick={event => { if (isEditing && !(event.target as HTMLElement).closest('[data-app-id], button, input, label')) setIsEditing(false); }}>
         <div className={styles.camera} aria-hidden="true" />
         <div className={styles.coverScreen} {...gestureHandlers()}>
           <div className={`${styles.coverContent}${isUnfolded ? ` ${styles.contentHidden}` : ''}`} aria-hidden={isUnfolded}>
-            <div className={styles.statusBar} aria-hidden="true"><span>9:41</span>{statusIcons}</div>
-            <div className={styles.appGrid}>
-              {filteredApps.map(app => appTile(app, !isUnfolded))}
+            <div className={styles.statusBar}><span aria-hidden="true">{clock}</span>{isEditing ? <button type="button" className={styles.doneButton} onClick={() => setIsEditing(false)}>완료</button> : statusIcons}</div>
+            <div key={`cover-${currentPage}`} className={`${styles.appGrid}${pageDirection < 0 ? ` ${styles.pagePrev}` : ''}`}>
+              {visibleApps.map(app => appTile(app, !isUnfolded))}
               {filteredApps.length === 0 && <p className={styles.empty}>{apps.length === 0 ? '아직 공개된 앱이 없습니다.' : '검색 결과가 없습니다.'}</p>}
             </div>
+            {pageDots}
             {searchBox('접힌 화면에서 앱 검색', !isUnfolded)}
           </div>
           <div className={`${styles.openContent}${isUnfolded ? ` ${styles.contentVisible}` : ''}`} aria-hidden={!isUnfolded}>
-            <div className={styles.statusBar} aria-hidden="true"><span>9:41</span></div>
-            <div className={styles.appGrid}>
+            <div className={styles.statusBar}><span aria-hidden="true">{clock}</span>{isEditing && <button type="button" className={styles.doneButton} onClick={() => setIsEditing(false)}>완료</button>}</div>
+            <div key={`left-${currentPage}`} className={`${styles.appGrid}${pageDirection < 0 ? ` ${styles.pagePrev}` : ''}`}>
               {leftApps.map(app => appTile(app, isUnfolded))}
               {filteredApps.length === 0 && <p className={styles.empty}>{apps.length === 0 ? '아직 공개된 앱이 없습니다.' : '검색 결과가 없습니다.'}</p>}
             </div>
+            {pageDots}
             {searchBox('펼친 화면에서 앱 검색', isUnfolded)}
           </div>
         </div>
@@ -123,14 +324,21 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
         <div className={styles.innerScreen} aria-hidden={!isUnfolded} {...gestureHandlers()}>
           <div className={styles.innerContent}>
             <div className={`${styles.statusBar} ${styles.rightStatus}`} aria-hidden="true">{statusIcons}</div>
-            <div className={styles.appGrid}>{rightApps.map(app => appTile(app, isUnfolded))}</div>
+            <div key={`right-${currentPage}`} className={`${styles.appGrid}${pageDirection < 0 ? ` ${styles.pagePrev}` : ''}`}>{rightApps.map(app => appTile(app, isUnfolded))}</div>
             <span className={styles.homeIndicator} aria-hidden="true" />
           </div>
         </div>
+        {menuApp && <div className={styles.quickMenu} style={{ left: menuPosition.x, top: menuPosition.y }} role="menu" aria-label={`${menuApp.name} 메뉴`}>
+          <strong>{menuApp.name}</strong>
+          <a href={menuApp.href} target="_blank" rel="noopener noreferrer" role="menuitem" onClick={() => setMenuAppId(null)}><ArrowUpRight size={16} />앱 열기</a>
+          <button type="button" role="menuitem" onClick={async () => { try { await navigator.clipboard.writeText(menuApp.href); setCopied(true); } catch { setCopied(false); } }}>{copied ? <Check size={16} /> : <Copy size={16} />}{copied ? '복사됨' : '링크 복사'}</button>
+          <button type="button" role="menuitem" onClick={() => { setIsEditing(true); setMenuAppId(null); }}>홈 화면 편집</button>
+          <button type="button" role="menuitem" onClick={() => { const ids = apps.map(app => app.id); setOrderedIds(ids); try { localStorage.removeItem(STORAGE_KEY); } catch { /* Storage may be disabled. */ } setMenuAppId(null); }}>기본 정렬로</button>
+        </div>}
         <button
           type="button"
           className={styles.foldToggle}
-          onClick={() => setIsUnfolded(value => !value)}
+          onClick={() => { setMenuAppId(null); setIsUnfolded(value => !value); }}
           aria-label={isUnfolded ? '듀오 접기' : '듀오 펼치기'}
           aria-expanded={isUnfolded}
         >
@@ -138,7 +346,7 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
           <span>{isUnfolded ? '접기' : '펼치기'}</span>
         </button>
       </div>
-      <p className={styles.instructions}>마우스를 올려 펼치기 · 좌우로 밀어 접고 펼치기 · 모바일은 가로로 돌리기</p>
+      <p className={styles.instructions}>아이콘 길게 눌러 정렬 · 좌우로 밀어 페이지 이동 · 마우스를 올려 펼치기 · 모바일은 가로로 돌리기</p>
     </section>
   );
 }
