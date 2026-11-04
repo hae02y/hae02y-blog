@@ -34,6 +34,7 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
   const [copied, setCopied] = useState(false);
   const [draggedId, setDraggedId] = useState<number | null>(null);
   const [dropId, setDropId] = useState<number | null>(null);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const gestureStart = useRef<GestureStart | null>(null);
   const deviceRef = useRef<HTMLDivElement>(null);
   const holdTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -128,15 +129,18 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
 
   function startAppPointer(event: React.PointerEvent<HTMLAnchorElement>, id: number) {
     appPointer.current = { x: event.clientX, y: event.clientY, id };
+    setDragOffset({ x: 0, y: 0 });
+    event.currentTarget.setPointerCapture(event.pointerId);
     if (isEditing) {
       dragIdRef.current = id;
       setDraggedId(id);
-      event.currentTarget.setPointerCapture(event.pointerId);
       return;
     }
     clearHold();
     holdTimer.current = setTimeout(() => {
       setIsEditing(true);
+      dragIdRef.current = id;
+      setDraggedId(id);
       setMenuAppId(null);
       blockNextClick();
       if (navigator.vibrate) navigator.vibrate(12);
@@ -148,22 +152,27 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
     if (!start) return;
     const distance = Math.hypot(event.clientX - start.x, event.clientY - start.y);
     if (distance > 10) clearHold();
-    if (!isEditing || dragIdRef.current === null || distance < 8) return;
-    const target = document.elementFromPoint(event.clientX, event.clientY)?.closest<HTMLElement>('[data-app-id]');
+    if (dragIdRef.current === null) return;
+    setDragOffset({ x: event.clientX - start.x, y: event.clientY - start.y });
+    if (distance < 8) return;
+    const target = document.elementsFromPoint(event.clientX, event.clientY)
+      .map(element => element.closest<HTMLElement>('[data-app-id]'))
+      .find(element => element && Number(element.dataset.appId) !== dragIdRef.current);
     const id = target ? Number(target.dataset.appId) : null;
     dropIdRef.current = id;
     setDropId(id);
   }
 
-  function endAppPointer() {
+  function endAppPointer(cancelled = false) {
     clearHold();
-    if (dragIdRef.current !== null && dropIdRef.current !== null) moveApp(dragIdRef.current, dropIdRef.current);
+    if (!cancelled && dragIdRef.current !== null && dropIdRef.current !== null) moveApp(dragIdRef.current, dropIdRef.current);
     if (dragIdRef.current !== null) blockNextClick();
     dragIdRef.current = null;
     dropIdRef.current = null;
     appPointer.current = null;
     setDraggedId(null);
     setDropId(null);
+    setDragOffset({ x: 0, y: 0 });
   }
 
   function openMenu(event: React.MouseEvent<HTMLAnchorElement>, id: number) {
@@ -238,6 +247,7 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
       key={app.id}
       data-app-id={app.id}
       className={`${styles.appTile}${isEditing ? ` ${styles.jiggling}` : ''}${draggedId === app.id ? ` ${styles.dragged}` : ''}${dropId === app.id && draggedId !== app.id ? ` ${styles.dropTarget}` : ''}`}
+      style={draggedId === app.id ? { transform: `translate(${dragOffset.x}px, ${dragOffset.y}px)` } : undefined}
       href={app.href}
       target="_blank"
       rel="noopener noreferrer"
@@ -261,8 +271,8 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
       }}
       onPointerDown={event => startAppPointer(event, app.id)}
       onPointerMove={moveAppPointer}
-      onPointerUp={endAppPointer}
-      onPointerCancel={endAppPointer}
+      onPointerUp={() => endAppPointer()}
+      onPointerCancel={() => endAppPointer(true)}
     >
       <span className={styles.iconWrap}>
         <AppIcon icon={app.icon} image={app.iconImage} iconSize={30} className={styles.appIcon} />

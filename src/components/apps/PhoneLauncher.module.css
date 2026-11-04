@@ -353,6 +353,7 @@
 
 .appTile {
   min-width: 0;
+  touch-action: none;
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -389,7 +390,7 @@
 
 .dragged {
   position: relative;
-  z-index: 3;
+  z-index: 4;
   cursor: grabbing;
 }
 
@@ -622,6 +623,11 @@
     top: 0;
     bottom: 0;
     left: 50%;
+    opacity: 0;
+  }
+
+  .isOpen .hinge {
+    opacity: 1;
   }
 
   .camera {
