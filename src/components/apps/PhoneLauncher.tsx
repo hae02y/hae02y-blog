@@ -14,11 +14,14 @@ type LauncherApp = {
   category: string;
   icon: string;
   iconImage: string | null;
+  addedAt: string;
 };
 
 type GestureStart = { x: number; y: number; interactive: boolean };
 type MenuPosition = { x: number; y: number };
 const STORAGE_KEY = 'hae02y-app-order';
+const OPENED_APPS_KEY = 'hae02y-opened-apps';
+const NEW_APP_DAYS = 30;
 
 export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
   const [isUnfolded, setIsUnfolded] = useState(false);
@@ -35,6 +38,7 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
   const [draggedId, setDraggedId] = useState<number | null>(null);
   const [dropId, setDropId] = useState<number | null>(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [newAppIds, setNewAppIds] = useState<number[]>([]);
   const gestureStart = useRef<GestureStart | null>(null);
   const deviceRef = useRef<HTMLDivElement>(null);
   const holdTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -65,6 +69,27 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
       // Keep the published order if local storage is unavailable.
     }
   }, [apps]);
+
+  useEffect(() => {
+    let openedIds: number[] = [];
+    try {
+      const saved = JSON.parse(localStorage.getItem(OPENED_APPS_KEY) ?? '[]') as unknown;
+      if (Array.isArray(saved)) openedIds = saved.filter((id): id is number => typeof id === 'number');
+    } catch {
+      // Keep recent badges when local storage is unavailable.
+    }
+    const cutoff = Date.now() - NEW_APP_DAYS * 24 * 60 * 60 * 1000;
+    setNewAppIds(apps.filter(app => Date.parse(app.addedAt) >= cutoff && !openedIds.includes(app.id)).map(app => app.id));
+  }, [apps]);
+
+  function markAppOpened(id: number) {
+    setNewAppIds(ids => ids.filter(value => value !== id));
+    try {
+      const saved = JSON.parse(localStorage.getItem(OPENED_APPS_KEY) ?? '[]') as unknown;
+      const ids = Array.isArray(saved) ? saved.filter((value): value is number => typeof value === 'number') : [];
+      localStorage.setItem(OPENED_APPS_KEY, JSON.stringify([...new Set([...ids, id])]));
+    } catch { /* Storage may be disabled. */ }
+  }
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -251,12 +276,13 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
       href={app.href}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label={`${app.name} 열기 (새 탭)`}
+      aria-label={`${newAppIds.includes(app.id) ? '새 앱, ' : ''}${app.name} 열기 (새 탭)`}
       title={app.name}
       tabIndex={visible ? 0 : -1}
       draggable={false}
       onClick={event => {
         if (isEditing || suppressClick.current) event.preventDefault();
+        else markAppOpened(app.id);
         suppressClick.current = false;
       }}
       onContextMenu={event => openMenu(event, app.id)}
@@ -278,7 +304,10 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
         <AppIcon icon={app.icon} image={app.iconImage} iconSize={30} className={styles.appIcon} />
         <ArrowUpRight className={styles.appArrow} size={16} aria-hidden="true" />
       </span>
-      <strong>{app.shortName || app.name}</strong>
+      <span className={styles.appLabel}>
+        <strong>{app.shortName || app.name}</strong>
+        {newAppIds.includes(app.id) && <span className={styles.newDot} aria-hidden="true" />}
+      </span>
     </a>
   );
 
@@ -340,7 +369,7 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
         </div>
         {menuApp && <div className={styles.quickMenu} style={{ left: menuPosition.x, top: menuPosition.y }} role="menu" aria-label={`${menuApp.name} 메뉴`}>
           <strong>{menuApp.name}</strong>
-          <a href={menuApp.href} target="_blank" rel="noopener noreferrer" role="menuitem" onClick={() => setMenuAppId(null)}><ArrowUpRight size={16} />앱 열기</a>
+          <a href={menuApp.href} target="_blank" rel="noopener noreferrer" role="menuitem" onClick={() => { markAppOpened(menuApp.id); setMenuAppId(null); }}><ArrowUpRight size={16} />앱 열기</a>
           <button type="button" role="menuitem" onClick={async () => { try { await navigator.clipboard.writeText(menuApp.href); setCopied(true); } catch { setCopied(false); } }}>{copied ? <Check size={16} /> : <Copy size={16} />}{copied ? '복사됨' : '링크 복사'}</button>
           <button type="button" role="menuitem" onClick={() => { setIsEditing(true); setMenuAppId(null); }}>홈 화면 편집</button>
           <button type="button" role="menuitem" onClick={() => { const ids = apps.map(app => app.id); setOrderedIds(ids); try { localStorage.removeItem(STORAGE_KEY); } catch { /* Storage may be disabled. */ } setMenuAppId(null); }}>기본 정렬로</button>

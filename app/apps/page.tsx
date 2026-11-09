@@ -16,7 +16,9 @@ export const metadata: Metadata = {
 
 export default async function AppsPage() {
   const apps = await getPublishedApps();
-  const launcherApps = apps.map(({ id, name, shortName, description, href, category, icon, iconImage }) => ({ id, name, shortName, description, href, category, icon, iconImage }));
+  const launcherApps = apps.map(({ id, name, shortName, description, href, category, icon, iconImage, createdAt }) => ({
+    id, name, shortName, description, href, category, icon, iconImage, addedAt: createdAt.toISOString(),
+  }));
 
   return (
     <main className="mx-auto max-w-6xl px-4 pb-24 pt-14 text-[var(--primary)] md:pt-16">
