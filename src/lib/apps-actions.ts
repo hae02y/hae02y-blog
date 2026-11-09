@@ -21,12 +21,17 @@ function parseUrl(value: FormDataEntryValue | null): string | null {
 
 function parseForm(formData: FormData) {
   const order = Number(formData.get('sortOrder'));
+  const kinds = new Set(['웹사이트', '웹앱', '모바일 앱', '실험작']);
+  const requestedKind = String(formData.get('kind') ?? '웹앱');
+  const platforms = formData.getAll('platforms').map(String).filter(value => ['Web', 'iOS', 'Android'].includes(value));
   return {
     name: String(formData.get('name') ?? '').trim(),
     shortName: String(formData.get('shortName') ?? '').trim(),
     description: String(formData.get('description') ?? '').trim(),
     href: parseUrl(formData.get('href')),
     category: String(formData.get('category') ?? '').trim() || 'WEB APP',
+    kind: kinds.has(requestedKind) ? requestedKind : '웹앱',
+    platforms: platforms.length ? [...new Set(platforms)] : ['Web'],
     icon: String(formData.get('icon') ?? 'app').trim(),
     iconImage: parseUrl(formData.get('iconImage')),
     sortOrder: Number.isSafeInteger(order) ? order : 0,

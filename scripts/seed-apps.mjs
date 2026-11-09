@@ -29,6 +29,8 @@ if (!process.env.DATABASE_URL) {
         description text NOT NULL DEFAULT '',
         href text NOT NULL,
         category text NOT NULL DEFAULT 'WEB APP',
+        kind text NOT NULL DEFAULT '웹앱',
+        platforms text[] NOT NULL DEFAULT ARRAY['Web']::text[],
         icon text NOT NULL DEFAULT 'app',
         icon_image text,
         sort_order integer NOT NULL DEFAULT 0,
@@ -38,6 +40,8 @@ if (!process.env.DATABASE_URL) {
       );
       CREATE UNIQUE INDEX IF NOT EXISTS apps_href_idx ON apps (href);
       CREATE INDEX IF NOT EXISTS apps_sort_order_idx ON apps (sort_order);
+      ALTER TABLE apps ADD COLUMN IF NOT EXISTS kind text NOT NULL DEFAULT '웹앱';
+      ALTER TABLE apps ADD COLUMN IF NOT EXISTS platforms text[] NOT NULL DEFAULT ARRAY['Web']::text[];
     `);
 
     const existing = await client.query('SELECT count(*)::int AS count FROM apps');
@@ -57,6 +61,45 @@ if (!process.env.DATABASE_URL) {
     await client.query('BEGIN');
     try {
       await client.query(`
+        CREATE TABLE IF NOT EXISTS repo_app_detail_updates (
+          batch text PRIMARY KEY,
+          updated_at timestamptz NOT NULL DEFAULT now()
+        )
+      `);
+      const claimed = await client.query(
+        'INSERT INTO repo_app_detail_updates (batch) VALUES ($1) ON CONFLICT DO NOTHING RETURNING batch',
+        ['app-details-2026-11-09'],
+      );
+      if (claimed.rowCount) {
+        const details = [
+          ['https://hundred-app.vercel.app/', '웹앱', ['Web']],
+          ['https://ground.hae02y.me/', '웹사이트', ['Web']],
+          ['https://life.ha-e.com/', '웹사이트', ['Web']],
+          ['https://leadbase-omega.vercel.app/', '웹앱', ['Web']],
+          ['https://snap-cal-snowy.vercel.app/', '모바일 앱', ['Web', 'iOS', 'Android']],
+          ['https://letter-world.vercel.app/', '웹앱', ['Web']],
+          ['https://video-roulette.vercel.app/', '웹앱', ['Web']],
+          ['https://off-work.vercel.app/', '웹앱', ['Web']],
+          ['https://online-smoke.vercel.app/', '실험작', ['Web']],
+          ['https://void-glass.vercel.app/', '실험작', ['Web']],
+          ['https://object-scanner-psi.vercel.app/', '웹앱', ['Web']],
+          ['https://paper-translator-cyan.vercel.app/', '웹앱', ['Web']],
+          ['https://ha-e.com/', '웹사이트', ['Web']],
+        ];
+        for (const [href, kind, platforms] of details) {
+          await client.query('UPDATE apps SET kind = $1, platforms = $2::text[] WHERE href = $3', [kind, platforms, href]);
+        }
+        console.log('seed-apps: 앱 종류·플랫폼 정보 반영');
+      }
+      await client.query('COMMIT');
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    }
+
+    await client.query('BEGIN');
+    try {
+      await client.query(`
         CREATE TABLE IF NOT EXISTS repo_app_publications (
           batch text PRIMARY KEY,
           published_at timestamptz NOT NULL DEFAULT now()
@@ -71,11 +114,15 @@ if (!process.env.DATABASE_URL) {
         let sortOrder = result.rows[0].last_order + 1;
         let inserted = 0;
         for (const [name, shortName, description, href, category, icon, iconImage] of soloDevApps) {
+          const kind = category === 'GUIDE' || category === 'STUDIO' ? '웹사이트'
+            : category === 'CALENDAR' ? '모바일 앱'
+              : category === 'EXPERIMENT' ? '실험작' : '웹앱';
+          const platforms = category === 'CALENDAR' ? ['Web', 'iOS', 'Android'] : ['Web'];
           const saved = await client.query(
-            `INSERT INTO apps (name, short_name, description, href, category, icon, icon_image, sort_order)
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+            `INSERT INTO apps (name, short_name, description, href, category, icon, icon_image, kind, platforms, sort_order)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9::text[], $10)
              ON CONFLICT (href) DO NOTHING`,
-            [name, shortName, description, href, category, icon, iconImage, sortOrder++],
+            [name, shortName, description, href, category, icon, iconImage, kind, platforms, sortOrder++],
           );
           inserted += saved.rowCount;
         }

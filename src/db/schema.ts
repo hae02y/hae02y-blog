@@ -74,6 +74,8 @@ export const apps = pgTable(
     description: text('description').notNull().default(''),
     href: text('href').notNull(),
     category: text('category').notNull().default('WEB APP'),
+    kind: text('kind').notNull().default('웹앱'),
+    platforms: text('platforms').array().notNull().default(sql`ARRAY['Web']::text[]`),
     icon: text('icon').notNull().default('app'),
     iconImage: text('icon_image'),
     sortOrder: integer('sort_order').notNull().default(0),

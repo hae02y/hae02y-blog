@@ -16,8 +16,8 @@ export const metadata: Metadata = {
 
 export default async function AppsPage() {
   const apps = await getPublishedApps();
-  const launcherApps = apps.map(({ id, name, shortName, description, href, category, icon, iconImage, createdAt }) => ({
-    id, name, shortName, description, href, category, icon, iconImage, addedAt: createdAt.toISOString(),
+  const launcherApps = apps.map(({ id, name, shortName, description, href, category, kind, platforms, icon, iconImage, createdAt }) => ({
+    id, name, shortName, description, href, category, kind, platforms, icon, iconImage, addedAt: createdAt.toISOString(),
   }));
 
   return (
@@ -43,7 +43,7 @@ export default async function AppsPage() {
           {apps.map(app => (
             <a key={app.id} href={app.href} target="_blank" rel="noopener noreferrer" className="group flex items-start gap-4 rounded-2xl border border-black/10 p-5 transition-colors hover:bg-black/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 dark:border-white/15 dark:hover:bg-white/5">
               <AppIcon icon={app.icon} image={app.iconImage} iconSize={26} className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl" />
-              <span className="min-w-0 flex-1"><span className="block font-mono text-[10px] tracking-[0.15em] text-[var(--secondary)]">{app.category}</span><span className="mt-1 block font-semibold">{app.name}</span><span className="mt-1 block text-sm leading-6 text-[var(--secondary)]">{app.description}</span></span>
+              <span className="min-w-0 flex-1"><span className="block font-mono text-[10px] tracking-[0.15em] text-[var(--secondary)]">{app.kind} · {app.platforms.join(' · ')}</span><span className="mt-1 block font-semibold">{app.name}</span><span className="mt-1 block text-sm leading-6 text-[var(--secondary)]">{app.description}</span></span>
               <ArrowUpRight size={18} className="shrink-0 opacity-50 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
             </a>
           ))}

@@ -24,6 +24,10 @@ export default function AppForm({ action, defaults, submitLabel, error }: AppFor
       </div>
       <div><label htmlFor="href" className={label}>앱 주소 *</label><input id="href" name="href" type="url" required defaultValue={d.href ?? ''} className={input} placeholder="https://example.com/" /></div>
       <div><label htmlFor="description" className={label}>소개</label><textarea id="description" name="description" rows={3} maxLength={500} defaultValue={d.description ?? ''} className={input} /></div>
+      <div className="grid gap-5 sm:grid-cols-2">
+        <div><label htmlFor="kind" className={label}>종류</label><select id="kind" name="kind" defaultValue={d.kind ?? '웹앱'} className={input}>{['웹사이트', '웹앱', '모바일 앱', '실험작'].map(kind => <option key={kind} value={kind}>{kind}</option>)}</select></div>
+        <fieldset><legend className={label}>지원 플랫폼</legend><div className="mt-3 flex flex-wrap gap-4">{['Web', 'iOS', 'Android'].map(platform => <label key={platform} className="flex items-center gap-1.5 text-sm text-black dark:text-white"><input type="checkbox" name="platforms" value={platform} defaultChecked={(d.platforms ?? ['Web']).includes(platform)} />{platform}</label>)}</div></fieldset>
+      </div>
       <ImageUploadField name="iconImage" label="앱 아이콘 이미지 (선택)" defaultValue={d.iconImage ?? ''} placeholder="이미지 URL 또는 파일 업로드" />
       <div className="grid gap-5 sm:grid-cols-3">
         <div><label htmlFor="category" className={label}>분류</label><input id="category" name="category" maxLength={30} defaultValue={d.category ?? 'WEB APP'} className={input} placeholder="WEB APP" /></div>
