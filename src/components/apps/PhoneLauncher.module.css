@@ -112,14 +112,18 @@
 .camera {
   position: absolute;
   z-index: 6;
-  top: 17px;
-  left: 128px;
-  width: 64px;
-  height: 17px;
-  border-radius: 12px;
-  background: #080d19;
-  box-shadow: inset 0 1px 2px #000, 0 1px 1px #ffffff22;
+  top: 12px;
+  left: calc(50% - 48px);
+  width: 96px;
+  height: 25px;
+  border-radius: 20px;
+  background: #05070d;
+  box-shadow: inset 0 0 0 1px #293041, inset 0 1px 3px #000, 0 1px 2px #ffffff16;
   pointer-events: none;
+}
+
+.isOpen .camera {
+  left: calc(25% - 48px);
 }
 
 .coverContent,
@@ -227,7 +231,7 @@
   width: 82px;
   height: 4px;
   flex: none;
-  margin: 14px auto 9px;
+  margin: 8px auto 0;
   border-radius: 99px;
   background: #fff;
   box-shadow: 0 1px 4px #0008;
@@ -241,7 +245,7 @@
   max-width: 100%;
   height: 34px;
   flex: none;
-  margin: 14px auto 0;
+  margin: 10px auto 0;
   border: 1px solid #ffffff38;
   border-radius: 999px;
   background: #6e78846b;
@@ -249,6 +253,45 @@
   color: #fff;
   box-shadow: 0 2px 12px #0004;
   backdrop-filter: blur(18px);
+}
+
+.dock {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  place-items: center;
+  gap: 5px;
+  width: 260px;
+  max-width: 100%;
+  min-height: 66px;
+  flex: none;
+  margin: 9px auto 0;
+  border: 1px solid #ffffff4d;
+  border-radius: 24px;
+  background: #e8edf244;
+  padding: 7px 9px;
+  box-shadow: inset 0 1px 0 #ffffff36, 0 10px 30px #0004;
+  backdrop-filter: blur(28px) saturate(1.4);
+  -webkit-backdrop-filter: blur(28px) saturate(1.4);
+}
+
+.dockTile {
+  width: 100%;
+}
+
+.dock .iconWrap {
+  width: min(100%, 49px);
+}
+
+.dockNewDot {
+  position: absolute;
+  right: -3px;
+  top: -3px;
+  width: 7px;
+  height: 7px;
+  border: 1px solid #fff;
+  border-radius: 50%;
+  background: #4ba9ff;
+  box-shadow: 0 0 6px #278fff;
 }
 
 .searchBox input {
@@ -325,12 +368,12 @@
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   align-content: start;
-  gap: 8px 7px;
+  gap: 16px 7px;
   flex: 1;
   min-height: 0;
   overflow-y: auto;
   margin-top: 39px;
-  padding: 5px 2px 15px;
+  padding: 5px 2px 4px;
   scrollbar-width: none;
   animation: pageIn .3s cubic-bezier(.2,.8,.2,1) both;
 }
@@ -420,8 +463,8 @@
 }
 
 .appTile:active .appIcon {
-  transform: scale(.88);
-  filter: brightness(.85);
+  transform: scale(.9);
+  filter: brightness(.92);
 }
 
 .jiggling {
@@ -476,14 +519,27 @@
   height: 100%;
   display: grid;
   place-items: center;
-  border-radius: 15px;
-  box-shadow: 0 7px 15px #08133160, inset 0 1px #ffffff55;
-  transition: transform .2s;
+  border-radius: 22%;
+  box-shadow: 0 5px 13px #08133155, inset 0 1px #ffffff45;
+  transition: transform .18s cubic-bezier(.2,.8,.2,1), filter .18s;
 }
 
-.appTile:hover .appIcon,
 .appTile:focus-visible .appIcon {
   transform: scale(1.07);
+}
+
+@media (hover: hover) {
+  .appTile:hover .appIcon { transform: scale(1.07); }
+}
+
+.launching .iconWrap {
+  animation: appLaunch .24s cubic-bezier(.2,.8,.2,1);
+}
+
+@keyframes appLaunch {
+  0% { transform: scale(1); }
+  48% { transform: scale(1.12); }
+  100% { transform: scale(1); }
 }
 
 .appArrow {
@@ -501,10 +557,13 @@
   transition: opacity .2s, transform .25s;
 }
 
-.appTile:hover .appArrow,
 .appTile:focus-visible .appArrow {
   opacity: 1;
   transform: translate(0, 0) scale(1);
+}
+
+@media (hover: hover) {
+  .appTile:hover .appArrow { opacity: 1; transform: translate(0, 0) scale(1); }
 }
 
 .appLabel {
@@ -513,19 +572,19 @@
   justify-content: center;
   gap: 4px;
   width: 100%;
-  min-height: 2.5em;
+  min-height: 1.25em;
 }
 
 .appLabel strong {
-  display: -webkit-box;
+  display: block;
   overflow: hidden;
   max-width: 100%;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  font-size: 11px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Pretendard', sans-serif;
+  font-size: 11.5px;
   font-weight: 550;
   line-height: 1.25;
-  overflow-wrap: anywhere;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   text-shadow: 0 1px 4px #000, 0 2px 8px #0009;
 }
 
@@ -837,12 +896,14 @@
   }
 
   .camera {
-    top: max(13px, env(safe-area-inset-top));
-    left: calc(50% - 32px);
+    top: max(8px, env(safe-area-inset-top));
+    left: calc(50% - 58px);
+    width: 116px;
+    height: 30px;
   }
 
   .isOpen .camera {
-    left: calc(25% - 32px);
+    left: calc(25% - 58px);
   }
 
   .coverContent,
@@ -874,6 +935,12 @@
     width: 220px;
     height: 44px;
     margin-top: 10px;
+  }
+
+  .dock {
+    width: min(100%, 350px);
+    border-radius: 29px;
+    background: #e8edf24d;
   }
 
   .searchBox input {
@@ -911,11 +978,15 @@
 
 @media (max-width: 767px) and (min-height: 760px) and (orientation: portrait) {
   .appGrid {
-    gap: 12px 8px;
+    gap: 18px 8px;
   }
 
   .iconWrap {
-    width: min(100%, 55px);
+    width: min(100%, 60px);
+  }
+
+  .dock .iconWrap {
+    width: min(100%, 60px);
   }
 }
 
@@ -928,8 +999,14 @@
   .openContent .appGrid,
   .innerContent .appGrid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 12px 8px;
+    gap: 10px 8px;
     margin-top: 0;
+  }
+
+  .dock {
+    min-height: 57px;
+    margin-top: 6px;
+    padding: 5px 7px;
   }
 
   .searchBox {
@@ -939,6 +1016,10 @@
 
   .openContent .iconWrap,
   .innerContent .iconWrap {
+    width: min(100%, 44px);
+  }
+
+  .dock .iconWrap {
     width: min(100%, 44px);
   }
 
@@ -963,6 +1044,7 @@
   .appIcon,
   .appArrow,
   .appGrid,
+  .launching .iconWrap,
   .jiggling .appIcon,
   .foldToggle {
     transition: none !important;

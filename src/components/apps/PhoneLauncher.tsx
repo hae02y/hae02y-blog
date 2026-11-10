@@ -41,6 +41,7 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
   const [draggedId, setDraggedId] = useState<number | null>(null);
   const [dropId, setDropId] = useState<number | null>(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [launchingId, setLaunchingId] = useState<number | null>(null);
   const [newAppIds, setNewAppIds] = useState<number[]>([]);
   const [infoAppId, setInfoAppId] = useState<number | null>(null);
   const [infoPosition, setInfoPosition] = useState({ x: 12, y: 12 });
@@ -49,6 +50,7 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
   const infoCardRef = useRef<HTMLDivElement>(null);
   const holdTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const infoTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const launchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const appPointer = useRef<{ x: number; y: number; id: number } | null>(null);
   const backgroundPointer = useRef<{ x: number; y: number } | null>(null);
   const dragIdRef = useRef<number | null>(null);
@@ -56,11 +58,14 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
   const suppressClick = useRef(false);
   const order = new Map(orderedIds.map((id, index) => [id, index]));
   const orderedApps = [...apps].sort((a, b) => (order.get(a.id) ?? Number.MAX_SAFE_INTEGER) - (order.get(b.id) ?? Number.MAX_SAFE_INTEGER));
+  const hasQuery = query.trim().length > 0;
   const filteredApps = orderedApps.filter(app => `${app.name} ${app.shortName} ${app.category} ${app.description}`.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()));
+  const dockApps = hasQuery ? [] : orderedApps.slice(0, 4);
+  const gridApps = hasQuery ? filteredApps : filteredApps.slice(dockApps.length);
   const pageSize = appsPerScreen * (isUnfolded ? 2 : 1);
-  const pageCount = Math.max(1, Math.ceil(filteredApps.length / pageSize));
+  const pageCount = Math.max(1, Math.ceil(gridApps.length / pageSize));
   const currentPage = Math.min(pageIndex, pageCount - 1);
-  const visibleApps = filteredApps.slice(currentPage * pageSize, (currentPage + 1) * pageSize);
+  const visibleApps = gridApps.slice(currentPage * pageSize, (currentPage + 1) * pageSize);
   const leftApps = visibleApps.slice(0, appsPerScreen);
   const rightApps = visibleApps.slice(appsPerScreen);
   const menuApp = apps.find(app => app.id === menuAppId);
@@ -101,6 +106,12 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
     } catch { /* Storage may be disabled. */ }
   }
 
+  function animateAppOpen(id: number) {
+    if (launchTimer.current !== null) clearTimeout(launchTimer.current);
+    setLaunchingId(id);
+    launchTimer.current = setTimeout(() => setLaunchingId(null), 240);
+  }
+
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key !== 'Escape') return;
@@ -120,7 +131,7 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
       if (landscape.matches) setAppsPerScreen(window.innerHeight < 390 ? 8 : 12);
       else if (window.matchMedia('(max-width: 767px) and (orientation: portrait)').matches) {
         setAppsPerScreen(window.innerHeight < 620 ? 12 : window.innerHeight >= 760 ? 20 : 16);
-      } else setAppsPerScreen(16);
+      } else setAppsPerScreen(12);
     };
     syncFold();
     syncPageSize();
@@ -153,6 +164,12 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
     syncClock();
     const interval = window.setInterval(syncClock, 30_000);
     return () => window.clearInterval(interval);
+  }, []);
+
+  useEffect(() => () => {
+    if (holdTimer.current !== null) clearTimeout(holdTimer.current);
+    if (infoTimer.current !== null) clearTimeout(infoTimer.current);
+    if (launchTimer.current !== null) clearTimeout(launchTimer.current);
   }, []);
 
   function clearHold() {
@@ -198,7 +215,7 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
     const target = filteredApps[selectedIndex + direction];
     if (target === undefined) return;
     moveApp(selectedAppId, target.id);
-    setPageIndex(Math.floor((selectedIndex + direction) / pageSize));
+    setPageIndex(Math.floor(Math.max(0, selectedIndex + direction - dockApps.length) / pageSize));
   }
 
   function changePage(index: number) {
@@ -341,11 +358,11 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
     };
   }
 
-  const appTile = (app: LauncherApp, visible: boolean) => (
+  const appTile = (app: LauncherApp, visible: boolean, inDock = false) => (
     <a
       key={app.id}
       data-app-id={app.id}
-      className={`${styles.appTile}${isEditing ? ` ${styles.jiggling}` : ''}${selectedAppId === app.id && isEditing ? ` ${styles.selected}` : ''}${draggedId === app.id ? ` ${styles.dragged}` : ''}${dropId === app.id && draggedId !== app.id ? ` ${styles.dropTarget}` : ''}`}
+      className={`${styles.appTile}${inDock ? ` ${styles.dockTile}` : ''}${isEditing ? ` ${styles.jiggling}` : ''}${selectedAppId === app.id && isEditing ? ` ${styles.selected}` : ''}${draggedId === app.id ? ` ${styles.dragged}` : ''}${dropId === app.id && draggedId !== app.id ? ` ${styles.dropTarget}` : ''}${launchingId === app.id ? ` ${styles.launching}` : ''}`}
       style={draggedId === app.id ? { transform: `translate(${dragOffset.x}px, ${dragOffset.y}px)` } : undefined}
       href={app.href}
       target="_blank"
@@ -357,7 +374,7 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
       onClick={event => {
         if (isEditing) { event.preventDefault(); setSelectedAppId(app.id); }
         else if (suppressClick.current && event.detail !== 0) event.preventDefault();
-        else { markAppOpened(app.id); setInfoAppId(null); }
+        else { markAppOpened(app.id); animateAppOpen(app.id); setInfoAppId(null); }
         suppressClick.current = false;
       }}
       onPointerEnter={event => { if (event.pointerType === 'mouse' && !isEditing) showInfo(event.currentTarget, app.id); }}
@@ -385,11 +402,12 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
       <span className={styles.iconWrap}>
         <AppIcon icon={app.icon} image={app.iconImage} iconSize={30} className={styles.appIcon} />
         <ArrowUpRight className={styles.appArrow} size={16} aria-hidden="true" />
+        {inDock && newAppIds.includes(app.id) && <span className={styles.dockNewDot} aria-hidden="true" />}
       </span>
-      <span className={styles.appLabel}>
+      {!inDock && <span className={styles.appLabel}>
         <strong>{app.shortName || app.name}</strong>
         {newAppIds.includes(app.id) && <span className={styles.newDot} aria-hidden="true" />}
-      </span>
+      </span>}
     </a>
   );
 
@@ -434,19 +452,23 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
             <div className={styles.statusBar}><span aria-hidden="true">{clock}</span>{isEditing ? <button type="button" className={styles.doneButton} onClick={() => { setIsEditing(false); setSelectedAppId(null); }}>완료</button> : statusIcons}</div>
             <div key={`cover-${currentPage}`} className={`${styles.appGrid}${pageDirection < 0 ? ` ${styles.pagePrev}` : ''}`}>
               {visibleApps.map(app => appTile(app, !isUnfolded))}
-              {filteredApps.length === 0 && <p className={styles.empty}>{apps.length === 0 ? '아직 공개된 앱이 없습니다.' : '검색 결과가 없습니다.'}</p>}
+              {gridApps.length === 0 && (apps.length === 0 || hasQuery) && <p className={styles.empty}>{apps.length === 0 ? '아직 공개된 앱이 없습니다.' : '검색 결과가 없습니다.'}</p>}
             </div>
             {pageDots}
             {isEditing ? editToolbar(!isUnfolded) : searchBox('접힌 화면에서 앱 검색', !isUnfolded)}
+            {dockApps.length > 0 && <div className={styles.dock} aria-label="고정 앱">{dockApps.map(app => appTile(app, !isUnfolded, true))}</div>}
+            <span className={styles.homeIndicator} aria-hidden="true" />
           </div>
           <div className={`${styles.openContent}${isUnfolded ? ` ${styles.contentVisible}` : ''}`} aria-hidden={!isUnfolded}>
             <div className={styles.statusBar}><span aria-hidden="true">{clock}</span>{isEditing && <button type="button" className={styles.doneButton} onClick={() => { setIsEditing(false); setSelectedAppId(null); }}>완료</button>}</div>
             <div key={`left-${currentPage}`} className={`${styles.appGrid}${pageDirection < 0 ? ` ${styles.pagePrev}` : ''}`}>
               {leftApps.map(app => appTile(app, isUnfolded))}
-              {filteredApps.length === 0 && <p className={styles.empty}>{apps.length === 0 ? '아직 공개된 앱이 없습니다.' : '검색 결과가 없습니다.'}</p>}
+              {gridApps.length === 0 && (apps.length === 0 || hasQuery) && <p className={styles.empty}>{apps.length === 0 ? '아직 공개된 앱이 없습니다.' : '검색 결과가 없습니다.'}</p>}
             </div>
             {pageDots}
             {isEditing ? editToolbar(isUnfolded) : searchBox('펼친 화면에서 앱 검색', isUnfolded)}
+            {dockApps.length > 0 && <div className={styles.dock} aria-label="고정 앱">{dockApps.map(app => appTile(app, isUnfolded, true))}</div>}
+            <span className={styles.homeIndicator} aria-hidden="true" />
           </div>
         </div>
         <div className={styles.hinge} aria-hidden="true" />
