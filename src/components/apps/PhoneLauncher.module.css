@@ -271,6 +271,56 @@
   background: #697789a8;
 }
 
+.editToolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 5px;
+  width: 260px;
+  max-width: 100%;
+  height: 44px;
+  flex: none;
+  margin: 10px auto 0;
+  border: 1px solid #ffffff50;
+  border-radius: 999px;
+  background: #26344bc9;
+  padding: 2px 4px;
+  color: #fff;
+  box-shadow: 0 2px 12px #0005;
+  backdrop-filter: blur(18px);
+}
+
+.editToolbar button {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  flex: none;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: #ffffff27;
+  color: #fff;
+  cursor: pointer;
+}
+
+.editToolbar button:disabled {
+  opacity: .3;
+  cursor: default;
+}
+
+.editToolbar button:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: -2px;
+}
+
+.editToolbar span {
+  overflow: hidden;
+  font-size: 11px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .appGrid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -387,6 +437,11 @@
   animation-direction: alternate-reverse;
 }
 
+.selected .appIcon {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
 @keyframes jiggle {
   from { transform: rotate(-1.6deg); }
   to { transform: rotate(1.6deg); }
@@ -488,8 +543,9 @@
   position: absolute;
   z-index: 16;
   width: min(260px, calc(100% - 24px));
-  max-height: min(210px, calc(100% - 24px));
-  overflow: hidden;
+  max-height: min(280px, calc(100% - 24px));
+  overflow-y: auto;
+  scrollbar-width: none;
   padding: 13px;
   border: 1px solid #ffffff5c;
   border-radius: 19px;
@@ -497,8 +553,12 @@
   background: #111b37e8;
   box-shadow: 0 18px 45px #0009;
   backdrop-filter: blur(22px);
-  pointer-events: none;
   animation: infoIn .18s ease-out both;
+}
+
+.infoCard::-webkit-scrollbar,
+.infoCard p::-webkit-scrollbar {
+  display: none;
 }
 
 @keyframes infoIn {
@@ -543,8 +603,31 @@
   font-weight: 700;
 }
 
+.infoClose {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  flex: none;
+  margin-left: auto;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: #ffffff25;
+  color: #fff;
+  cursor: pointer;
+}
+
+.infoClose:focus-visible,
+.infoOpen:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
 .infoCard p {
   margin: 11px 0 10px !important;
+  max-height: 96px;
+  overflow-y: auto;
+  scrollbar-width: none;
   color: #edf2ff !important;
   font-size: 11px !important;
   line-height: 1.45 !important;
@@ -564,6 +647,25 @@
   color: #fff;
   font-size: 10px;
   line-height: 1;
+}
+
+.infoOpen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 32px;
+  margin-top: 10px;
+  border-radius: 10px;
+  background: #ffffff28;
+  color: #fff !important;
+  font-size: 11px;
+  font-weight: 700;
+  text-decoration: none !important;
+}
+
+.infoOpen:hover {
+  background: #ffffff3e;
 }
 
 .empty {
@@ -757,6 +859,15 @@
 
   .infoCard {
     background: #111b37ed;
+  }
+
+  .infoClose {
+    width: 36px;
+    height: 36px;
+  }
+
+  .infoOpen {
+    min-height: 44px;
   }
 
   .searchBox {

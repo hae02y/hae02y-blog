@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { ArrowUpRight, BatteryFull, Check, ChevronsLeft, ChevronsRight, Copy, Search, Wifi } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ArrowUpRight, BatteryFull, Check, ChevronsLeft, ChevronsRight, Copy, Search, Wifi, X } from 'lucide-react';
 import AppIcon from './AppIcon';
 import styles from './PhoneLauncher.module.css';
 
@@ -34,6 +34,7 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
   const [appsPerScreen, setAppsPerScreen] = useState(16);
   const [orderedIds, setOrderedIds] = useState(() => apps.map(app => app.id));
   const [isEditing, setIsEditing] = useState(false);
+  const [selectedAppId, setSelectedAppId] = useState<number | null>(null);
   const [menuAppId, setMenuAppId] = useState<number | null>(null);
   const [menuPosition, setMenuPosition] = useState<MenuPosition>({ x: 0, y: 0 });
   const [copied, setCopied] = useState(false);
@@ -45,6 +46,7 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
   const [infoPosition, setInfoPosition] = useState({ x: 12, y: 12 });
   const gestureStart = useRef<GestureStart | null>(null);
   const deviceRef = useRef<HTMLDivElement>(null);
+  const infoCardRef = useRef<HTMLDivElement>(null);
   const holdTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const infoTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const appPointer = useRef<{ x: number; y: number; id: number } | null>(null);
@@ -63,6 +65,8 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
   const rightApps = visibleApps.slice(appsPerScreen);
   const menuApp = apps.find(app => app.id === menuAppId);
   const infoApp = apps.find(app => app.id === infoAppId);
+  const selectedApp = apps.find(app => app.id === selectedAppId);
+  const selectedIndex = selectedAppId === null ? -1 : filteredApps.findIndex(app => app.id === selectedAppId);
 
   useEffect(() => {
     try {
@@ -101,7 +105,7 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key !== 'Escape') return;
       if (menuAppId !== null) setMenuAppId(null);
-      else if (isEditing) setIsEditing(false);
+      else if (isEditing) { setIsEditing(false); setSelectedAppId(null); }
       else if (infoAppId !== null) setInfoAppId(null);
       else if (query) setQuery('');
     };
@@ -168,14 +172,13 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
     const width = Math.min(260, device.width - 24);
     const x = Math.max(12, Math.min(icon.left - device.left + icon.width / 2 - width / 2, device.width - width - 12));
     const below = icon.bottom - device.top + 10;
-    const y = below + 210 <= device.height - 12 ? below : Math.max(12, icon.top - device.top - 220);
+    const y = below + 280 <= device.height - 12 ? below : Math.max(12, icon.top - device.top - 290);
     setInfoPosition({ x, y });
     setInfoAppId(id);
   }
 
   function blockNextClick() {
     suppressClick.current = true;
-    window.setTimeout(() => { suppressClick.current = false; }, 700);
   }
 
   function moveApp(fromId: number, toId: number) {
@@ -190,18 +193,30 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); } catch { /* Storage may be disabled. */ }
   }
 
+  function moveSelected(direction: -1 | 1) {
+    if (selectedAppId === null || selectedIndex < 0) return;
+    const target = filteredApps[selectedIndex + direction];
+    if (target === undefined) return;
+    moveApp(selectedAppId, target.id);
+    setPageIndex(Math.floor((selectedIndex + direction) / pageSize));
+  }
+
   function changePage(index: number) {
     setPageDirection(index >= currentPage ? 1 : -1);
     setPageIndex(index);
     setMenuAppId(null);
     setInfoAppId(null);
+    if (isEditing) setSelectedAppId(null);
   }
 
   function startAppPointer(event: React.PointerEvent<HTMLAnchorElement>, id: number) {
+    // A new gesture must never inherit click suppression from an earlier swipe.
+    suppressClick.current = false;
     appPointer.current = { x: event.clientX, y: event.clientY, id };
     setDragOffset({ x: 0, y: 0 });
     event.currentTarget.setPointerCapture(event.pointerId);
     if (isEditing) {
+      setSelectedAppId(id);
       dragIdRef.current = id;
       setDraggedId(id);
       return;
@@ -217,13 +232,14 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
     clearHold();
     holdTimer.current = setTimeout(() => {
       setIsEditing(true);
+      setSelectedAppId(id);
       setInfoAppId(null);
       dragIdRef.current = id;
       setDraggedId(id);
       setMenuAppId(null);
       blockNextClick();
       if (navigator.vibrate) navigator.vibrate(12);
-    }, 520);
+    }, 700);
   }
 
   function moveAppPointer(event: React.PointerEvent<HTMLAnchorElement>) {
@@ -262,14 +278,10 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
 
   function openMenu(event: React.MouseEvent<HTMLAnchorElement>, id: number) {
     event.preventDefault();
+    if (window.matchMedia('(hover: none)').matches) return;
     clearHold();
     clearInfoTimer();
     setInfoAppId(null);
-    if (window.matchMedia('(hover: none)').matches) {
-      setIsEditing(true);
-      blockNextClick();
-      return;
-    }
     const bounds = deviceRef.current?.getBoundingClientRect();
     if (!bounds) return;
     setMenuPosition({
@@ -301,7 +313,7 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
         if (interactive || isEditing) return;
         backgroundPointer.current = { x: event.clientX, y: event.clientY };
         clearHold();
-        holdTimer.current = setTimeout(() => { setIsEditing(true); blockNextClick(); }, 520);
+        holdTimer.current = setTimeout(() => { setIsEditing(true); setSelectedAppId(null); blockNextClick(); }, 700);
       },
       onPointerMove: (event: React.PointerEvent<HTMLDivElement>) => {
         const start = backgroundPointer.current;
@@ -333,7 +345,7 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
     <a
       key={app.id}
       data-app-id={app.id}
-      className={`${styles.appTile}${isEditing ? ` ${styles.jiggling}` : ''}${draggedId === app.id ? ` ${styles.dragged}` : ''}${dropId === app.id && draggedId !== app.id ? ` ${styles.dropTarget}` : ''}`}
+      className={`${styles.appTile}${isEditing ? ` ${styles.jiggling}` : ''}${selectedAppId === app.id && isEditing ? ` ${styles.selected}` : ''}${draggedId === app.id ? ` ${styles.dragged}` : ''}${dropId === app.id && draggedId !== app.id ? ` ${styles.dropTarget}` : ''}`}
       style={draggedId === app.id ? { transform: `translate(${dragOffset.x}px, ${dragOffset.y}px)` } : undefined}
       href={app.href}
       target="_blank"
@@ -343,14 +355,18 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
       tabIndex={visible ? 0 : -1}
       draggable={false}
       onClick={event => {
-        if (isEditing || suppressClick.current) event.preventDefault();
+        if (isEditing) { event.preventDefault(); setSelectedAppId(app.id); }
+        else if (suppressClick.current && event.detail !== 0) event.preventDefault();
         else { markAppOpened(app.id); setInfoAppId(null); }
         suppressClick.current = false;
       }}
       onPointerEnter={event => { if (event.pointerType === 'mouse' && !isEditing) showInfo(event.currentTarget, app.id); }}
-      onPointerLeave={event => { if (event.pointerType === 'mouse' && infoAppId === app.id) setInfoAppId(null); }}
+      onPointerLeave={event => {
+        if (event.pointerType !== 'mouse' || infoAppId !== app.id) return;
+        if (event.relatedTarget instanceof Node && infoCardRef.current?.contains(event.relatedTarget)) return;
+        setInfoAppId(null);
+      }}
       onFocus={event => { if (event.currentTarget.matches(':focus-visible') && !isEditing) showInfo(event.currentTarget, app.id); }}
-      onBlur={() => setInfoAppId(null)}
       onContextMenu={event => openMenu(event, app.id)}
       onKeyDown={event => {
         if (!isEditing) return;
@@ -381,8 +397,16 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
     <label className={styles.searchBox}>
       <Search size={15} aria-hidden="true" />
       <span className="sr-only">{label}</span>
-      <input value={query} onFocus={() => { setIsEditing(false); setMenuAppId(null); setInfoAppId(null); }} onChange={event => { setQuery(event.target.value); setPageIndex(0); }} placeholder="앱 검색" aria-label={label} tabIndex={visible ? 0 : -1} />
+      <input value={query} onFocus={() => { setIsEditing(false); setSelectedAppId(null); setMenuAppId(null); setInfoAppId(null); }} onChange={event => { setQuery(event.target.value); setPageIndex(0); }} placeholder="앱 검색" aria-label={label} tabIndex={visible ? 0 : -1} />
     </label>
+  );
+
+  const editToolbar = (visible: boolean) => (
+    <div className={styles.editToolbar} role="group" aria-label="앱 순서 편집">
+      <button type="button" onClick={() => moveSelected(-1)} disabled={selectedIndex <= 0} tabIndex={visible ? 0 : -1} aria-label="선택한 앱을 앞으로 이동"><ArrowLeft size={16} aria-hidden="true" /></button>
+      <span aria-live="polite">{selectedApp?.shortName || '아이콘 선택'}</span>
+      <button type="button" onClick={() => moveSelected(1)} disabled={selectedIndex < 0 || selectedIndex >= filteredApps.length - 1} tabIndex={visible ? 0 : -1} aria-label="선택한 앱을 뒤로 이동"><ArrowRight size={16} aria-hidden="true" /></button>
+    </div>
   );
 
   const pageDots = pageCount > 1 && (
@@ -403,26 +427,26 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
 
   return (
     <section className={styles.stage} aria-label={`접이식 앱 목록, 앱 ${apps.length}개`}>
-      <div ref={deviceRef} className={`${styles.device}${isUnfolded ? ` ${styles.isOpen}` : ''}`} onPointerDownCapture={event => { if (menuAppId !== null && !(event.target as HTMLElement).closest('[role="menu"]')) setMenuAppId(null); }} onClick={event => { if (!(event.target as HTMLElement).closest('[data-app-id], button, input, label')) { setInfoAppId(null); if (isEditing) setIsEditing(false); } }}>
+      <div ref={deviceRef} className={`${styles.device}${isUnfolded ? ` ${styles.isOpen}` : ''}`} onPointerDownCapture={event => { if (menuAppId !== null && !(event.target as HTMLElement).closest('[role="menu"]')) setMenuAppId(null); }} onClick={event => { if (!(event.target as HTMLElement).closest('[data-app-id], button, input, label, [data-app-info]')) { setInfoAppId(null); if (isEditing) { setIsEditing(false); setSelectedAppId(null); } } }}>
         <div className={styles.camera} aria-hidden="true" />
         <div className={styles.coverScreen} {...gestureHandlers()}>
           <div className={`${styles.coverContent}${isUnfolded ? ` ${styles.contentHidden}` : ''}`} aria-hidden={isUnfolded}>
-            <div className={styles.statusBar}><span aria-hidden="true">{clock}</span>{isEditing ? <button type="button" className={styles.doneButton} onClick={() => setIsEditing(false)}>완료</button> : statusIcons}</div>
+            <div className={styles.statusBar}><span aria-hidden="true">{clock}</span>{isEditing ? <button type="button" className={styles.doneButton} onClick={() => { setIsEditing(false); setSelectedAppId(null); }}>완료</button> : statusIcons}</div>
             <div key={`cover-${currentPage}`} className={`${styles.appGrid}${pageDirection < 0 ? ` ${styles.pagePrev}` : ''}`}>
               {visibleApps.map(app => appTile(app, !isUnfolded))}
               {filteredApps.length === 0 && <p className={styles.empty}>{apps.length === 0 ? '아직 공개된 앱이 없습니다.' : '검색 결과가 없습니다.'}</p>}
             </div>
             {pageDots}
-            {searchBox('접힌 화면에서 앱 검색', !isUnfolded)}
+            {isEditing ? editToolbar(!isUnfolded) : searchBox('접힌 화면에서 앱 검색', !isUnfolded)}
           </div>
           <div className={`${styles.openContent}${isUnfolded ? ` ${styles.contentVisible}` : ''}`} aria-hidden={!isUnfolded}>
-            <div className={styles.statusBar}><span aria-hidden="true">{clock}</span>{isEditing && <button type="button" className={styles.doneButton} onClick={() => setIsEditing(false)}>완료</button>}</div>
+            <div className={styles.statusBar}><span aria-hidden="true">{clock}</span>{isEditing && <button type="button" className={styles.doneButton} onClick={() => { setIsEditing(false); setSelectedAppId(null); }}>완료</button>}</div>
             <div key={`left-${currentPage}`} className={`${styles.appGrid}${pageDirection < 0 ? ` ${styles.pagePrev}` : ''}`}>
               {leftApps.map(app => appTile(app, isUnfolded))}
               {filteredApps.length === 0 && <p className={styles.empty}>{apps.length === 0 ? '아직 공개된 앱이 없습니다.' : '검색 결과가 없습니다.'}</p>}
             </div>
             {pageDots}
-            {searchBox('펼친 화면에서 앱 검색', isUnfolded)}
+            {isEditing ? editToolbar(isUnfolded) : searchBox('펼친 화면에서 앱 검색', isUnfolded)}
           </div>
         </div>
         <div className={styles.hinge} aria-hidden="true" />
@@ -433,19 +457,21 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
             <span className={styles.homeIndicator} aria-hidden="true" />
           </div>
         </div>
-        {infoApp && !isEditing && <div className={styles.infoCard} style={{ left: infoPosition.x, top: infoPosition.y }} role="status" aria-live="polite">
+        {infoApp && !isEditing && <div ref={infoCardRef} data-app-info className={styles.infoCard} style={{ left: infoPosition.x, top: infoPosition.y }} role="group" aria-label={`${infoApp.name} 정보`} onPointerLeave={event => { if (event.pointerType === 'mouse') setInfoAppId(null); }}>
           <div className={styles.infoHeader}>
             <AppIcon icon={infoApp.icon} image={infoApp.iconImage} iconSize={24} className={styles.infoIcon} />
             <div><strong>{infoApp.name}</strong><span>{infoApp.kind}</span></div>
+            <button type="button" className={styles.infoClose} onClick={() => setInfoAppId(null)} aria-label="정보 닫기"><X size={16} aria-hidden="true" /></button>
           </div>
           <p>{infoApp.description || `${infoApp.name}을(를) 열어보세요.`}</p>
           <div className={styles.infoPlatforms}>{infoApp.platforms.map(platform => <span key={platform}>{platform}</span>)}</div>
+          <a className={styles.infoOpen} href={infoApp.href} target="_blank" rel="noopener noreferrer" onClick={() => { markAppOpened(infoApp.id); setInfoAppId(null); }}>열기 <ArrowUpRight size={15} aria-hidden="true" /></a>
         </div>}
         {menuApp && <div className={styles.quickMenu} style={{ left: menuPosition.x, top: menuPosition.y }} role="menu" aria-label={`${menuApp.name} 메뉴`}>
           <strong>{menuApp.name}</strong>
           <a href={menuApp.href} target="_blank" rel="noopener noreferrer" role="menuitem" onClick={() => { markAppOpened(menuApp.id); setMenuAppId(null); }}><ArrowUpRight size={16} />앱 열기</a>
           <button type="button" role="menuitem" onClick={async () => { try { await navigator.clipboard.writeText(menuApp.href); setCopied(true); } catch { setCopied(false); } }}>{copied ? <Check size={16} /> : <Copy size={16} />}{copied ? '복사됨' : '링크 복사'}</button>
-          <button type="button" role="menuitem" onClick={() => { setIsEditing(true); setMenuAppId(null); }}>홈 화면 편집</button>
+          <button type="button" role="menuitem" onClick={() => { setIsEditing(true); setSelectedAppId(menuApp.id); setMenuAppId(null); }}>홈 화면 편집</button>
           <button type="button" role="menuitem" onClick={() => { const ids = apps.map(app => app.id); setOrderedIds(ids); try { localStorage.removeItem(STORAGE_KEY); } catch { /* Storage may be disabled. */ } setMenuAppId(null); }}>기본 정렬로</button>
         </div>}
         <button
