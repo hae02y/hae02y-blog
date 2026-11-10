@@ -110,12 +110,13 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
   }, [infoAppId, isEditing, menuAppId, query]);
 
   useEffect(() => {
-    const landscape = window.matchMedia('(max-width: 900px) and (orientation: landscape)');
+    const landscape = window.matchMedia('(max-height: 500px) and (orientation: landscape) and (pointer: coarse)');
     const syncFold = () => { setIsUnfolded(landscape.matches); setMenuAppId(null); setInfoAppId(null); };
     const syncPageSize = () => {
-      if (window.matchMedia('(max-width: 900px) and (max-height: 500px) and (orientation: landscape)').matches) setAppsPerScreen(12);
-      else if (window.matchMedia('(max-width: 767px) and (min-height: 760px) and (orientation: portrait)').matches) setAppsPerScreen(24);
-      else setAppsPerScreen(16);
+      if (landscape.matches) setAppsPerScreen(window.innerHeight < 390 ? 8 : 12);
+      else if (window.matchMedia('(max-width: 767px) and (orientation: portrait)').matches) {
+        setAppsPerScreen(window.innerHeight < 620 ? 12 : window.innerHeight >= 760 ? 20 : 16);
+      } else setAppsPerScreen(16);
     };
     syncFold();
     syncPageSize();
@@ -125,7 +126,7 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
   }, []);
 
   useEffect(() => {
-    const fullscreen = window.matchMedia('(max-width: 767px), (max-width: 900px) and (max-height: 500px) and (orientation: landscape)');
+    const fullscreen = window.matchMedia('(max-width: 767px), (max-height: 500px) and (orientation: landscape) and (pointer: coarse)');
     const root = document.documentElement;
     const body = document.body;
     const rootOverflow = root.style.overflow;

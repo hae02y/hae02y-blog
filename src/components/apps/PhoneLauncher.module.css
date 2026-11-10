@@ -683,7 +683,7 @@
   }
 }
 
-@media (max-width: 767px), (max-width: 900px) and (max-height: 500px) and (orientation: landscape) {
+@media (max-width: 767px), (max-height: 500px) and (orientation: landscape) and (pointer: coarse) {
   .stage {
     position: fixed;
     z-index: 1000;
@@ -759,6 +759,43 @@
     background: #111b37ed;
   }
 
+  .searchBox {
+    width: 220px;
+    height: 44px;
+    margin-top: 10px;
+  }
+
+  .searchBox input {
+    font-size: 16px;
+  }
+
+  .pageDots {
+    min-height: 24px;
+    gap: 0;
+  }
+
+  .pageDots button,
+  .pageDots button.activeDot {
+    display: grid;
+    width: 24px;
+    height: 24px;
+    place-items: center;
+    background: transparent;
+  }
+
+  .pageDots button::before {
+    width: 7px;
+    height: 7px;
+    border-radius: 99px;
+    background: #ffffff68;
+    content: '';
+  }
+
+  .pageDots button.activeDot::before {
+    width: 16px;
+    background: #fff;
+  }
+
 }
 
 @media (max-width: 767px) and (min-height: 760px) and (orientation: portrait) {
@@ -771,7 +808,7 @@
   }
 }
 
-@media (max-width: 900px) and (max-height: 500px) and (orientation: landscape) {
+@media (max-height: 500px) and (orientation: landscape) and (pointer: coarse) {
   .openContent,
   .innerContent {
     padding: max(8px, env(safe-area-inset-top)) 20px 9px;
@@ -781,7 +818,12 @@
   .innerContent .appGrid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 12px 8px;
-    margin-top: 11px;
+    margin-top: 0;
+  }
+
+  .searchBox {
+    height: 40px;
+    margin-top: 6px;
   }
 
   .openContent .iconWrap,
