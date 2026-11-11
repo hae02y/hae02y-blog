@@ -146,9 +146,15 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
     const body = document.body;
     const rootOverflow = root.style.overflow;
     const bodyOverflow = body.style.overflow;
+    const rootBackground = root.style.backgroundColor;
+    const bodyBackground = body.style.backgroundColor;
+    const rootColorScheme = root.style.colorScheme;
     const syncScroll = () => {
       root.style.overflow = fullscreen.matches ? 'hidden' : rootOverflow;
       body.style.overflow = fullscreen.matches ? 'hidden' : bodyOverflow;
+      root.style.backgroundColor = fullscreen.matches ? '#030812' : rootBackground;
+      body.style.backgroundColor = fullscreen.matches ? '#030812' : bodyBackground;
+      root.style.colorScheme = fullscreen.matches ? 'dark' : rootColorScheme;
     };
     syncScroll();
     fullscreen.addEventListener('change', syncScroll);
@@ -156,6 +162,9 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
       fullscreen.removeEventListener('change', syncScroll);
       root.style.overflow = rootOverflow;
       body.style.overflow = bodyOverflow;
+      root.style.backgroundColor = rootBackground;
+      body.style.backgroundColor = bodyBackground;
+      root.style.colorScheme = rootColorScheme;
     };
   }, []);
 
@@ -412,7 +421,7 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
   );
 
   const searchBox = (label: string, visible: boolean) => (
-    <label className={styles.searchBox}>
+    <label className={`${styles.searchBox}${query ? ` ${styles.searchActive}` : ''}`}>
       <Search size={15} aria-hidden="true" />
       <span className="sr-only">{label}</span>
       <input value={query} onFocus={() => { setIsEditing(false); setSelectedAppId(null); setMenuAppId(null); setInfoAppId(null); }} onChange={event => { setQuery(event.target.value); setPageIndex(0); }} placeholder="앱 검색" aria-label={label} tabIndex={visible ? 0 : -1} />

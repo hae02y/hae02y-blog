@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
 import PhoneLauncher from '@/components/apps/PhoneLauncher';
@@ -7,6 +7,11 @@ import { siteConfig } from '@/config/site';
 import { getPublishedApps } from '@/lib/apps';
 
 export const dynamic = 'force-dynamic';
+
+export const viewport: Viewport = {
+  themeColor: '#030812',
+  colorScheme: 'dark',
+};
 
 export const metadata: Metadata = {
   title: 'Apps by hae02y',

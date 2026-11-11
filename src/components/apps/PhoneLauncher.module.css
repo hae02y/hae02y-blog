@@ -241,18 +241,25 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  width: 190px;
+  width: 112px;
   max-width: 100%;
-  height: 34px;
+  height: 30px;
   flex: none;
   margin: 10px auto 0;
-  border: 1px solid #ffffff38;
+  border: 1px solid #ffffff30;
   border-radius: 999px;
-  background: #6e78846b;
-  padding: 7px 14px;
+  background: #e6ebf438;
+  padding: 5px 10px;
   color: #fff;
-  box-shadow: 0 2px 12px #0004;
+  box-shadow: 0 2px 10px #0003;
   backdrop-filter: blur(18px);
+  transition: width .28s cubic-bezier(.2,.8,.2,1), height .28s cubic-bezier(.2,.8,.2,1), background .2s;
+}
+
+.searchBox:focus-within,
+.searchActive {
+  width: min(230px, 100%);
+  height: 40px;
 }
 
 .dock {
@@ -311,7 +318,7 @@
 .searchBox:focus-within {
   outline: 2px solid #fff;
   outline-offset: 2px;
-  background: #697789a8;
+  background: #65758dcb;
 }
 
 .editToolbar {
@@ -589,13 +596,13 @@
 }
 
 .newDot {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
   flex: none;
   margin-top: 4px;
   border-radius: 50%;
   background: #4ba9ff;
-  box-shadow: 0 0 0 1px #fff5, 0 0 7px #278fff;
+  box-shadow: 0 0 0 1px #fff5, 0 0 4px #278fff8c;
 }
 
 .infoCard {
@@ -896,14 +903,28 @@
   }
 
   .camera {
-    top: max(8px, env(safe-area-inset-top));
-    left: calc(50% - 58px);
-    width: 116px;
-    height: 30px;
+    display: none;
   }
 
-  .isOpen .camera {
-    left: calc(25% - 58px);
+  .homeIndicator {
+    display: none;
+  }
+
+  .statusBar {
+    height: 0;
+    padding: 0;
+  }
+
+  .statusBar > span {
+    display: none;
+  }
+
+  .doneButton {
+    position: absolute;
+    z-index: 8;
+    top: max(10px, env(safe-area-inset-top));
+    right: 18px;
+    min-height: 36px;
   }
 
   .coverContent,
@@ -932,9 +953,15 @@
   }
 
   .searchBox {
-    width: 220px;
-    height: 44px;
+    width: 118px;
+    height: 32px;
     margin-top: 10px;
+  }
+
+  .searchBox:focus-within,
+  .searchActive {
+    width: min(240px, 100%);
+    height: 44px;
   }
 
   .dock {
