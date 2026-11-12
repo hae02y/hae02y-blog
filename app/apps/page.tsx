@@ -1,8 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import Link from 'next/link';
-import { ArrowUpRight } from 'lucide-react';
 import PhoneLauncher from '@/components/apps/PhoneLauncher';
-import AppIcon from '@/components/apps/AppIcon';
 import { siteConfig } from '@/config/site';
 import { getPublishedApps } from '@/lib/apps';
 
@@ -26,34 +23,9 @@ export default async function AppsPage() {
   }));
 
   return (
-    <main className="mx-auto max-w-6xl px-4 pb-24 pt-14 text-[var(--primary)] md:pt-16">
-      <div className="mx-auto mb-10 max-w-xl text-center">
-        <p className="mb-4 font-mono text-xs font-semibold tracking-[0.24em] text-[var(--secondary)]">HAE02Y / APP COLLECTION</p>
-        <h1 className="mb-4 text-4xl font-bold tracking-tight sm:text-5xl">만든 앱들</h1>
-        <p className="text-sm leading-7 text-[var(--secondary)]">모든 앱을 아이콘으로 둘러보고 바로 열어보세요. 화면을 펼치거나 검색해서 앱을 찾을 수 있습니다.</p>
-        <div className="mt-5 flex flex-wrap justify-center gap-5 font-mono text-xs font-semibold tracking-wide">
-            <Link href="/about/?tab=portfolio" className="underline underline-offset-4 hover:opacity-70">프로젝트 자세히 보기</Link>
-            <Link href="/blog/" className="underline underline-offset-4 hover:opacity-70">개발 기록 읽기</Link>
-        </div>
-      </div>
+    <main className="-mt-16 flex min-h-dvh items-center justify-center px-4 py-10">
+      <h1 className="sr-only">만든 앱들</h1>
       <PhoneLauncher apps={launcherApps} />
-      <p className="mt-3 text-center font-mono text-[10px] text-[var(--secondary)]">
-        배경화면: <a href="https://www.iclarified.com/86246/download-the-official-ios-16-wallpaper-for-iphone" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2">Apple iOS 16 Astronomy</a>
-      </p>
-
-      <section aria-labelledby="apps-list-title" className="mt-16 border-t border-black/10 pt-10 dark:border-white/10">
-        <p className="mb-2 font-mono text-xs tracking-[0.22em] text-[var(--secondary)]">DIRECT LINKS</p>
-        <h2 id="apps-list-title" className="mb-7 text-2xl font-bold">앱 바로가기</h2>
-        <div className="grid gap-4 sm:grid-cols-2">
-          {apps.map(app => (
-            <a key={app.id} href={app.href} target="_blank" rel="noopener noreferrer" className="group flex items-start gap-4 rounded-2xl border border-black/10 p-5 transition-colors hover:bg-black/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 dark:border-white/15 dark:hover:bg-white/5">
-              <AppIcon icon={app.icon} image={app.iconImage} iconSize={26} className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl" />
-              <span className="min-w-0 flex-1"><span className="block font-mono text-[10px] tracking-[0.15em] text-[var(--secondary)]">{app.kind} · {app.platforms.join(' · ')}</span><span className="mt-1 block font-semibold">{app.name}</span><span className="mt-1 block text-sm leading-6 text-[var(--secondary)]">{app.description}</span></span>
-              <ArrowUpRight size={18} className="shrink-0 opacity-50 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
-            </a>
-          ))}
-        </div>
-      </section>
     </main>
   );
 }

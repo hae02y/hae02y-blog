@@ -32,8 +32,8 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll);
   }, [lastY]);
 
-  // Hide navbar on ABOUT routes — AFTER all hooks
-  if (pathname.startsWith('/about') || pathname.startsWith('/me') || pathname.startsWith('/en/about')) return null;
+  // Hide navbar on full-screen portfolio and app routes — AFTER all hooks.
+  if (pathname.startsWith('/about') || pathname.startsWith('/me') || pathname.startsWith('/en/about') || pathname === '/apps' || pathname === '/apps/') return null;
 
   return (
     <nav
