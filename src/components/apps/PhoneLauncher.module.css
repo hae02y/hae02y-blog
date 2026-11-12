@@ -109,21 +109,212 @@
   opacity: 1;
 }
 
-.camera {
+.dynamicIsland {
   position: absolute;
-  z-index: 6;
+  z-index: 16;
   top: 12px;
   left: calc(50% - 48px);
   width: 96px;
   height: 25px;
-  border-radius: 20px;
-  background: #05070d;
-  box-shadow: inset 0 0 0 1px #293041, inset 0 1px 3px #000, 0 1px 2px #ffffff16;
+  overflow: hidden;
+  border-radius: 30px;
+  background: #050507;
+  box-shadow: inset 0 0 0 1px #1c1f27, 0 1px 2px #ffffff16;
+  pointer-events: none;
+  transform-origin: top center;
+  transition: left .55s cubic-bezier(.22,.8,.18,1), width .48s cubic-bezier(.2,.82,.2,1), height .48s cubic-bezier(.2,.82,.2,1), border-radius .48s cubic-bezier(.2,.82,.2,1), box-shadow .35s;
+}
+
+.isOpen .dynamicIsland {
+  left: calc(25% - 48px);
+}
+
+.dynamicIsland.islandExpanded {
+  left: calc(50% - 137px);
+  width: 274px;
+  height: 86px;
+  border-radius: 27px;
+  box-shadow: 0 14px 28px #0008, inset 0 0 0 1px #ffffff14;
+}
+
+.isOpen .dynamicIsland.islandExpanded {
+  left: calc(25% - 137px);
+}
+
+.islandContent {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: 274px;
+  padding: 12px;
+  color: #fff;
+  opacity: 0;
+  transform: translateY(4px) scale(.96);
+  animation: islandContentIn .25s .13s ease-out both;
+}
+
+@keyframes islandContentIn {
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.islandIcon {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  flex: none;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 9px;
+}
+
+.islandText { min-width: 0; flex: 1; }
+
+.islandHeading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px;
+  min-width: 0;
+}
+
+.islandHeading strong {
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.islandHeading span {
+  flex: none;
+  max-width: 88px;
+  overflow: hidden;
+  color: #98a8cb;
+  font-size: 9px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.islandText p {
+  display: -webkit-box;
+  overflow: hidden;
+  margin: 5px 0 0 !important;
+  color: #d9e0ef !important;
+  font-size: 10px !important;
+  line-height: 1.35 !important;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.lockScreen {
+  position: absolute;
+  z-index: 30;
+  inset: var(--edge);
+  overflow: hidden;
+  border-radius: 34px;
+  background: #030812 url('/ios-astronomy-earth.jpg') center / 100% auto no-repeat;
+  color: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, 'Pretendard', sans-serif;
+  text-align: center;
+  touch-action: none;
+  user-select: none;
+  transition: transform .62s cubic-bezier(.32,.72,.16,1), opacity .5s ease;
+}
+
+.lockScreen::before {
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  width: 96px;
+  height: 25px;
+  transform: translateX(-50%);
+  border-radius: 99px;
+  background: #050507;
+  content: '';
+}
+
+.lockScreenUnlocking {
+  transform: translateY(-105%) scale(1.03);
+  opacity: 0;
   pointer-events: none;
 }
 
-.isOpen .camera {
-  left: calc(25% - 48px);
+.unlockingDevice .coverContent,
+.unlockingDevice .openContent,
+.unlockingDevice .innerContent {
+  animation: homeReveal .62s cubic-bezier(.32,.72,.16,1) both;
+}
+
+@keyframes homeReveal {
+  from { opacity: .4; transform: scale(1.06); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.lockStatus {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 29px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.lockTime {
+  position: absolute;
+  top: 17%;
+  right: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 1px;
+  text-shadow: 0 2px 18px #0009;
+}
+
+.lockTime span { font-size: 17px; font-weight: 600; }
+.lockTime strong { font-size: clamp(58px, 12vw, 78px); font-weight: 300; letter-spacing: -.045em; line-height: 1.1; }
+
+.lockBottom {
+  position: absolute;
+  right: 0;
+  bottom: 16px;
+  left: 0;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lockBottom button {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 170px;
+  border: 0;
+  background: transparent;
+  padding: 8px;
+  color: #fff;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  text-shadow: 0 1px 6px #000a;
+  cursor: pointer;
+  animation: unlockHint 2.4s ease-in-out infinite;
+}
+
+.lockBottom button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; border-radius: 14px; }
+
+@keyframes unlockHint {
+  50% { transform: translateY(-5px); }
+}
+
+.lockHomeIndicator {
+  width: 82px;
+  height: 4px;
+  border-radius: 99px;
+  background: #fff;
+  box-shadow: 0 1px 4px #0008;
 }
 
 .coverContent,
@@ -379,7 +570,7 @@
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  margin-top: 39px;
+  margin-top: 62px;
   padding: 5px 2px 4px;
   scrollbar-width: none;
   animation: pageIn .3s cubic-bezier(.2,.8,.2,1) both;
@@ -512,6 +703,29 @@
 .dropTarget .appIcon {
   box-shadow: 0 0 0 3px #fff, 0 7px 15px #08133160;
 }
+
+.dragEdge {
+  position: absolute;
+  z-index: 18;
+  top: 45%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 33px;
+  border: 1px solid #ffffff5c;
+  border-radius: 18px;
+  background: #121a32cf;
+  padding: 9px 4px;
+  color: #fff;
+  box-shadow: 0 6px 20px #0008;
+  backdrop-filter: blur(16px);
+  pointer-events: none;
+}
+
+.dragEdge span { font-size: 10px; font-weight: 700; }
+.dragEdgeLeft { left: 3px; }
+.dragEdgeRight { right: 3px; }
 
 .iconWrap {
   position: relative;
@@ -902,9 +1116,30 @@
     opacity: 1;
   }
 
-  .camera {
+  .dynamicIsland {
     display: none;
   }
+
+  .dynamicIsland.islandExpanded {
+    display: block;
+    top: max(8px, calc(env(safe-area-inset-top) + 8px));
+    left: calc(50% - 137px);
+  }
+
+  .lockScreen {
+    inset: 0;
+    border-radius: 0;
+  }
+
+  .lockScreen::before,
+  .lockStatus,
+  .lockHomeIndicator {
+    display: none;
+  }
+
+  .lockTime { top: 13%; }
+  .lockTime strong { font-size: clamp(70px, 20vw, 92px); }
+  .lockBottom { bottom: max(22px, env(safe-area-inset-bottom)); }
 
   .homeIndicator {
     display: none;
@@ -957,6 +1192,8 @@
     height: 32px;
     margin-top: 10px;
   }
+
+  .appGrid { margin-top: 80px; }
 
   .searchBox:focus-within,
   .searchActive {
@@ -1055,9 +1292,6 @@
     font-size: 10px;
   }
 
-  .camera {
-    display: none;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1075,6 +1309,25 @@
   .jiggling .appIcon,
   .foldToggle {
     transition: none !important;
+    animation: none !important;
+  }
+
+  .dynamicIsland,
+  .lockScreen,
+  .lockBottom button {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .islandContent {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+  }
+
+  .unlockingDevice .coverContent,
+  .unlockingDevice .openContent,
+  .unlockingDevice .innerContent {
     animation: none !important;
   }
 }
