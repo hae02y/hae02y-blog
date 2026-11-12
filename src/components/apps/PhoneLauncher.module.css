@@ -1,6 +1,6 @@
 .stage {
   width: 100%;
-  max-width: 660px;
+  max-width: 740px;
   margin-inline: auto;
   display: flex;
   flex-direction: column;
@@ -9,11 +9,11 @@
 }
 
 .device {
-  --leaf: 300px;
+  --leaf: 340px;
   --edge: 7px;
   position: relative;
-  width: 320px;
-  height: 540px;
+  width: 360px;
+  height: min(650px, calc(100dvh - 125px));
   flex: none;
   border: 3px solid #778294;
   border-radius: 43px;
@@ -24,7 +24,7 @@
 }
 
 .isOpen {
-  width: 620px;
+  width: 700px;
   box-shadow: 0 0 0 1px #121722, 0 36px 85px -22px #131a3960, inset 0 0 0 2px #3d4659;
 }
 
@@ -477,7 +477,7 @@
 }
 
 .dock .iconWrap {
-  width: min(100%, 49px);
+  width: min(100%, 54px);
 }
 
 .dockNewDot {
@@ -730,7 +730,7 @@
 .iconWrap {
   position: relative;
   display: block;
-  width: min(100%, 50px);
+  width: min(100%, 56px);
   aspect-ratio: 1;
   flex: none;
 }

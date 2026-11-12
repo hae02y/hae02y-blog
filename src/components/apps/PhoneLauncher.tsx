@@ -140,7 +140,7 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
       if (landscape.matches) setAppsPerScreen(window.innerHeight < 390 ? 8 : 12);
       else if (window.matchMedia('(max-width: 767px) and (orientation: portrait)').matches) {
         setAppsPerScreen(window.innerHeight < 620 ? 12 : window.innerHeight >= 760 ? 20 : 16);
-      } else setAppsPerScreen(12);
+      } else setAppsPerScreen(window.innerHeight < 690 ? 12 : 16);
     };
     syncFold();
     syncPageSize();
@@ -159,8 +159,8 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
     const bodyBackground = body.style.backgroundColor;
     const rootColorScheme = root.style.colorScheme;
     const syncScroll = () => {
-      root.style.overflow = fullscreen.matches ? 'hidden' : rootOverflow;
-      body.style.overflow = fullscreen.matches ? 'hidden' : bodyOverflow;
+      root.style.overflow = 'hidden';
+      body.style.overflow = 'hidden';
       root.style.backgroundColor = fullscreen.matches ? '#030812' : rootBackground;
       body.style.backgroundColor = fullscreen.matches ? '#030812' : bodyBackground;
       root.style.colorScheme = fullscreen.matches ? 'dark' : rootColorScheme;
