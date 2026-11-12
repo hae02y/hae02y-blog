@@ -1263,8 +1263,9 @@
   .openContent .appGrid,
   .innerContent .appGrid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 10px 8px;
+    gap: 8px;
     margin-top: 0;
+    padding-bottom: 0;
   }
 
   .dock {
