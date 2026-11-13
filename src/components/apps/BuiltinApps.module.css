@@ -1,0 +1,75 @@
+.overlay { position: absolute; inset: 7px; z-index: 90; border-radius: 34px; background: #0008; }
+.window { position: absolute; inset: 7px; z-index: 91; border-radius: 34px; overflow: hidden; display: flex; flex-direction: column; background: #f2f2f7; color: #17171b; outline: none; animation: launch .24s cubic-bezier(.2,.8,.2,1); font-family: Pretendard, sans-serif; }
+.window button, .window a { -webkit-tap-highlight-color: transparent; }
+.window button { cursor: pointer; }
+.window button:disabled { opacity: .35; cursor: default; }
+.window button:focus-visible, .window a:focus-visible { outline: 2px solid #0985ff; outline-offset: 2px; }
+.header { display: flex; align-items: center; justify-content: space-between; flex: none; padding: 16px 18px 8px; }
+.header h2 { font-size: 15px !important; line-height: 1.3 !important; color: inherit !important; margin: 0 !important; }
+.header button { display: grid; place-items: center; width: 30px; height: 30px; border: 0; border-radius: 50%; color: #555; background: #e1e1e6; }
+.content { flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; }
+.home { height: 28px; flex: none; display: grid; place-items: center; width: 100%; border: 0; background: #f2f2f7; }
+.home span { width: 100px; height: 5px; border-radius: 9px; background: #17171b; }
+.browser { display: flex; flex-direction: column; height: 100%; }
+.address { margin: 4px 12px; display: flex; align-items: center; gap: 6px; background: #e4e4ea; border-radius: 13px; padding: 7px 10px; }
+.address input { flex: 1; min-width: 0; background: none; border: 0; outline: none; color: #17171b; font-size: 16px; }
+.address button { border: 0; background: none; color: #007aff; font-size: 13px; white-space: nowrap; padding: 5px 0; }
+.browserTools { display: flex; justify-content: space-around; align-items: center; padding: 4px 8px; flex: none; }
+.browserTools button, .browserTools a { display: grid; place-items: center; min-width: 34px; height: 34px; border: 0; background: none; color: #007aff !important; font-size: 12px; }
+.webFrame { flex: 1; min-height: 130px; width: 100%; border: 0; background: #fff; }
+.browserHint { font-size: 10px !important; padding: 8px 10px; margin: 0 !important; text-align: center; color: #61616b !important; }
+.browserHint a { color: #007aff !important; }
+.favorites { overflow-y: auto; padding: 22px 18px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px 8px; align-content: start; }
+.favorites h3 { grid-column: 1/-1; margin: 0 !important; color: #17171b !important; font-size: 25px !important; }
+.favorites p { grid-column: 1/-1; margin: -10px 0 0 !important; color: #777 !important; font-size: 12px !important; }
+.favorites button { display: flex; align-items: center; flex-direction: column; gap: 7px; background: none; border: 0; color: #17171b; font-size: 11px; }
+.favorites button svg { box-sizing: content-box; padding: 15px; border-radius: 14px; color: #fff; background: linear-gradient(145deg,#40baff,#006aff); }
+.favorites button span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.error { color: #b42318 !important; padding: 4px 12px; margin: 0 !important; font-size: 12px !important; }
+.camera { background: #080808; color: #fff; height: 100%; min-height: 300px; display: flex; flex-direction: column; }
+.viewfinder { position: relative; flex: 1; min-height: 120px; overflow: hidden; background: #171719; }
+.viewfinder video, .viewfinder > img { width: 100%; height: 100%; position: absolute; inset: 0; object-fit: contain; }
+.mirrored { transform: scaleX(-1); }
+.cameraMessage { position: absolute; inset: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 14px; }
+.cameraMessage p { color: #d1d1d6 !important; font-size: 13px !important; margin: 0 !important; }
+.cameraMessage button { border: 0; border-radius: 20px; background: #ffd60a; padding: 9px 17px; color: #17171b; }
+.photoMode { color: #ffd60a !important; font-size: 12px !important; text-align: center; margin: 12px 0 2px !important; }
+.cameraControls { display: flex; align-items: center; justify-content: space-around; height: 86px; flex: none; }
+.cameraControls button, .cameraControls a { display: flex; flex-direction: column; gap: 5px; align-items: center; justify-content: center; border: 0; background: transparent; color: #fff !important; font-size: 11px; min-width: 48px; min-height: 48px; text-decoration: none; }
+.cameraControls img { width: 42px; height: 42px; border-radius: 6px; object-fit: cover; }
+.cameraControls .shutter { border: 3px solid #fff; border-radius: 50%; padding: 4px; width: 66px; height: 66px; }
+.shutter span { background: #fff; border-radius: 50%; width: 100%; height: 100%; }
+.shutter:active { transform: scale(.94); }
+.cameraNote { color: #999 !important; font-size: 10px !important; text-align: center; margin: 0 12px 12px !important; }
+.phone { min-height: 100%; display: flex; flex-direction: column; align-items: center; padding: 6px 18px 18px; }
+.simulation { font-size: 10px; color: #86868b; margin: 0 0 10px; }
+.number { width: 100%; border: 0; background: none; color: #17171b; font-size: 29px; text-align: center; padding: 8px 0 15px; min-height: 60px; }
+.number::placeholder { color: #aaa; font-size: 21px; }
+.keypad { display: grid; grid-template-columns: repeat(3, 64px); gap: 12px 20px; }
+.keypad button { display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 50%; width: 64px; height: 64px; border: 0; background: #e2e2e7; color: #111; }
+.keypad button:active { background: #bcbcc5; }
+.keypad strong { font-size: 28px; font-weight: 400; line-height: 1.05; }
+.keypad small { font-size: 8px; letter-spacing: 2px; margin-top: 3px; }
+.dialActions { display: flex; align-items: center; justify-content: center; width: 232px; position: relative; padding-top: 16px; }
+.dialActions > button:last-child { position: absolute; right: 5px; background: none; border: 0; color: #777; }
+.callButton, .endCall { width: 64px; height: 64px; border: 0; border-radius: 50%; background: #34c759; color: #fff; display: grid; place-items: center; }
+.inCall { background: radial-gradient(ellipse at top,#36485b,#101722); color: #fff; }
+.inCall .simulation { color: #c0c5ce; }
+.callIdentity { display: flex; flex-direction: column; align-items: center; gap: 15px; margin: 24px 0; }
+.avatar { width: 70px; height: 70px; display: grid; place-items: center; border-radius: 50%; background: #ffffff20; }
+.callIdentity strong { font-size: 25px; overflow-wrap: anywhere; text-align: center; }
+.callIdentity p { margin: 0 !important; color: #c9d0d8 !important; font-size: 17px !important; font-variant-numeric: tabular-nums; }
+.callOptions { display: flex; gap: 28px; margin: 18px 0 35px; }
+.callOptions button { border: 0; width: 70px; height: 70px; border-radius: 50%; background: #ffffff25; color: #fff; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 5px; font-size: 11px; }
+.callOptions button[aria-pressed='true'] { background: #fff; color: #182330; }
+.endCall { background: #ff3b30; margin-top: auto; margin-bottom: 16px; }
+.returnDial { background: #ffffff20; border: 0; color: #fff; padding: 12px 20px; border-radius: 22px; }
+@keyframes launch { from { opacity: .2; transform: scale(.84); } to { opacity: 1; transform: scale(1); } }
+@media (max-width: 767px), (max-height: 500px) and (orientation: landscape) and (pointer: coarse) {
+  .window, .overlay { inset: 0; border-radius: 0; }
+  .header { padding-top: max(10px, env(safe-area-inset-top)); }
+  .home { height: max(28px, calc(env(safe-area-inset-bottom) + 12px)); }
+}
+@media (max-width: 767px) and (min-height: 740px) { .keypad { grid-template-columns: repeat(3, 72px); gap: 18px 22px; } .keypad button { width: 72px; height: 72px; } .number { margin-top: 18px; margin-bottom: 14px; } }
+@media (max-height: 500px) and (orientation: landscape) { .header { padding: 5px 15px; } .phone { padding-top: 0; } .keypad { grid-template-columns: repeat(3, 48px); gap: 5px 20px; } .keypad button { width: 48px; height: 48px; } .keypad strong { font-size: 21px; } .number { min-height: 36px; padding: 0 0 6px; font-size: 22px; } .dialActions { padding-top: 7px; } .callButton { width: 46px; height: 46px; } .simulation { margin-bottom: 4px; } .callIdentity { margin: 5px 0; gap: 4px; } .avatar { display: none; } .callOptions { margin: 8px 0; } .endCall { width: 48px; height: 48px; margin: 4px; } .camera { min-height: 220px; } .cameraControls { height: 68px; } }
+@media (prefers-reduced-motion: reduce) { .window { animation: none; } }

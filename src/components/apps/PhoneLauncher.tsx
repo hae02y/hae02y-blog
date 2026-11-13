@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { ArrowLeft, ArrowRight, ArrowUpRight, BatteryFull, Check, ChevronUp, ChevronsLeft, ChevronsRight, Copy, Search, Wifi, X } from 'lucide-react';
 import AppIcon from './AppIcon';
+import BuiltinApps, { builtinApps, type BuiltinApp } from './BuiltinApps';
 import styles from './PhoneLauncher.module.css';
 
 type LauncherApp = {
@@ -36,6 +37,8 @@ function folderName(app: LauncherApp) {
 }
 
 export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
+  const [builtinApp, setBuiltinApp] = useState<BuiltinApp | null>(null);
+  const builtinTrigger = useRef<HTMLButtonElement | null>(null);
   const [isLocked, setIsLocked] = useState(true);
   const [isUnlocking, setIsUnlocking] = useState(false);
   const [isUnfolded, setIsUnfolded] = useState(false);
@@ -82,7 +85,8 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
   const orderedApps = [...apps].sort((a, b) => (order.get(a.id) ?? Number.MAX_SAFE_INTEGER) - (order.get(b.id) ?? Number.MAX_SAFE_INTEGER));
   const hasQuery = query.trim().length > 0;
   const filteredApps = orderedApps.filter(app => `${app.name} ${app.shortName} ${app.category} ${app.description}`.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()));
-  const dockApps = hasQuery ? [] : orderedApps.slice(0, 4);
+  const filteredBuiltinApps = builtinApps.filter(app => `${app.name} ${app.id} ${app.id === 'camera' ? '사진 촬영' : ''}`.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()));
+  const dockApps = hasQuery ? [] : orderedApps.slice(0, 1);
   const folders = Array.from(new Set(orderedApps.map(folderName))).map(name => ({ name, apps: orderedApps.filter(app => folderName(app) === name) }));
   const folderApps = orderedApps.filter(app => folderName(app) === openFolder);
   const folderPageSize = 9;
@@ -90,9 +94,8 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
   const currentFolderPage = Math.min(folderPage, folderPageCount - 1);
   const gridApps = filteredApps;
   const pageSize = appsPerScreen * (isUnfolded ? 2 : 1);
-  const pageCount = Math.max(1, Math.ceil((hasQuery ? gridApps.length : folders.length) / pageSize));
+  const pageCount = Math.max(1, Math.ceil((hasQuery ? gridApps.length + filteredBuiltinApps.length : folders.length) / pageSize));
   const currentPage = Math.min(pageIndex, pageCount - 1);
-  const visibleApps = gridApps.slice(currentPage * pageSize, (currentPage + 1) * pageSize);
   const menuApp = apps.find(app => app.id === menuAppId);
   const infoApp = apps.find(app => app.id === infoAppId);
   const islandApp = apps.find(app => app.id === islandAppId);
@@ -141,7 +144,7 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== 'Escape' || openFolder !== null) return;
+      if (event.key !== 'Escape' || openFolder !== null || builtinApp !== null) return;
       if (menuAppId !== null) setMenuAppId(null);
       else if (isEditing) { setIsEditing(false); setSelectedAppId(null); }
       else if (infoAppId !== null) setInfoAppId(null);
@@ -149,7 +152,7 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [infoAppId, isEditing, menuAppId, query, openFolder]);
+  }, [infoAppId, isEditing, menuAppId, query, openFolder, builtinApp]);
 
   useEffect(() => {
     const landscape = window.matchMedia('(max-height: 500px) and (orientation: landscape) and (pointer: coarse)');
@@ -527,12 +530,20 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
     </button>
   );
   const homeTiles = (start: number, end: number, visible: boolean) => hasQuery
-    ? visibleApps.slice(start, end).map(app => appTile(app, visible))
+    ? [...filteredBuiltinApps.map(app => builtinTile(app, visible, false)), ...gridApps.map(app => appTile(app, visible))].slice(currentPage * pageSize + start, currentPage * pageSize + end)
     : folders.slice(currentPage * pageSize + start, currentPage * pageSize + end).map(folder => folderTile(folder, visible));
   function closeFolder() {
     setOpenFolder(null); setIsEditing(false); setSelectedAppId(null); setInfoAppId(null); setIslandAppId(null);
     endAppPointer(true);
   }
+
+  const builtinTile = ({ id, name, Icon }: (typeof builtinApps)[number], visible: boolean, inDock = true) => <button key={id} type="button"
+    className={`${styles.appTile} ${inDock ? styles.dockTile : ''} ${styles.builtinTile}`} aria-label={`${name} 앱 열기`} tabIndex={visible && !isLocked ? 0 : -1}
+    onClick={event => { builtinTrigger.current = event.currentTarget; setBuiltinApp(id); setIsEditing(false); setMenuAppId(null); setInfoAppId(null); setIslandAppId(null); }}>
+    <span className={`${styles.iconWrap} ${styles.builtinIcon} ${styles[id]}`}><Icon size={31} strokeWidth={id === 'safari' ? 1.4 : 2} /></span>
+    {!inDock && <span className={styles.appLabel}><strong>{name}</strong></span>}
+  </button>;
+  const builtinDock = (visible: boolean) => builtinApps.map(app => builtinTile(app, visible));
 
   const searchBox = (label: string, visible: boolean) => (
     <label className={`${styles.searchBox}${query ? ` ${styles.searchActive}` : ''}`}>
@@ -586,22 +597,22 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
             <div className={styles.statusBar}><span aria-hidden="true">{clock}</span>{isEditing ? <button type="button" className={styles.doneButton} onClick={() => { setIsEditing(false); setSelectedAppId(null); }}>완료</button> : statusIcons}</div>
             <div key={`cover-${currentPage}`} className={`${styles.appGrid}${pageDirection < 0 ? ` ${styles.pagePrev}` : ''}`}>
               {homeTiles(0, pageSize, !isUnfolded)}
-              {gridApps.length === 0 && (apps.length === 0 || hasQuery) && <p className={styles.empty}>{apps.length === 0 ? '아직 공개된 앱이 없습니다.' : '검색 결과가 없습니다.'}</p>}
+              {hasQuery && gridApps.length === 0 && filteredBuiltinApps.length === 0 && <p className={styles.empty}>검색 결과가 없습니다.</p>}
             </div>
             {pageDots}
             {isEditing ? editToolbar(!isUnfolded) : searchBox('접힌 화면에서 앱 검색', !isUnfolded)}
-            {dockApps.length > 0 && <div className={styles.dock} aria-label="고정 앱">{dockApps.map(app => appTile(app, !isUnfolded, true))}</div>}
+            {!hasQuery && <div className={styles.dock} aria-label="고정 앱">{builtinDock(!isUnfolded)}{dockApps.map(app => appTile(app, !isUnfolded, true))}</div>}
             {homeButton(!isUnfolded)}
           </div>
           <div className={`${styles.openContent}${isUnfolded ? ` ${styles.contentVisible}` : ''}`} aria-hidden={!isUnfolded}>
             <div className={styles.statusBar}><span aria-hidden="true">{clock}</span>{isEditing && <button type="button" className={styles.doneButton} onClick={() => { setIsEditing(false); setSelectedAppId(null); }}>완료</button>}</div>
             <div key={`left-${currentPage}`} className={`${styles.appGrid}${pageDirection < 0 ? ` ${styles.pagePrev}` : ''}`}>
               {homeTiles(0, appsPerScreen, isUnfolded)}
-              {gridApps.length === 0 && (apps.length === 0 || hasQuery) && <p className={styles.empty}>{apps.length === 0 ? '아직 공개된 앱이 없습니다.' : '검색 결과가 없습니다.'}</p>}
+              {hasQuery && gridApps.length === 0 && filteredBuiltinApps.length === 0 && <p className={styles.empty}>검색 결과가 없습니다.</p>}
             </div>
             {pageDots}
             {isEditing ? editToolbar(isUnfolded) : searchBox('펼친 화면에서 앱 검색', isUnfolded)}
-            {dockApps.length > 0 && <div className={styles.dock} aria-label="고정 앱">{dockApps.map(app => appTile(app, isUnfolded, true))}</div>}
+            {!hasQuery && <div className={styles.dock} aria-label="고정 앱">{builtinDock(isUnfolded)}{dockApps.map(app => appTile(app, isUnfolded, true))}</div>}
             {homeButton(isUnfolded)}
           </div>
         </div>
@@ -613,6 +624,8 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
             {homeButton(isUnfolded)}
           </div>
         </div>
+        <BuiltinApps app={builtinApp} container={deviceRef.current} favorites={apps.map(({ name, href }) => ({ name, href }))}
+          onClose={() => setBuiltinApp(null)} onReturnFocus={() => builtinTrigger.current?.focus()} />
         <Dialog.Root open={openFolder !== null} onOpenChange={open => { if (!open) closeFolder(); }}>
           <Dialog.Portal container={deviceRef.current}>
             <Dialog.Overlay className={styles.folderOverlay} />
