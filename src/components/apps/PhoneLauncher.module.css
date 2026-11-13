@@ -1332,3 +1332,67 @@
     animation: none !important;
   }
 }
+
+/* Category folders share the home screen's icon geometry. */
+.folderTile { border: 0; background: none; padding: 0; cursor: pointer; font: inherit; }
+.folderPreview {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: repeat(3, minmax(0, 1fr)); gap: 3px; padding: 6px;
+  border-radius: 23%; background: #d8e4f64d;
+  box-shadow: inset 0 1px 1px #ffffff65, 0 4px 12px #0003;
+  backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+  transition: transform .2s, background .2s;
+}
+.folderMiniIcon { width: 100%; height: 100%; min-width: 0; border-radius: 25%; display: grid; place-items: center; overflow: hidden; }
+.folderTile:active .folderPreview { transform: scale(.91); background: #d8e4f670; }
+.folderTile:focus-visible { outline: 2px solid #fff; outline-offset: 6px; border-radius: 12px; }
+.folderOverlay {
+  position: absolute; inset: var(--edge); z-index: 80; border-radius: 34px;
+  background: #09132666; backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+  animation: folderFade .2s ease-out;
+}
+.folderDialog {
+  position: absolute; z-index: 81; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: min(310px, calc(100% - 40px)); max-height: calc(100% - 55px); overflow-y: auto;
+  color: #fff; outline: none; overscroll-behavior: contain;
+  animation: folderOpen .28s cubic-bezier(.2,.8,.2,1);
+}
+.folderHeading { display: flex; justify-content: center; align-items: center; position: relative; padding: 0 35px; }
+.folderTitle { margin: 0 !important; color: #fff !important; font: 500 27px/1.3 Pretendard, sans-serif !important; text-align: center; letter-spacing: -.7px; }
+.folderClose { position: absolute; right: 0; display: grid; place-items: center; width: 32px; height: 32px; border: 0; border-radius: 50%; background: #ffffff24; color: #fff; cursor: pointer; }
+.folderDescription { color: #ffffffba !important; font-size: 11px !important; text-align: center; margin: 8px 0 20px !important; }
+.folderSheet { padding: 24px 16px 15px; border-radius: 32px; background: #ced8e64d; box-shadow: inset 0 1px #ffffff45, 0 20px 60px #0002; touch-action: pan-y; }
+.folderGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: 78px; gap: 18px 10px; min-height: 270px; align-content: start; }
+.folderGrid .iconWrap { width: 56px; }
+.folderGrid .appTile { justify-content: flex-start; }
+.folderDots { display: flex; justify-content: center; gap: 2px; margin-top: 10px; }
+.folderDots button { width: 24px; height: 24px; padding: 8px; background: none; border: 0; cursor: pointer; }
+.folderDots button::after { content: ''; display: block; width: 7px; height: 7px; border-radius: 50%; background: #ffffff50; }
+.folderDots button[aria-current='page']::after { background: #fff; }
+.folderEditing { display: flex; align-items: center; gap: 8px; margin-top: 14px; }
+.folderEditing .editToolbar { position: static; flex: 1; margin: 0; }
+.folderHome { display: flex; justify-content: center; align-items: center; width: 100%; height: 44px; margin-top: 8px; background: none; border: 0; cursor: pointer; touch-action: none; }
+.folderHome span { width: 100px; height: 5px; border-radius: 10px; background: #fff; }
+@keyframes folderOpen { from { opacity: 0; transform: translate(-50%, -45%) scale(.78); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+@keyframes folderFade { from { opacity: 0; } to { opacity: 1; } }
+@media (max-height: 500px) and (orientation: landscape) {
+  .folderDialog { width: min(480px, calc(100% - 70px)); max-height: calc(100% - 22px); }
+  .folderTitle { font-size: 21px !important; }
+  .folderDescription { margin: 4px 0 10px !important; }
+  .folderSheet { padding: 14px; }
+  .folderGrid { grid-template-columns: repeat(3, minmax(0, 1fr)); min-height: 80px; max-height: 165px; overflow-y: auto; }
+  .folderHome { height: 25px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .folderDialog, .folderOverlay { animation: none; }
+  .folderPreview { transition: none; }
+}
+.homeButton { display: flex; align-items: center; justify-content: center; width: 120px; height: 22px; flex: none; margin: 2px auto 0; padding: 0; border: 0; background: transparent; cursor: pointer; }
+.homeButton .homeIndicator { margin: 0; }
+.homeButton:focus-visible { outline: 2px solid #fff; border-radius: 10px; }
+.homeButton .homeIndicator { display: block; }
+.folderEditing .doneButton { position: static; }
+@media (max-width: 767px), (max-height: 500px) and (orientation: landscape) and (pointer: coarse) {
+  .folderOverlay { inset: 0; border-radius: 0; }
+}
+.folderEditButton { display: block; margin: -8px auto 14px; border: 0; border-radius: 16px; padding: 6px 14px; background: #ffffff26; color: #fff; font-size: 12px; cursor: pointer; }

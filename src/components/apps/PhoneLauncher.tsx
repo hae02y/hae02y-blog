@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import * as Dialog from '@radix-ui/react-dialog';
 import { ArrowLeft, ArrowRight, ArrowUpRight, BatteryFull, Check, ChevronUp, ChevronsLeft, ChevronsRight, Copy, Search, Wifi, X } from 'lucide-react';
 import AppIcon from './AppIcon';
 import styles from './PhoneLauncher.module.css';
@@ -24,11 +25,24 @@ type MenuPosition = { x: number; y: number };
 const STORAGE_KEY = 'hae02y-app-order';
 const OPENED_APPS_KEY = 'hae02y-opened-apps';
 const NEW_APP_DAYS = 30;
+const FOLDER_NAMES: Record<string, string> = {
+  SOCIAL: '소셜', CALENDAR: '생산성', TOOL: '생산성',
+  'AI TOOL': 'AI 도구', EXPERIMENT: '실험실', LAB: '실험실',
+  GUIDE: '생활', PREVIEW: '비즈니스', STUDIO: '비즈니스',
+};
+function folderName(app: LauncherApp) {
+  if (app.category.trim().toUpperCase() === 'WEB APP') return ['dice', 'game'].includes(app.icon) ? '엔터테인먼트' : '웹앱';
+  return FOLDER_NAMES[app.category.trim().toUpperCase()] || app.category.trim() || '기타';
+}
 
 export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
   const [isLocked, setIsLocked] = useState(true);
   const [isUnlocking, setIsUnlocking] = useState(false);
   const [isUnfolded, setIsUnfolded] = useState(false);
+  const [openFolder, setOpenFolder] = useState<string | null>(null);
+  const [folderPage, setFolderPage] = useState(0);
+  const folderTrigger = useRef<HTMLButtonElement | null>(null);
+  const folderGesture = useRef<{ x: number; y: number } | null>(null);
   const [query, setQuery] = useState('');
   const [pageIndex, setPageIndex] = useState(0);
   const [pageDirection, setPageDirection] = useState(1);
@@ -69,18 +83,22 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
   const hasQuery = query.trim().length > 0;
   const filteredApps = orderedApps.filter(app => `${app.name} ${app.shortName} ${app.category} ${app.description}`.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()));
   const dockApps = hasQuery ? [] : orderedApps.slice(0, 4);
-  const gridApps = hasQuery ? filteredApps : filteredApps.slice(dockApps.length);
+  const folders = Array.from(new Set(orderedApps.map(folderName))).map(name => ({ name, apps: orderedApps.filter(app => folderName(app) === name) }));
+  const folderApps = orderedApps.filter(app => folderName(app) === openFolder);
+  const folderPageSize = 9;
+  const folderPageCount = Math.max(1, Math.ceil(folderApps.length / folderPageSize));
+  const currentFolderPage = Math.min(folderPage, folderPageCount - 1);
+  const gridApps = filteredApps;
   const pageSize = appsPerScreen * (isUnfolded ? 2 : 1);
-  const pageCount = Math.max(1, Math.ceil(gridApps.length / pageSize));
+  const pageCount = Math.max(1, Math.ceil((hasQuery ? gridApps.length : folders.length) / pageSize));
   const currentPage = Math.min(pageIndex, pageCount - 1);
   const visibleApps = gridApps.slice(currentPage * pageSize, (currentPage + 1) * pageSize);
-  const leftApps = visibleApps.slice(0, appsPerScreen);
-  const rightApps = visibleApps.slice(appsPerScreen);
   const menuApp = apps.find(app => app.id === menuAppId);
   const infoApp = apps.find(app => app.id === infoAppId);
   const islandApp = apps.find(app => app.id === islandAppId);
   const selectedApp = apps.find(app => app.id === selectedAppId);
-  const selectedIndex = selectedAppId === null ? -1 : filteredApps.findIndex(app => app.id === selectedAppId);
+  const editableApps = openFolder ? folderApps : filteredApps;
+  const selectedIndex = selectedAppId === null ? -1 : editableApps.findIndex(app => app.id === selectedAppId);
 
   useEffect(() => {
     try {
@@ -123,7 +141,7 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== 'Escape') return;
+      if (event.key !== 'Escape' || openFolder !== null) return;
       if (menuAppId !== null) setMenuAppId(null);
       else if (isEditing) { setIsEditing(false); setSelectedAppId(null); }
       else if (infoAppId !== null) setInfoAppId(null);
@@ -131,7 +149,7 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [infoAppId, isEditing, menuAppId, query]);
+  }, [infoAppId, isEditing, menuAppId, query, openFolder]);
 
   useEffect(() => {
     const landscape = window.matchMedia('(max-height: 500px) and (orientation: landscape) and (pointer: coarse)');
@@ -261,10 +279,10 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
 
   function moveSelected(direction: -1 | 1) {
     if (selectedAppId === null || selectedIndex < 0) return;
-    const target = filteredApps[selectedIndex + direction];
+    const target = editableApps[selectedIndex + direction];
     if (target === undefined) return;
     moveApp(selectedAppId, target.id);
-    setPageIndex(Math.floor(Math.max(0, selectedIndex + direction - dockApps.length) / pageSize));
+    if (openFolder) setFolderPage(Math.floor((selectedIndex + direction) / folderPageSize));
   }
 
   function changePage(index: number) {
@@ -288,7 +306,7 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
       setDraggedId(id);
       return;
     }
-    if (event.pointerType !== 'mouse') {
+    if (event.pointerType !== 'mouse' && !openFolder) {
       clearInfoTimer();
       infoTimer.current = setTimeout(() => {
         showIsland(id, true);
@@ -324,7 +342,7 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
     setDragOffset({ x: event.clientX - start.x, y: event.clientY - start.y });
     if (distance < 8) return;
     const device = deviceRef.current?.getBoundingClientRect();
-    const edgePage = device && event.clientX < device.left + 36 && currentPage > 0 ? currentPage - 1
+    const edgePage = openFolder ? null : device && event.clientX < device.left + 36 && currentPage > 0 ? currentPage - 1
       : device && event.clientX > device.right - 36 && currentPage < pageCount - 1 ? currentPage + 1 : null;
     edgeTargetPageRef.current = edgePage;
     setEdgeTargetPage(edgePage);
@@ -361,7 +379,7 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
 
   function openMenu(event: React.MouseEvent<HTMLAnchorElement>, id: number) {
     event.preventDefault();
-    if (window.matchMedia('(hover: none)').matches) return;
+    if (openFolder || window.matchMedia('(hover: none)').matches) return;
     clearHold();
     clearInfoTimer();
     setInfoAppId(null);
@@ -382,6 +400,11 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
     if (!start || start.interactive || isEditing || menuAppId !== null) return;
     const dx = x - start.x;
     const dy = y - start.y;
+    if (dy > 65 && Math.abs(dy) > Math.abs(dx) * 1.25) {
+      const inputs = deviceRef.current?.querySelectorAll<HTMLInputElement>('input[type="search"]');
+      Array.from(inputs ?? []).find(input => input.tabIndex === 0)?.focus();
+      return;
+    }
     if (Math.abs(dx) < 68 || Math.abs(dx) < Math.abs(dy) * 1.25) return;
     blockNextClick();
     if (dx < 0 && currentPage < pageCount - 1) changePage(currentPage + 1);
@@ -416,7 +439,7 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
         gestureStart.current = {
           x: event.touches[0].clientX,
           y: event.touches[0].clientY,
-          interactive: Boolean((event.target as HTMLElement).closest('button, input, label')),
+          interactive: Boolean((event.target as HTMLElement).closest('button:not([aria-haspopup="dialog"]), input, label')),
         };
       },
       onTouchEnd: (event: React.TouchEvent<HTMLDivElement>) => {
@@ -445,7 +468,7 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
         suppressClick.current = false;
       }}
       onPointerEnter={event => {
-        if (event.pointerType !== 'mouse' || isEditing) return;
+        if (event.pointerType !== 'mouse' || isEditing || openFolder) return;
         showIsland(app.id);
         clearInfoTimer();
         const element = event.currentTarget;
@@ -458,16 +481,16 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
         setInfoAppId(null);
         hideIsland(90);
       }}
-      onFocus={event => { if (event.currentTarget.matches(':focus-visible') && !isEditing) showIsland(app.id); }}
+      onFocus={event => { if (event.currentTarget.matches(':focus-visible') && !isEditing && !openFolder) showIsland(app.id); }}
       onBlur={() => hideIsland(90)}
       onContextMenu={event => openMenu(event, app.id)}
       onKeyDown={event => {
         if (!isEditing) return;
-        const offset = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -4, ArrowDown: 4 }[event.key];
+        const offset = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: openFolder ? -3 : -4, ArrowDown: openFolder ? 3 : 4 }[event.key];
         if (offset === undefined) return;
         event.preventDefault();
-        const index = orderedIds.indexOf(app.id);
-        const target = orderedIds[index + offset];
+        const editIndex = editableApps.findIndex(item => item.id === app.id);
+        const target = editableApps[editIndex + offset]?.id;
         if (target !== undefined) moveApp(app.id, target);
       }}
       onPointerDown={event => startAppPointer(event, app.id)}
@@ -487,11 +510,35 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
     </a>
   );
 
+
+  const folderTile = (folder: { name: string; apps: LauncherApp[] }, visible: boolean) => (
+    <button key={folder.name} type="button" className={`${styles.appTile} ${styles.folderTile}`}
+      aria-label={`${folder.name} 폴더, 앱 ${folder.apps.length}개`} aria-haspopup="dialog"
+      tabIndex={visible && !isLocked ? 0 : -1}
+      onClick={event => {
+        if (suppressClick.current && event.detail !== 0) { suppressClick.current = false; return; }
+        folderTrigger.current = event.currentTarget;
+        setOpenFolder(folder.name); setFolderPage(0); setInfoAppId(null); setIslandAppId(null); setMenuAppId(null);
+      }}>
+      <span className={`${styles.iconWrap} ${styles.folderPreview}`} aria-hidden="true">
+        {folder.apps.slice(0, 9).map(app => <AppIcon key={app.id} icon={app.icon} image={app.iconImage} iconSize={10} className={styles.folderMiniIcon} />)}
+      </span>
+      <span className={styles.appLabel}><strong>{folder.name}</strong></span>
+    </button>
+  );
+  const homeTiles = (start: number, end: number, visible: boolean) => hasQuery
+    ? visibleApps.slice(start, end).map(app => appTile(app, visible))
+    : folders.slice(currentPage * pageSize + start, currentPage * pageSize + end).map(folder => folderTile(folder, visible));
+  function closeFolder() {
+    setOpenFolder(null); setIsEditing(false); setSelectedAppId(null); setInfoAppId(null); setIslandAppId(null);
+    endAppPointer(true);
+  }
+
   const searchBox = (label: string, visible: boolean) => (
     <label className={`${styles.searchBox}${query ? ` ${styles.searchActive}` : ''}`}>
       <Search size={15} aria-hidden="true" />
       <span className="sr-only">{label}</span>
-      <input value={query} onFocus={() => { setIsEditing(false); setSelectedAppId(null); setMenuAppId(null); setInfoAppId(null); }} onChange={event => { setQuery(event.target.value); setPageIndex(0); }} placeholder="앱 검색" aria-label={label} tabIndex={visible && !isLocked ? 0 : -1} />
+      <input type="search" autoComplete="off" value={query} onFocus={() => { setIsEditing(false); setSelectedAppId(null); setMenuAppId(null); setInfoAppId(null); }} onChange={event => { setQuery(event.target.value); setPageIndex(0); }} placeholder="앱 검색" aria-label={label} tabIndex={visible && !isLocked ? 0 : -1} />
     </label>
   );
 
@@ -499,7 +546,7 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
     <div className={styles.editToolbar} role="group" aria-label="앱 순서 편집">
       <button type="button" onClick={() => moveSelected(-1)} disabled={selectedIndex <= 0} tabIndex={visible ? 0 : -1} aria-label="선택한 앱을 앞으로 이동"><ArrowLeft size={16} aria-hidden="true" /></button>
       <span aria-live="polite">{selectedApp?.shortName || '아이콘 선택'}</span>
-      <button type="button" onClick={() => moveSelected(1)} disabled={selectedIndex < 0 || selectedIndex >= filteredApps.length - 1} tabIndex={visible ? 0 : -1} aria-label="선택한 앱을 뒤로 이동"><ArrowRight size={16} aria-hidden="true" /></button>
+      <button type="button" onClick={() => moveSelected(1)} disabled={selectedIndex < 0 || selectedIndex >= editableApps.length - 1} tabIndex={visible ? 0 : -1} aria-label="선택한 앱을 뒤로 이동"><ArrowRight size={16} aria-hidden="true" /></button>
     </div>
   );
 
@@ -510,6 +557,9 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
       ))}
     </div>
   );
+
+  const homeButton = (visible: boolean) => <button type="button" className={styles.homeButton} aria-label="홈 화면으로" tabIndex={visible && !isLocked ? 0 : -1}
+    onClick={() => { setQuery(''); setPageIndex(0); setIsEditing(false); setSelectedAppId(null); setMenuAppId(null); setInfoAppId(null); setIslandAppId(null); }}><span className={styles.homeIndicator} /></button>;
 
   const statusIcons = (
     <span className={styles.statusIcons} aria-hidden="true">
@@ -535,34 +585,69 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
           <div className={`${styles.coverContent}${isUnfolded ? ` ${styles.contentHidden}` : ''}`} aria-hidden={isUnfolded}>
             <div className={styles.statusBar}><span aria-hidden="true">{clock}</span>{isEditing ? <button type="button" className={styles.doneButton} onClick={() => { setIsEditing(false); setSelectedAppId(null); }}>완료</button> : statusIcons}</div>
             <div key={`cover-${currentPage}`} className={`${styles.appGrid}${pageDirection < 0 ? ` ${styles.pagePrev}` : ''}`}>
-              {visibleApps.map(app => appTile(app, !isUnfolded))}
+              {homeTiles(0, pageSize, !isUnfolded)}
               {gridApps.length === 0 && (apps.length === 0 || hasQuery) && <p className={styles.empty}>{apps.length === 0 ? '아직 공개된 앱이 없습니다.' : '검색 결과가 없습니다.'}</p>}
             </div>
             {pageDots}
             {isEditing ? editToolbar(!isUnfolded) : searchBox('접힌 화면에서 앱 검색', !isUnfolded)}
             {dockApps.length > 0 && <div className={styles.dock} aria-label="고정 앱">{dockApps.map(app => appTile(app, !isUnfolded, true))}</div>}
-            <span className={styles.homeIndicator} aria-hidden="true" />
+            {homeButton(!isUnfolded)}
           </div>
           <div className={`${styles.openContent}${isUnfolded ? ` ${styles.contentVisible}` : ''}`} aria-hidden={!isUnfolded}>
             <div className={styles.statusBar}><span aria-hidden="true">{clock}</span>{isEditing && <button type="button" className={styles.doneButton} onClick={() => { setIsEditing(false); setSelectedAppId(null); }}>완료</button>}</div>
             <div key={`left-${currentPage}`} className={`${styles.appGrid}${pageDirection < 0 ? ` ${styles.pagePrev}` : ''}`}>
-              {leftApps.map(app => appTile(app, isUnfolded))}
+              {homeTiles(0, appsPerScreen, isUnfolded)}
               {gridApps.length === 0 && (apps.length === 0 || hasQuery) && <p className={styles.empty}>{apps.length === 0 ? '아직 공개된 앱이 없습니다.' : '검색 결과가 없습니다.'}</p>}
             </div>
             {pageDots}
             {isEditing ? editToolbar(isUnfolded) : searchBox('펼친 화면에서 앱 검색', isUnfolded)}
             {dockApps.length > 0 && <div className={styles.dock} aria-label="고정 앱">{dockApps.map(app => appTile(app, isUnfolded, true))}</div>}
-            <span className={styles.homeIndicator} aria-hidden="true" />
+            {homeButton(isUnfolded)}
           </div>
         </div>
         <div className={styles.hinge} aria-hidden="true" />
         <div className={styles.innerScreen} aria-hidden={!isUnfolded || isLocked} {...gestureHandlers()}>
           <div className={styles.innerContent}>
             <div className={`${styles.statusBar} ${styles.rightStatus}`} aria-hidden="true">{statusIcons}</div>
-            <div key={`right-${currentPage}`} className={`${styles.appGrid}${pageDirection < 0 ? ` ${styles.pagePrev}` : ''}`}>{rightApps.map(app => appTile(app, isUnfolded))}</div>
-            <span className={styles.homeIndicator} aria-hidden="true" />
+            <div key={`right-${currentPage}`} className={`${styles.appGrid}${pageDirection < 0 ? ` ${styles.pagePrev}` : ''}`}>{homeTiles(appsPerScreen, pageSize, isUnfolded)}</div>
+            {homeButton(isUnfolded)}
           </div>
         </div>
+        <Dialog.Root open={openFolder !== null} onOpenChange={open => { if (!open) closeFolder(); }}>
+          <Dialog.Portal container={deviceRef.current}>
+            <Dialog.Overlay className={styles.folderOverlay} />
+            <Dialog.Content className={styles.folderDialog}
+              onCloseAutoFocus={event => { event.preventDefault(); folderTrigger.current?.focus(); }}
+              onPointerDown={event => event.stopPropagation()} onClick={event => event.stopPropagation()}>
+              <div className={styles.folderHeading}>
+                <Dialog.Title className={styles.folderTitle}>{openFolder}</Dialog.Title>
+                <Dialog.Close className={styles.folderClose} aria-label="폴더 닫기"><X size={20} /></Dialog.Close>
+              </div>
+              <Dialog.Description className={styles.folderDescription}>앱 {folderApps.length}개 · 길게 눌러 순서 편집</Dialog.Description>
+              {!isEditing && <button type="button" className={styles.folderEditButton} onClick={() => { setIsEditing(true); setSelectedAppId(folderApps[0]?.id ?? null); }}>폴더 편집</button>}
+              <div className={styles.folderSheet}
+                onTouchStart={event => { folderGesture.current = { x: event.touches[0].clientX, y: event.touches[0].clientY }; }}
+                onTouchEnd={event => {
+                  const start = folderGesture.current; folderGesture.current = null;
+                  if (!start || isEditing) return;
+                  const dx = event.changedTouches[0].clientX - start.x;
+                  const dy = event.changedTouches[0].clientY - start.y;
+                  if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) {
+                    blockNextClick(); setFolderPage(Math.max(0, Math.min(folderPageCount - 1, currentFolderPage + (dx < 0 ? 1 : -1))));
+                  }
+                }}>
+                <div className={styles.folderGrid} key={`${openFolder}-${currentFolderPage}`}>
+                  {folderApps.slice(currentFolderPage * folderPageSize, (currentFolderPage + 1) * folderPageSize).map(app => appTile(app, true))}
+                </div>
+                {folderPageCount > 1 && <div className={styles.folderDots} aria-label="폴더 페이지">
+                  {Array.from({ length: folderPageCount }, (_, index) => <button key={index} type="button" aria-label={`폴더 ${index + 1}페이지`} aria-current={index === currentFolderPage ? 'page' : undefined} onClick={() => setFolderPage(index)} />)}
+                </div>}
+                {isEditing && <div className={styles.folderEditing}>{editToolbar(true)}<button type="button" className={styles.doneButton} onClick={() => { setIsEditing(false); setSelectedAppId(null); }}>완료</button></div>}
+              </div>
+              <Dialog.Close className={styles.folderHome} aria-label="홈 화면으로 돌아가기"><span /></Dialog.Close>
+            </Dialog.Content>
+          </Dialog.Portal>
+        </Dialog.Root>
         {infoApp && !isEditing && <div ref={infoCardRef} data-app-info className={styles.infoCard} style={{ left: infoPosition.x, top: infoPosition.y }} role="group" aria-label={`${infoApp.name} 정보`} onPointerLeave={event => { if (event.pointerType === 'mouse') { setInfoAppId(null); hideIsland(90); } }}>
           <div className={styles.infoHeader}>
             <AppIcon icon={infoApp.icon} image={infoApp.iconImage} iconSize={24} className={styles.infoIcon} />
@@ -618,7 +703,7 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
           </div>
         </div>}
       </div>
-      <p className={styles.instructions}>아이콘에 마우스를 올리거나 손가락을 잠깐 대면 상세 정보 · 길게 눌러 정렬 · 좌우로 밀어 페이지 이동</p>
+      <p className={styles.instructions}>종류별 폴더를 눌러 앱 보기 · 길게 눌러 순서 편집 · 검색으로 모든 앱 찾기</p>
     </section>
   );
 }
