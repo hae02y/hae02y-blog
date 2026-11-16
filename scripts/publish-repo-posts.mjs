@@ -73,37 +73,45 @@ if (!process.env.DATABASE_URL) {
 
     // Add the requested illustration once without replacing later editor changes.
     const directory = '2026-11-16-local-rag-ollama';
-    const revision = 'local-rag-ollama:diagram-v1';
-    const anchor = '## 1. 이번에 만든 RAG의 범위';
+    const illustrations = [
+      ['local-rag-ollama:diagram-v1', '## 1. 이번에 만든 RAG의 범위', 'rag-pipeline.png'],
+      ['local-rag-ollama:chunking-v1', '## 3. 문서를 어떻게 쪼갰는가', 'rag-chunking.png'],
+      ['local-rag-ollama:grounding-v1', '## 6. 생성 모델에 전달한 근거와 출력 검사', 'rag-grounding.png'],
+      ['local-rag-ollama:failures-v1', '## 7. 실제 질문으로 확인한 결과', 'rag-failures.png'],
+    ];
     const source = matter(fs.readFileSync(path.join(process.cwd(), 'blog', directory, 'index.md'), 'utf8')).content;
-    const illustration = source.match(/!\[DNS·TLS[^\n]+\n\n\*위쪽은[^\n]+\*/)?.[0];
-    if (!illustration) throw new Error('RAG illustration source is missing');
-    await client.query('BEGIN');
-    try {
-      const claimed = await client.query(
-        'INSERT INTO repo_post_publications (slug) VALUES ($1) ON CONFLICT DO NOTHING RETURNING slug',
-        [revision],
-      );
-      if (claimed.rowCount) {
-        const result = await client.query(
-          "SELECT content FROM posts WHERE type = 'blog' AND slug = $1 FOR UPDATE",
-          ['local-rag-ollama'],
+    for (const [revision, anchor, filename] of illustrations) {
+      if (source.split(anchor).length !== 2) throw new Error('RAG source anchor is missing or ambiguous');
+      const section = source.slice(source.indexOf(anchor) + anchor.length).trimStart();
+      const illustration = section.match(/^!\[[^\n]+\n\n\*[^\n]+\*/)?.[0];
+      if (!illustration?.includes(`(./${filename})`)) throw new Error('RAG illustration source is missing');
+      await client.query('BEGIN');
+      try {
+        const claimed = await client.query(
+          'INSERT INTO repo_post_publications (slug) VALUES ($1) ON CONFLICT DO NOTHING RETURNING slug',
+          [revision],
         );
-        const current = result.rows[0]?.content;
-        if (typeof current !== 'string') throw new Error('Published RAG post is missing');
-        if (!current.includes('rag-pipeline.png')) {
-          if (current.split(anchor).length !== 2) throw new Error('RAG section anchor changed; review before adding illustration');
-          await client.query(
-            "UPDATE posts SET content = $1, updated_at = now() WHERE type = 'blog' AND slug = $2",
-            [current.replace(anchor, `${anchor}\n\n${resolveImages(illustration, directory)}`), 'local-rag-ollama'],
+        if (claimed.rowCount) {
+          const result = await client.query(
+            "SELECT content FROM posts WHERE type = 'blog' AND slug = $1 FOR UPDATE",
+            ['local-rag-ollama'],
           );
+          const current = result.rows[0]?.content;
+          if (typeof current !== 'string') throw new Error('Published RAG post is missing');
+          if (!current.includes(filename)) {
+            if (current.split(anchor).length !== 2) throw new Error('RAG section anchor changed; review before adding illustration');
+            await client.query(
+              "UPDATE posts SET content = $1, updated_at = now() WHERE type = 'blog' AND slug = $2",
+              [current.replace(anchor, `${anchor}\n\n${resolveImages(illustration, directory)}`), 'local-rag-ollama'],
+            );
+          }
+          console.log(`publish-repo-posts: ${filename} applied`);
         }
-        console.log('publish-repo-posts: RAG illustration applied');
+        await client.query('COMMIT');
+      } catch (error) {
+        await client.query('ROLLBACK');
+        throw error;
       }
-      await client.query('COMMIT');
-    } catch (error) {
-      await client.query('ROLLBACK');
-      throw error;
     }
   } finally {
     await client.end();
