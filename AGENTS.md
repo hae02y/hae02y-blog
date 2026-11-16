@@ -117,6 +117,7 @@ yarn typecheck   # run tsc --noEmit for the whole project
 - Report changed paths and commands run without dumping large diffs.
 
 ## Blog Writing Requirements
+- 앞으로 RAG·모델·데이터 실험은 Python을 기본으로 작성하고, 실행 환경·의존성·평가 스크립트도 Python 기준으로 구성한다. 기존 실험의 언어 전환은 요청된 범위에 따라 진행한다.
 - 기술 블로그 글은 경험을 바탕으로 기술 중심으로 작성한다.
 - 개념 소개만 하지 말고 실제 구현 흐름, 데이터 구조, 상태 전이, API 요청·응답 또는 코드 예시를 포함한다.
 - 플랫폼이나 도구의 차이와 운영 중 발생할 수 있는 실패·재시도·복원·보안 경계를 설명한다.

@@ -12,6 +12,13 @@ const directories = [
   '2026-11-16-local-rag-ollama',
 ];
 
+function resolveImages(content, directory) {
+  return content.replace(/(!\[[^\]]*\]\()([^)\s]+)([^)]*\))/g, (match, before, src, after) => {
+    if (/^(?:[a-z][a-z\d+.-]*:|\/|#)/i.test(src)) return match;
+    return `${before}/blog/${directory}/${src.replace(/^\.\//, '')}${after}`;
+  });
+}
+
 if (!process.env.DATABASE_URL) {
   console.log('publish-repo-posts: DATABASE_URL 없음 → 스킵 (로컬 빌드)');
 } else {
@@ -46,7 +53,7 @@ if (!process.env.DATABASE_URL) {
               slug,
               String(data.title || slug),
               String(data.description || ''),
-              content,
+              resolveImages(content, directory),
               Array.isArray(data.tags) ? data.tags.map(String) : [],
               Array.isArray(data.authors) ? data.authors.map(String) : [],
               directory.slice(0, 10),
@@ -62,6 +69,41 @@ if (!process.env.DATABASE_URL) {
         await client.query('ROLLBACK');
         throw error;
       }
+    }
+
+    // Add the requested illustration once without replacing later editor changes.
+    const directory = '2026-11-16-local-rag-ollama';
+    const revision = 'local-rag-ollama:diagram-v1';
+    const anchor = '## 1. 이번에 만든 RAG의 범위';
+    const source = matter(fs.readFileSync(path.join(process.cwd(), 'blog', directory, 'index.md'), 'utf8')).content;
+    const illustration = source.match(/!\[DNS·TLS[^\n]+\n\n\*위쪽은[^\n]+\*/)?.[0];
+    if (!illustration) throw new Error('RAG illustration source is missing');
+    await client.query('BEGIN');
+    try {
+      const claimed = await client.query(
+        'INSERT INTO repo_post_publications (slug) VALUES ($1) ON CONFLICT DO NOTHING RETURNING slug',
+        [revision],
+      );
+      if (claimed.rowCount) {
+        const result = await client.query(
+          "SELECT content FROM posts WHERE type = 'blog' AND slug = $1 FOR UPDATE",
+          ['local-rag-ollama'],
+        );
+        const current = result.rows[0]?.content;
+        if (typeof current !== 'string') throw new Error('Published RAG post is missing');
+        if (!current.includes('rag-pipeline.png')) {
+          if (current.split(anchor).length !== 2) throw new Error('RAG section anchor changed; review before adding illustration');
+          await client.query(
+            "UPDATE posts SET content = $1, updated_at = now() WHERE type = 'blog' AND slug = $2",
+            [current.replace(anchor, `${anchor}\n\n${resolveImages(illustration, directory)}`), 'local-rag-ollama'],
+          );
+        }
+        console.log('publish-repo-posts: RAG illustration applied');
+      }
+      await client.query('COMMIT');
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
     }
   } finally {
     await client.end();
