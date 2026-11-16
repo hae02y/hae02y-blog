@@ -9,6 +9,7 @@ const directories = [
   '2026-11-04-coding-agent-harness-app-launcher',
   '2026-11-16-dns-domain-records-authoritative-server',
   '2026-11-16-https-tls-certificates',
+  '2026-11-16-local-rag-ollama',
 ];
 
 if (!process.env.DATABASE_URL) {

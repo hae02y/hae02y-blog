@@ -1,0 +1,188 @@
+{
+  "metadata": {
+    "at": "2026-11-16T04:53:13.650Z",
+    "ollama": {
+      "version": "0.40.16"
+    },
+    "node": "v26.13.0",
+    "config": {
+      "version": 1,
+      "maxChars": 900,
+      "overlap": 120,
+      "prefix": "search-result-v1"
+    },
+    "think": true,
+    "generation": {
+      "name": "qwen3:1.7b",
+      "digest": "8f68893c685c3ddff2aa3fffce2aa60a30bb2da65ca488b61fff134a4d1730e7"
+    },
+    "embedding": {
+      "name": "embeddinggemma:300m",
+      "digest": "85462619ee721b466c5927d109d4cb765861907d5417b9109caebc4e614679f1"
+    }
+  },
+  "cases": [
+    {
+      "id": "ttl",
+      "retrievalHit": true,
+      "abstentionMatches": true,
+      "answer": "네, TTL을 3600에서 60으로 낮추면 이미 캐시된 DNS 응답은 즉시 60초로 줄어들지 않습니다. 캐시된 응답은 TTL의 만료 시간이 지나야야 새로운 값으로 업데이트됩니다. 제공된 문서에서 확인할 수 있습니다.",
+      "citations": [
+        1
+      ],
+      "elapsedMs": 26576,
+      "manualReview": {
+        "verdict": "partial",
+        "reason": "즉시 줄지 않는다는 핵심은 맞지만 긍정 질문에 첫 네가 모순되어 완전 정답으로 세지 않았다."
+      },
+      "retrieved": [
+        {
+          "id": "5a8d5ba9588f33af",
+          "source": "blog/2026-11-16-dns-domain-records-authoritative-server/index.md",
+          "heading": "4. TTL과 “전파 대기”를 정확히 구분하기",
+          "score": 0.6760889355325856
+        },
+        {
+          "id": "633bab26d00fad91",
+          "source": "blog/2026-11-16-dns-domain-records-authoritative-server/index.md",
+          "heading": "6. BIND로 권한 DNS를 직접 띄우기",
+          "score": 0.3995954028216204
+        },
+        {
+          "id": "0814e2e691877f93",
+          "source": "blog/2026-11-16-dns-domain-records-authoritative-server/index.md",
+          "heading": "2. 브라우저가 이름을 찾는 흐름",
+          "score": 0.3793696683652824
+        }
+      ]
+    },
+    {
+      "id": "dnssec",
+      "retrievalHit": true,
+      "abstentionMatches": false,
+      "answer": "제공된 문서에서 확인할 수 없습니다.",
+      "citations": [],
+      "elapsedMs": 10469,
+      "manualReview": {
+        "verdict": "incorrect",
+        "reason": "근거가 검색됐는데 과도하게 보류했다."
+      },
+      "retrieved": [
+        {
+          "id": "ac9beb023eae45bc",
+          "source": "blog/2026-11-16-dns-domain-records-authoritative-server/index.md",
+          "heading": "9. DNSSEC·DoH·TLS가 각각 보호하는 것",
+          "score": 0.568008788551695
+        },
+        {
+          "id": "ba2b67430fa6ac54",
+          "source": "blog/2026-11-16-dns-domain-records-authoritative-server/index.md",
+          "heading": "9. DNSSEC·DoH·TLS가 각각 보호하는 것",
+          "score": 0.5377258558716784
+        },
+        {
+          "id": "e39a58ca270abb0b",
+          "source": "blog/2026-11-16-https-tls-certificates/index.md",
+          "heading": "9. TLS, DNSSEC, DoH, CAA, mTLS는 서로 대체재가 아니다",
+          "score": 0.5039142223837315
+        }
+      ]
+    },
+    {
+      "id": "wildcard",
+      "retrievalHit": true,
+      "abstentionMatches": false,
+      "answer": "제공된 문서에서 확인할 수 없습니다.",
+      "citations": [],
+      "elapsedMs": 9700,
+      "manualReview": {
+        "verdict": "incorrect",
+        "reason": "정답 표와 설명이 검색됐는데 과도하게 보류했다."
+      },
+      "retrieved": [
+        {
+          "id": "4f91094f76e607f6",
+          "source": "blog/2026-11-16-https-tls-certificates/index.md",
+          "heading": "이름 확인은 IP 확인과 다르다",
+          "score": 0.5058805540503661
+        },
+        {
+          "id": "e01a67296d7913cc",
+          "source": "blog/2026-11-16-https-tls-certificates/index.md",
+          "heading": "소개",
+          "score": 0.4614897002551354
+        },
+        {
+          "id": "1d41ef6d824af205",
+          "source": "blog/2026-11-16-https-tls-certificates/index.md",
+          "heading": "7. DNS-01을 자동화할 때 Cloudflare 토큰은 무엇을 하는가",
+          "score": 0.4598427569681296
+        }
+      ]
+    },
+    {
+      "id": "missing",
+      "retrievalHit": null,
+      "abstentionMatches": true,
+      "answer": "제공된 문서에서 확인할 수 없습니다.",
+      "citations": [],
+      "elapsedMs": 24945,
+      "manualReview": {
+        "verdict": "correct",
+        "reason": "문서에 없는 운영 비밀을 답하지 않았다."
+      },
+      "retrieved": [
+        {
+          "id": "3b4e6b70645e2872",
+          "source": "blog/2026-11-16-https-tls-certificates/index.md",
+          "heading": "2. 인증서는 비밀번호가 아니라, 이름과 공개키를 묶은 문서다",
+          "score": 0.3749251466484517
+        },
+        {
+          "id": "62a374f004f2ff1b",
+          "source": "blog/2026-11-16-https-tls-certificates/index.md",
+          "heading": "12. 운영에서 지켜야 할 경계",
+          "score": 0.3404002120640845
+        },
+        {
+          "id": "65b7fe2d9d365b2b",
+          "source": "blog/2026-11-16-dns-domain-records-authoritative-server/index.md",
+          "heading": "소개",
+          "score": 0.32667361136983325
+        }
+      ]
+    },
+    {
+      "id": "unrelated",
+      "retrievalHit": null,
+      "abstentionMatches": true,
+      "answer": "제공된 문서에서 확인할 수 없습니다.",
+      "citations": [],
+      "elapsedMs": 22354,
+      "manualReview": {
+        "verdict": "correct",
+        "reason": "문서 범위 밖 요리 질문을 보류했다."
+      },
+      "retrieved": [
+        {
+          "id": "e79a6ff619e36c58",
+          "source": "blog/2026-11-16-dns-domain-records-authoritative-server/index.md",
+          "heading": "7. 응답과 실패를 직접 비교하기",
+          "score": 0.08724661023334088
+        },
+        {
+          "id": "c2150e4ccb78ef48",
+          "source": "blog/2026-11-16-dns-domain-records-authoritative-server/index.md",
+          "heading": "7. 응답과 실패를 직접 비교하기",
+          "score": 0.0770401679646773
+        },
+        {
+          "id": "661ed8281c4f189f",
+          "source": "blog/2026-11-16-dns-domain-records-authoritative-server/index.md",
+          "heading": "3. 레코드는 이름·타입·TTL·값으로 읽는다",
+          "score": 0.06886152551562286
+        }
+      ]
+    }
+  ]
+}
