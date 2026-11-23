@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { ArrowLeft, ArrowRight, ArrowUpRight, BatteryFull, Check, ChevronUp, ChevronsLeft, ChevronsRight, Copy, Search, Wifi, X } from 'lucide-react';
 import AppIcon from './AppIcon';
+import MobileAppSearch from './MobileAppSearch';
 import BuiltinApps, { builtinApps, type BuiltinApp } from './BuiltinApps';
 import styles from './PhoneLauncher.module.css';
 
@@ -47,6 +48,15 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
   const folderTrigger = useRef<HTMLButtonElement | null>(null);
   const folderGesture = useRef<{ x: number; y: number } | null>(null);
   const [query, setQuery] = useState('');
+  const [mobileSearch, setMobileSearch] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const media = window.matchMedia('(pointer: coarse) and (max-width: 767px), (pointer: coarse) and (max-height: 500px) and (orientation: landscape)');
+    const sync = () => { setIsMobile(media.matches); if (!media.matches) setMobileSearch(false); };
+    sync();
+    media.addEventListener('change', sync);
+    return () => media.removeEventListener('change', sync);
+  }, []);
   const [pageIndex, setPageIndex] = useState(0);
   const [pageDirection, setPageDirection] = useState(1);
   const [clock, setClock] = useState('9:41');
@@ -404,6 +414,7 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
     const dx = x - start.x;
     const dy = y - start.y;
     if (dy > 65 && Math.abs(dy) > Math.abs(dx) * 1.25) {
+      if (isMobile) { setMobileSearch(true); return; }
       const inputs = deviceRef.current?.querySelectorAll<HTMLInputElement>('input[type="search"]');
       Array.from(inputs ?? []).find(input => input.tabIndex === 0)?.focus();
       return;
@@ -549,7 +560,7 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
     <label className={`${styles.searchBox}${query ? ` ${styles.searchActive}` : ''}`}>
       <Search size={15} aria-hidden="true" />
       <span className="sr-only">{label}</span>
-      <input type="search" autoComplete="off" value={query} onFocus={() => { setIsEditing(false); setSelectedAppId(null); setMenuAppId(null); setInfoAppId(null); }} onChange={event => { setQuery(event.target.value); setPageIndex(0); }} placeholder="앱 검색" aria-label={label} tabIndex={visible && !isLocked ? 0 : -1} />
+      <input type="search" readOnly={isMobile} inputMode={isMobile ? "none" : undefined} onClick={() => { if (isMobile) setMobileSearch(true); }} autoComplete="off" value={query} onFocus={() => { if (isMobile) setMobileSearch(true); setIsEditing(false); setSelectedAppId(null); setMenuAppId(null); setInfoAppId(null); }} onChange={event => { setQuery(event.target.value); setPageIndex(0); }} placeholder="앱 검색" aria-label={label} tabIndex={visible && !isLocked ? 0 : -1} />
     </label>
   );
 
@@ -716,6 +727,11 @@ export default function PhoneLauncher({ apps }: { apps: LauncherApp[] }) {
           </div>
         </div>}
       </div>
+      {isMobile && mobileSearch && <MobileAppSearch query={query} onChange={value => { setQuery(value); setPageIndex(0); }} onClose={() => setMobileSearch(false)}>
+        {filteredBuiltinApps.map(app => <div key={app.id} onClick={() => setMobileSearch(false)}>{builtinTile(app, true, false)}</div>)}
+        {filteredApps.map(app => <div key={app.id} onClick={() => setMobileSearch(false)}>{appTile(app, true)}</div>)}
+        {filteredApps.length === 0 && filteredBuiltinApps.length === 0 && <p>검색 결과가 없습니다.</p>}
+      </MobileAppSearch>}
       <p className={styles.instructions}>종류별 폴더를 눌러 앱 보기 · 길게 눌러 순서 편집 · 검색으로 모든 앱 찾기</p>
     </section>
   );

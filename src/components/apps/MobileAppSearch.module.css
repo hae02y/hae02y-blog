@@ -1,0 +1,20 @@
+.backdrop { position: fixed; inset: 0; z-index: 2000; background: #071120d9; backdrop-filter: blur(25px); }
+.panel { position: fixed; inset: 0; z-index: 2001; display: flex; flex-direction: column; height: 100dvh; color: white; padding-top: max(20px, env(safe-area-inset-top)); outline: none; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+.results { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 20px 24px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: min-content; align-content: start; gap: 24px 16px; }
+.results > p { grid-column: 1 / -1; color: white !important; text-align: center; }
+.searchRow { display: flex; flex: none; gap: 12px; padding: 12px 16px; align-items: center; }
+.field { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; background: #ffffff22; border-radius: 12px; padding: 11px; }
+.field input { width: 100%; min-width: 0; background: transparent; border: 0; outline: none; color: white; font-size: 16px; }
+.field input::placeholder { color: #c0c5cf; }
+.field button, .cancel { border: 0; background: transparent; color: white; flex: none; }
+.keyboard { flex: none; background: #272a30f5; padding: 10px 5px max(12px, env(safe-area-inset-bottom)); touch-action: manipulation; user-select: none; }
+.row { display: flex; justify-content: center; gap: 6px; margin-bottom: 10px; }
+.row:last-child { margin-bottom: 0; }
+.row:nth-child(2) { padding-inline: 4%; }
+.row button { display: flex; justify-content: center; align-items: center; min-width: 0; flex: 1; height: 44px; padding: 0; border: 0; border-radius: 6px; background: #62656d; color: white; box-shadow: 0 1px 1px #0009; font-size: 21px; }
+.row button:active { background: #9a9da5; transform: translateY(1px); }
+.row button:focus-visible, .searchRow button:focus-visible { outline: 2px solid #8bc5ff; outline-offset: 2px; }
+.row .special { flex: 1.45; background: #41454d; font-size: 14px; }
+.row .space { flex: 5; font-size: 15px; }
+.row .done { flex: 2; background: #087fff; font-size: 15px; }
+@media (orientation: landscape) and (max-height: 500px) { .panel { padding-top: 0; } .results { gap: 10px; padding: 10px 24px; grid-template-columns: repeat(8, minmax(0, 1fr)); } .keyboard { padding-top: 5px; padding-bottom: max(5px, env(safe-area-inset-bottom)); } .row { margin-bottom: 5px; } .row button { height: 30px; font-size: 17px; } .searchRow { padding-block: 6px; } .field { padding-block: 7px; } }
