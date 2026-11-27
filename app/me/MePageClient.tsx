@@ -10,6 +10,7 @@ import type { meConfig } from '@/config/me';
 import type { Locale } from '@/i18n/config';
 import type { PortfolioData } from '@/lib/portfolio';
 import './me-styles.css';
+import './resume-print.css';
 
 type MePageClientProps = {
   portfolioData: PortfolioData;
