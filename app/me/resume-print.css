@@ -5,8 +5,8 @@
 
   @bottom-left {
     content: "Software Weaver";
-    font-family: Arial, sans-serif;
-    font-size: 8pt;
+    font-family: 'Allura', cursive;
+    font-size: 12pt;
     color: #64748b;
   }
 
@@ -62,7 +62,19 @@
     margin-bottom: 4mm;
   }
   .resume-page h1 { margin: 0; font-size: 27pt; line-height: 1.15; letter-spacing: -0.6pt; }
-  .resume-identity > p { flex: none; margin: 0; font-size: 9pt; color: #526175 !important; }
+  .resume-contact { flex: none; }
+  .resume-page a.resume-email {
+    min-height: 0;
+    padding: 1mm 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    gap: 1.5mm;
+  }
+  .resume-email-label { font-size: 6.5pt; }
+  .resume-email-value { font-size: 8pt; }
+  .resume-email svg { width: 10pt; height: 10pt; }
+  .resume-signature { font-size: 23pt; line-height: 1.15; }
   .resume-introduction { display: block; }
   .resume-page .resume-introduction-authored > p:first-child {
     font-size: 12pt;

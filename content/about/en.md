@@ -3,7 +3,7 @@ title: About Haeyoung Jeong
 description: Meet Haeyoung Jeong, a Software Weaver connecting technology and ideas and exploring how AI can expand what he builds.
 ---
 
-Software Weaver — weaving software, ideas, and possibilities together.
+<span class="resume-signature">Software Weaver</span> — weaving software, ideas, and possibilities together.
 
 I’m Haeyoung Jeong, a developer who connects technology and ideas to make useful things. I want to turn everyday frustrations and early ideas into services and tools that people can actually use.
 

@@ -1,3 +1,11 @@
+@font-face {
+  font-family: 'Allura';
+  src: url('/font/allura/Allura-Regular.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
 .main-wrapper:has(.resume-page) {
   padding-top: 0 !important;
 }
@@ -94,6 +102,49 @@
 .resume-page .period-mark { color: #3a7bd5; }
 .resume-page .big-paragraph { font-size: 1.4rem; line-height: 1.6; font-weight: 500; margin-bottom: 1.8rem; color: #0f172a; }
 @media screen and (max-width: 960px) { .resume-page .big-paragraph { font-size: 1.2rem; } }
+
+.resume-identity {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.85rem 1.5rem;
+  margin-bottom: 1.25rem;
+}
+.resume-identity h1 { margin-bottom: 0; word-break: normal; overflow-wrap: normal; }
+.resume-signature {
+  display: inline-block;
+  font-family: 'Allura', cursive;
+  font-size: 2.35rem;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: 0;
+  color: #405d78;
+  white-space: nowrap;
+}
+.resume-contact { margin: 0; max-width: 100%; font-style: normal; }
+.resume-page a.resume-email {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  max-width: 100%;
+  min-height: 44px;
+  padding: 0.65rem 0.9rem;
+  border: 1px solid #dce3eb;
+  border-radius: 0.75rem;
+  background: #f8fafc;
+  color: #334155;
+  text-decoration: none;
+}
+.resume-email svg { flex: none; color: #64748b; }
+.resume-email-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #64748b; }
+.resume-email-value { min-width: 0; font-size: 0.85rem; font-weight: 500; overflow-wrap: anywhere; }
+.resume-page a.resume-email:hover { color: #0f172a; border-color: #94a3b8; background: #f1f5f9; }
+.resume-email:focus-visible { outline: 3px solid #93c5fd; outline-offset: 3px; }
+@media screen and (max-width: 640px) {
+  .resume-identity { flex-direction: column; align-items: flex-start; }
+  .resume-signature { display: block; font-size: 2.15rem; }
+}
 
 /* Projects */
 .resume-projects { display: flex; flex-direction: column; gap: 1.2rem; }
@@ -348,9 +399,8 @@
   .portfolio-toc-wrapper { display: none; }
 }
 
-/* Semantic print hooks do not introduce new screen layout boxes. */
+/* Keep authored introduction paragraphs in the screen document flow. */
 .resume-profile,
-.resume-identity,
 .resume-introduction {
   display: contents;
 }

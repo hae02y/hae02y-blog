@@ -3,7 +3,7 @@ title: 개발자 정해영 소개
 description: Software Weaver 정해영이 기술과 아이디어를 엮고 AI로 만드는 범위를 넓혀가는 가치관과 개발 경험을 소개합니다.
 ---
 
-Software Weaver — 소프트웨어를 엮는 사람.
+<span class="resume-signature">Software Weaver</span> — 소프트웨어를 엮는 사람.
 
 저는 기술과 아이디어를 연결해 쓸모 있는 것을 만드는 개발자 정해영입니다. 일상의 불편함이나 막연한 아이디어에서 출발해, 실제로 사용할 수 있는 서비스와 도구로 완성하는 일을 지향합니다.
 

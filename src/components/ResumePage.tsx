@@ -1,5 +1,7 @@
 'use client';
 
+import { Mail } from 'lucide-react';
+
 import ExperienceSummary from '@/components/Resume/ExperienceSummary';
 import ExperienceTimeline from '@/components/Resume/ExperienceTimeline';
 import ProjectTimeline from '@/components/Resume/ProjectTimeline';
@@ -49,7 +51,17 @@ export default function ResumePage({
       <header className="resume-profile">
         <div className="resume-identity">
           <h1>{profile.name}</h1>
-          <p>{profile.email}</p>
+          <address className="resume-contact">
+            <a
+              className="resume-email"
+              href={`mailto:${profile.email}`}
+              aria-label={locale === 'en' ? `Email ${profile.name}: ${profile.email}` : `${profile.name}에게 이메일 보내기: ${profile.email}`}
+            >
+              <Mail size={16} aria-hidden="true" />
+              <span className="resume-email-label">Email</span>
+              <span className="resume-email-value">{profile.email}</span>
+            </a>
+          </address>
         </div>
         <div className={`resume-introduction${aboutContent ? ' resume-introduction-authored' : ''}`}>
           {aboutContent ? (
