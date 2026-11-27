@@ -110,7 +110,7 @@ export const meConfig = {
     projects: [
       {
         org: '(주)베스텔라랩',
-        period: '2024.05 - 현재',
+        period: '2024.05 - 2026.03',
         title: '워치마일(주차내비게이션) 서비스 백엔드 개발',
         techStack: 'Java, Spring Boot, Spring Security, Mybatis, MySQL, Thymeleaf, NCP',
         bulletGroups: [
@@ -142,8 +142,8 @@ export const meConfig = {
       },
       {
         org: '(주)베스텔라랩',
-        period: '2025.06 - 현재',
-        title: 'MLOps',
+        period: '2025.06 - 2026.03',
+        title: '안산도시공사 주차관리 시스템 백엔드 개발',
         techStack: 'Java, Spring Boot, Spring Security, Mybatis, MySQL, Thymeleaf, NCP',
         bulletGroups: [
           {
@@ -192,7 +192,7 @@ export const meConfig = {
     automation: [
       {
         org: '(주)베스텔라랩',
-        period: '2025.10 - 현재',
+        period: '2025.10 - 2026.03',
         title: '도면 데이터 변경 자동화 프로세스 구축',
         techStack: 'Java, Spring Boot, Spring Security, Mybatis, MySQL, Thymeleaf, NCP',
         bulletGroups: [
@@ -211,7 +211,7 @@ export const meConfig = {
       },
       {
         org: '(주)베스텔라랩',
-        period: '2025.10 - 현재',
+        period: '2025.10 - 2026.03',
         title: 'TIG 스택 기반 모니터링 프로세스 구축',
         techStack: 'Java, Spring Boot, Spring Security, Mybatis, MySQL, Thymeleaf, NCP',
         bullets: [
@@ -307,25 +307,60 @@ export const meConfig = {
         company: '맨인블록',
         period: '2026-03 ~ 현재',
         role: '선임연구원 · 백엔드/AI 개발',
-        summary: 'MENINBLOX는 의료 특화 LLM MediKoGPT와 초개인화 운동 관리 플랫폼 Ailix를 기반으로 의료 행정 자동화와 글로벌 헬스케어 서비스를 확장하는 의료 AI 스타트업입니다.',
+        summary: '러닝·건강 관리와 AI 임상진료 실습 서비스의 백엔드, AI 연동, 인증과 운영 도구를 개발합니다.',
         projects: [
           {
             slug: 'meninblox-medical-ai-backend',
-            title: '의료 AI 서비스 백엔드 개발',
-            summary: '의료 특화 LLM과 헬스케어 플랫폼 확장을 위한 백엔드/API 구조를 설계하고 개발하고 있습니다.',
-            role: 'Backend/AI 설계 및 개발',
-            techStack: 'Java, Spring Boot, Python, FastAPI, LLM, AWS, Docker',
+            title: 'Roopin — 러닝·건강 데이터와 AI 코칭',
+            summary: '활동 데이터와 AI 대화를 연결하고, 스트리밍 응답·관리자 인증·약관 버전 관리와 백엔드 검증 흐름을 개선하고 있습니다.',
+            role: '백엔드·관리자 기능 개발 · AI 연동',
+            techStack: 'Java, Spring Boot, JPA, SSE, React, TypeScript',
             category: 'AI / Healthcare',
-            start: '2026-03',
             end: 'present',
             details: [
               {
-                title: 'Summary',
-                bullets: ['의료 AI 서비스의 도메인 요구사항을 백엔드 API와 데이터 처리 흐름으로 연결하는 구조를 설계하고 있습니다.'],
+                title: '담당한 문제',
+                bullets: [
+                  '러닝·활동·일정·채팅을 다루는 API와 AI 서버의 계약을 분리하고 서비스 데이터를 연결했습니다.',
+                ],
               },
               {
-                title: 'Highlights',
-                bullets: ['의료 특화 LLM 연동을 고려한 API 설계', '서비스 확장을 위한 백엔드 모듈 구조 검토', '헬스케어 플랫폼 운영에 필요한 데이터 흐름 정리'],
+                title: '구현과 개선',
+                bullets: [
+                  'SSE 응답의 중복 누적과 대화 컨텍스트 동기화 문제를 다뤘습니다.',
+                  '관리자 TOTP 인증, 약관 발행 버전과 동의 유형, 이미지 표시용 변형을 구현했습니다.',
+                  '연구·설계·구현·검토의 인계와 공통 검사를 백엔드 개발 흐름에 연결했습니다.',
+                ],
+              },
+              {
+                title: '이어가는 작업',
+                bullets: [
+                  '컨테이너·Kubernetes 전환은 격리된 로컬 환경에서 검증하며 세션, 스트리밍과 복귀 조건을 정리하고 있습니다.',
+                ],
+              },
+            ],
+          },
+          {
+            slug: 'cpx-clinical-training',
+            title: 'CPX — AI 진료 실습 대화와 이용권',
+            summary: '진료 실습 대화의 저장·재개·만료와 무료·유료 이용권, iOS·Android 인앱결제 검증을 구현했습니다.',
+            role: '백엔드 설계·개발 · 결제 연동',
+            techStack: 'Java, Spring Boot, JPA, SSE, Apple IAP, Google Play Billing, FCM',
+            category: 'AI / Healthcare',
+            details: [
+              {
+                title: '대화와 상태',
+                bullets: [
+                  'AI 프록시와 SSE 응답을 연결하고 세션·턴·사용자 발화·AI 발화를 나누어 저장했습니다.',
+                  '대화 재개에 필요한 이력과 시간 정보를 반환하고 AI context ID 저장·만료 처리를 보완했습니다.',
+                ],
+              },
+              {
+                title: '이용권과 거래',
+                bullets: [
+                  '무료·유료 잔액을 분리하고 스토어 영수증 검증, 거래 기록과 이용권 지급을 연결했습니다.',
+                  'FCM HTTP v1 호출로 푸시 연동을 전환했습니다.',
+                ],
               },
             ],
           },
@@ -335,38 +370,30 @@ export const meConfig = {
         id: 'vestellalab',
         order: 1,
         company: '베스텔라랩',
-        period: '2024-01 ~ 현재',
+        period: '2024-01 ~ 2026-03',
         role: '선임연구원 · 백엔드 개발',
         summary: 'Vision-AI 기반 실내 정밀 측위 및 Non-GPS 주차 내비게이션을 서비스하는 스마트 모빌리티 스타트업입니다.',
         projects: [
           {
             slug: 'ansan-parking-system',
-            title: '안산도시공사 MLOps 개발',
-            summary: '클린 아키텍처 기반 멀티모듈 전환과 비동기 처리 구조를 도입해 확장성과 운영 안정성을 강화했습니다.',
+            title: '안산도시공사 주차관리 시스템',
+            summary: '현장·고객 업무를 분석하고 주차업체 연동, 회원 인증, 결제·감면·정산과 클라우드 전환을 다뤘습니다.',
             role: 'Backend 설계 및 개발',
             techStack: 'Java, Spring Boot, Spring Security, MyBatis, MySQL, Thymeleaf, NCP, Kubernetes, GitHub Actions',
-            category: 'AI / MLOps',
-            start: '2025-10',
-            end: 'present',
+            category: 'Backend / Infra',
             details: [
               {
-                title: 'Summary',
+                title: '업무와 요구사항',
                 bullets: [
-                  '도메인 분리 기반 멀티모듈 아키텍처로 중복 코드 제거 및 확장성을 높였습니다.',
-                  '비동기, 배치, 메시지 큐 구조로 트래픽 대응력과 처리 안정성을 강화했습니다.',
+                  '현장 조사와 실무자 협의를 통해 만공정보, 미납·감면, 결제와 세외수입 처리 요구를 정리했습니다.',
                 ],
               },
               {
-                title: 'Highlights',
+                title: '구현과 운영',
                 bullets: [
-                  'Spring Security 인증/인가 구조를 재정립해 API 보안 수준을 강화했습니다.',
-                  'JPA 도입으로 MyBatis 레거시를 개선하고 유지보수성을 높였습니다.',
-                  'CI/CD 자동화로 배포 안정성과 운영 효율성을 개선했습니다.',
+                  '주차업체별 연동을 공통 API로 정리하고 회원·본인인증·결제·정산 기능을 개발했습니다.',
+                  'NCP·NKS와 VPN 연결, 배포 환경과 QA 이슈를 함께 다뤘습니다.',
                 ],
-              },
-              {
-                title: 'Impact',
-                bullets: ['영상분석 AI 연동 결과 반영률 100% 증가', '서비스 안정성 기반으로 DAU 지속 상승'],
               },
             ],
           },
@@ -378,19 +405,23 @@ export const meConfig = {
             techStack: 'Java, Spring Boot, Spring Security, MyBatis, MySQL, Thymeleaf, Python, FastAPI, AWS',
             category: 'Backend / Infra',
             start: '2024-06',
-            end: 'present',
+            end: '2026-03',
             details: [
               {
                 title: 'Summary',
-                bullets: ['온프레미스/레거시 워치마일 서비스를 클라우드 기반으로 전환했습니다.', '외부 주차 관제 업체 및 파트너 연동 API를 표준화했습니다.'],
+                bullets: [
+                  '온프레미스/레거시 워치마일 서비스를 클라우드 기반으로 전환했습니다.',
+                  '외부 주차 관제 업체 및 파트너 연동 API를 표준화했습니다.',
+                ],
               },
               {
                 title: 'Highlights',
-                bullets: ['JWT 기반 인증 적용 및 RESTful API 설계/문서화', '운영사 전용 배포 대시보드 설계 및 구현', 'FCM 기반 실시간 푸시 알림 서비스 구축', '신규 현장 도면 데이터 표준화 및 DB 적재 프로세스 개선'],
-              },
-              {
-                title: 'Impact',
-                bullets: ['배포 리드타임 60일에서 14일로 단축'],
+                bullets: [
+                  'JWT 기반 인증 적용 및 RESTful API 설계/문서화',
+                  '운영사 전용 배포 대시보드 설계 및 구현',
+                  'FCM 기반 실시간 푸시 알림 서비스 구축',
+                  '신규 현장 도면 데이터 표준화 및 DB 적재 프로세스 개선',
+                ],
               },
             ],
           },
@@ -406,21 +437,31 @@ export const meConfig = {
             details: [
               {
                 title: 'Summary',
-                bullets: ['인증/인가와 실시간 퀴즈 진행 로직을 포함한 백엔드 아키텍처를 구축했습니다.', '서비스별 독립 모듈화로 확장 가능한 구조를 설계했습니다.'],
+                bullets: [
+                  '인증/인가와 실시간 퀴즈 진행 로직을 포함한 백엔드 아키텍처를 구축했습니다.',
+                  '서비스별 독립 모듈화로 확장 가능한 구조를 설계했습니다.',
+                ],
               },
               {
                 title: 'Highlights',
-                bullets: ['JWT 기반 인증/인가 및 세션 상태 관리 모듈 구현', 'WebSocket 기반 퀴즈 진행/브로드캐스트 로직 개발', 'R2DBC 비동기 DB 연동 모듈화 및 트랜잭션 최적화', 'NCP Kubernetes 환경 자동 배포 파이프라인 구축'],
+                bullets: [
+                  'JWT 기반 인증/인가 및 세션 상태 관리 모듈 구현',
+                  'WebSocket 기반 퀴즈 진행/브로드캐스트 로직 개발',
+                  'R2DBC 비동기 DB 연동 모듈화 및 트랜잭션 최적화',
+                  'NCP Kubernetes 환경 자동 배포 파이프라인 구축',
+                ],
               },
               {
                 title: 'Impact',
-                bullets: ['K-PaaS 클라우드 서비스 확인제 인증 통과'],
+                bullets: [
+                  'K-PaaS 클라우드 서비스 확인제 인증 통과',
+                ],
               },
             ],
           },
           {
             slug: 'la-joes-auto-park-poc',
-            title: '도면 데이터 변경 자동화 프로세스 구축',
+            title: 'LA Joe’s Auto Park — 주차 관제 PoC',
             summary: 'LPR/스트리밍 데이터를 결합한 주차 관제 대시보드를 구축해 실시간 운영 시나리오를 검증했습니다.',
             role: 'Backend 설계 및 개발 · Web Frontend 개발',
             techStack: 'Java, Spring Boot, MySQL, JavaScript, jQuery, Bootstrap, Hls.js, Nginx, FFmpeg',
@@ -430,15 +471,25 @@ export const meConfig = {
             details: [
               {
                 title: 'Summary',
-                bullets: ['SVG 기반 도면 시각화와 실시간 스트리밍 통합 관제 UI를 구현했습니다.', 'CCTV 스트림 안정성을 위한 변환/복구 로직을 설계했습니다.'],
+                bullets: [
+                  'SVG 기반 도면 시각화와 실시간 스트리밍 통합 관제 UI를 구현했습니다.',
+                  'CCTV 스트림 안정성을 위한 변환/복구 로직을 설계했습니다.',
+                ],
               },
               {
                 title: 'Highlights',
-                bullets: ['주차 슬롯과 Spot ID 매핑 및 JSON 실시간 반영', '차량 입출차 이력/번호판 메타데이터 테이블 및 팝업 구성', 'HLS.js 기반 스트리밍 재생 안정화 및 오류 복구 처리', 'RTSP에서 HLS로 변환하는 서버 및 Failover 로직 구현'],
+                bullets: [
+                  '주차 슬롯과 Spot ID 매핑 및 JSON 실시간 반영',
+                  '차량 입출차 이력/번호판 메타데이터 테이블 및 팝업 구성',
+                  'HLS.js 기반 스트리밍 재생 안정화 및 오류 복구 처리',
+                  'RTSP에서 HLS로 변환하는 서버 및 Failover 로직 구현',
+                ],
               },
               {
                 title: 'Impact',
-                bullets: ['LPR + 스트리밍 통합 관제 PoC 사례 확보'],
+                bullets: [
+                  'LPR + 스트리밍 통합 관제 PoC 사례 확보',
+                ],
               },
             ],
           },
@@ -454,15 +505,66 @@ export const meConfig = {
             details: [
               {
                 title: 'Summary',
-                bullets: ['SVG 기반 주차 도면 시각화 및 상태 모니터링 UI를 구현했습니다.', '다국어 전환과 리소스 lazy load 국제화 시스템을 구축했습니다.'],
+                bullets: [
+                  'SVG 기반 주차 도면 시각화 및 상태 모니터링 UI를 구현했습니다.',
+                  '다국어 전환과 리소스 lazy load 국제화 시스템을 구축했습니다.',
+                ],
               },
               {
                 title: 'Highlights',
-                bullets: ['Role 기반 메뉴/화면 접근 제어 및 상태 관리 로직 구현', 'Directus API 쿼리 빌더와 인증 토큰 인터셉터 개발', '웹 접근성/보안 헤더/시맨틱 마크업 개선'],
+                bullets: [
+                  'Role 기반 메뉴/화면 접근 제어 및 상태 관리 로직 구현',
+                  'Directus API 쿼리 빌더와 인증 토큰 인터셉터 개발',
+                  '웹 접근성/보안 헤더/시맨틱 마크업 개선',
+                ],
               },
               {
                 title: 'Impact',
-                bullets: ['GS 인증 1등급 획득'],
+                bullets: [
+                  'GS 인증 1등급 획득',
+                ],
+              },
+            ],
+          },
+          {
+            slug: 'digital-drawing-tool',
+            title: '디지털 도면 시각화 Tool',
+            summary: '주차장 도면과 요소를 실시간 시각화하는 내부 도구를 단독 개발했습니다.',
+            role: '사내 도구 설계·개발',
+            techStack: 'JavaScript, Thymeleaf, jQuery, Java, Spring Boot',
+            category: 'Automation / Internal Tool',
+            start: '2025-01',
+            end: '2025-03',
+            details: [
+              {
+                title: 'Summary',
+                bullets: [
+                  '도면 데이터 검증을 위한 시각화 도구를 설계하고 구현했습니다.',
+                ],
+              },
+              {
+                title: 'Highlights',
+                bullets: [
+                  '실시간 도면 렌더링으로 데이터 품질 검증 효율 향상',
+                  '사내 업무에 적용해 도면 검증 프로세스 개선',
+                ],
+              },
+            ],
+          },
+          {
+            slug: 'drawing-validation-automation',
+            title: 'Figma 도면 검증과 등록 상태 대시보드',
+            summary: '도면을 데이터로 변환할 때 오류를 찾고, 도면·내비게이션 데이터의 등록 상태를 확인하는 업무 도구를 만들었습니다.',
+            role: '검증 도구 설계·개발 · 업무 개선',
+            techStack: 'Figma Plugin, Java, Spring Boot, JavaScript',
+            category: 'Automation / Internal Tool',
+            details: [
+              {
+                title: '작업 흐름',
+                bullets: [
+                  'Figma 산출물을 데이터로 변환하는 과정에 오류 검증 플러그인을 적용했습니다.',
+                  '비개발 인력도 도면과 내비게이션 데이터 등록 상태를 확인할 수 있도록 내부 검증 화면을 구현했습니다.',
+                ],
               },
             ],
           },
@@ -488,11 +590,18 @@ export const meConfig = {
             details: [
               {
                 title: 'Summary',
-                bullets: ['전국 지자체/공공기관 관제센터 데이터센터 구축 및 운영을 담당했습니다.', '핵심 네트워크 장비 운용과 보안 정책 관리를 수행했습니다.'],
+                bullets: [
+                  '전국 지자체/공공기관 관제센터 데이터센터 구축 및 운영을 담당했습니다.',
+                  '핵심 네트워크 장비 운용과 보안 정책 관리를 수행했습니다.',
+                ],
               },
               {
                 title: 'Highlights',
-                bullets: ['논산시청 통합관제센터 서버/네트워크 인프라 구축', 'Cisco L3/L2 스위치 및 방화벽 운영', '장애 이력 기록 및 운영 표준 수립'],
+                bullets: [
+                  '논산시청 통합관제센터 서버/네트워크 인프라 구축',
+                  'Cisco L3/L2 스위치 및 방화벽 운영',
+                  '장애 이력 기록 및 운영 표준 수립',
+                ],
               },
             ],
           },
@@ -508,11 +617,17 @@ export const meConfig = {
             details: [
               {
                 title: 'Summary',
-                bullets: ['관제센터 네트워크 대역폭 업그레이드를 설계하고 구축했습니다.', '스트리밍 품질과 응답성 향상을 위한 네트워크 튜닝을 수행했습니다.'],
+                bullets: [
+                  '관제센터 네트워크 대역폭 업그레이드를 설계하고 구축했습니다.',
+                  '스트리밍 품질과 응답성 향상을 위한 네트워크 튜닝을 수행했습니다.',
+                ],
               },
               {
                 title: 'Highlights',
-                bullets: ['1Gbps에서 10Gbps로 업그레이드하여 영상 스트리밍 품질과 응답성을 개선했습니다.', '장비 구성 및 운영 정책을 정비해 안정적인 서비스 제공 기반을 마련했습니다.'],
+                bullets: [
+                  '1Gbps에서 10Gbps로 업그레이드하여 영상 스트리밍 품질과 응답성을 개선했습니다.',
+                  '장비 구성 및 운영 정책을 정비해 안정적인 서비스 제공 기반을 마련했습니다.',
+                ],
               },
             ],
           },
@@ -528,21 +643,27 @@ export const meConfig = {
             details: [
               {
                 title: 'Summary',
-                bullets: ['네트워크 보안 정책 수립 및 운영 프로세스 정비를 수행했습니다.', '장애/보안 이력 관리 체계를 정착시켰습니다.'],
+                bullets: [
+                  '네트워크 보안 정책 수립 및 운영 프로세스 정비를 수행했습니다.',
+                  '장애/보안 이력 관리 체계를 정착시켰습니다.',
+                ],
               },
               {
                 title: 'Highlights',
-                bullets: ['방화벽 설정 및 포트 트래픽 관리 표준 수립', '주요 장비 운용 정책 정리 및 보안 운영 기록 정착'],
+                bullets: [
+                  '방화벽 설정 및 포트 트래픽 관리 표준 수립',
+                  '주요 장비 운용 정책 정리 및 보안 운영 기록 정착',
+                ],
               },
             ],
           },
         ],
       },
-    ] satisfies PortfolioCompanyConfig[],
+    ],
     independentCategories: [
       {
         category: 'Business / Product',
-        summary: '서비스 운영 과정에서 자동화, 고객 대응, 결제 흐름, 데이터 분석까지 직접 다루며 제품이 실제로 굴러가는 과정을 경험했습니다.',
+        summary: 'ha-e.company의 제품·콘텐츠와 손끝의휴식의 서비스·브랜드 기획을 실제 작업과 준비 단계에 맞춰 정리했습니다.',
         order: 1,
       },
       {
@@ -560,25 +681,28 @@ export const meConfig = {
         summary: '반복 업무를 줄이기 위한 자동화, 데이터 처리, 운영 도구를 직접 설계하고 구현했습니다.',
         order: 4,
       },
-    ] satisfies PortfolioCategoryConfig[],
+      {
+        category: 'Writing / Publishing',
+        summary: '기술 경험과 공식 자료 조사를 독자가 따라 읽을 수 있는 글과 책으로 구성합니다.',
+        order: 5,
+      },
+    ],
     solo: [
       {
         slug: 'independent-business-ops',
-        title: '개인 서비스 운영 및 자동화',
-        summary: '개인 서비스 운영 과정에서 고객 대응, 결제 흐름, 데이터 분석, 반복 업무 자동화를 함께 다뤘습니다.',
-        role: '개인 사업 · 제품 운영 · 자동화',
-        techStack: 'Next.js, TypeScript, Supabase, Stripe, Google Analytics',
+        title: 'ha-e.company',
+        summary: '서비스 기획·개발과 외주, 브랜딩, 콘텐츠·운영 자동화를 함께 다루는 개인 사업입니다.',
+        role: '사업 기획 · 브랜드 · 제품 개발·운영',
+        techStack: '서비스 기획, 브랜딩, 웹 개발, 운영 자동화',
         category: 'Business / Product',
-        start: '2025-08',
         end: 'present',
         details: [
           {
-            title: 'Summary',
-            bullets: ['개인 사업 관점에서 서비스 운영, 고객 대응, 결제 흐름, 데이터 확인 과정을 직접 다루는 경험을 정리했습니다.'],
-          },
-          {
-            title: 'Highlights',
-            bullets: ['운영 반복 업무를 줄이기 위한 자동화 흐름 설계', '고객 문의와 사용 흐름을 바탕으로 개선 항목 정리', '서비스 운영에 필요한 지표와 데이터 확인 방식 구성'],
+            title: '사업 방향',
+            bullets: [
+              '요구사항을 기획부터 구현·검증·운영까지 연결하고, 제품마다 고객과 제공 가치를 구체화합니다.',
+              '우리42, 리드베이스, Gear 72, 생존지침서의 제품·콘텐츠 작업을 같은 사업 안에서 관리합니다.',
+            ],
           },
         ],
       },
@@ -594,11 +718,17 @@ export const meConfig = {
         details: [
           {
             title: 'Summary',
-            bullets: ['클라이언트가 요청한 업무 흐름을 기능 요구사항으로 정리하고 백엔드 구현과 배포까지 연결했습니다.'],
+            bullets: [
+              '클라이언트가 요청한 업무 흐름을 기능 요구사항으로 정리하고 백엔드 구현과 배포까지 연결했습니다.',
+            ],
           },
           {
             title: 'Highlights',
-            bullets: ['요구사항을 API와 데이터 모델로 구체화', '배포 환경과 운영 대응 흐름 정리', '반복 처리되는 업무를 자동화할 수 있는 구조 검토'],
+            bullets: [
+              '요구사항을 API와 데이터 모델로 구체화',
+              '배포 환경과 운영 대응 흐름 정리',
+              '반복 처리되는 업무를 자동화할 수 있는 구조 검토',
+            ],
           },
         ],
       },
@@ -614,11 +744,16 @@ export const meConfig = {
         details: [
           {
             title: 'Summary',
-            bullets: ['한국관광공사 공모전 참가용 여행 추천 서비스 백엔드를 설계했습니다.'],
+            bullets: [
+              '한국관광공사 공모전 참가용 여행 추천 서비스 백엔드를 설계했습니다.',
+            ],
           },
           {
             title: 'Highlights',
-            bullets: ['여정 추천, 미션 경험치 등 핵심 비즈니스 로직 구현', 'S3 이미지 처리 및 성능 개선'],
+            bullets: [
+              '여정 추천, 미션 경험치 등 핵심 비즈니스 로직 구현',
+              'S3 이미지 처리 및 성능 개선',
+            ],
           },
         ],
       },
@@ -634,11 +769,16 @@ export const meConfig = {
         details: [
           {
             title: 'Summary',
-            bullets: ['커뮤니티 운영을 위한 SSR 웹 서비스 백엔드를 설계하고 MVP를 구현했습니다.'],
+            bullets: [
+              '커뮤니티 운영을 위한 SSR 웹 서비스 백엔드를 설계하고 MVP를 구현했습니다.',
+            ],
           },
           {
             title: 'Highlights',
-            bullets: ['REST API 기반 Kotlin 전환 및 데이터베이스 마이그레이션', '핵심 도메인 설계 및 인증/인가 구조 구현'],
+            bullets: [
+              'REST API 기반 Kotlin 전환 및 데이터베이스 마이그레이션',
+              '핵심 도메인 설계 및 인증/인가 구조 구현',
+            ],
           },
         ],
       },
@@ -654,11 +794,16 @@ export const meConfig = {
         details: [
           {
             title: 'Summary',
-            bullets: ['자격증 정보, 일정, 커뮤니티 기능을 결합한 서비스를 설계했습니다.'],
+            bullets: [
+              '자격증 정보, 일정, 커뮤니티 기능을 결합한 서비스를 설계했습니다.',
+            ],
           },
           {
             title: 'Highlights',
-            bullets: ['외부 API 트래픽을 고려한 Batch 설계', '북마크/검색 성능 최적화 및 CI/CD 자동화'],
+            bullets: [
+              '외부 API 트래픽을 고려한 Batch 설계',
+              '북마크/검색 성능 최적화 및 CI/CD 자동화',
+            ],
           },
         ],
       },
@@ -674,34 +819,207 @@ export const meConfig = {
         details: [
           {
             title: 'Summary',
-            bullets: ['반려동물 기록/공유 SNS의 핵심 백엔드 로직을 구현했습니다.'],
+            bullets: [
+              '반려동물 기록/공유 SNS의 핵심 백엔드 로직을 구현했습니다.',
+            ],
           },
           {
             title: 'Highlights',
-            bullets: ['JWT · OAuth2 기반 인증 및 회원 API 구축', 'S3 이미지 처리 및 CI/CD 자동화 적용'],
+            bullets: [
+              'JWT · OAuth2 기반 인증 및 회원 API 구축',
+              'S3 이미지 처리 및 CI/CD 자동화 적용',
+            ],
           },
         ],
       },
       {
-        slug: 'digital-drawing-tool',
-        title: '디지털 도면 시각화 Tool',
-        summary: '주차장 도면과 요소를 실시간 시각화하는 내부 도구를 단독 개발했습니다.',
-        role: 'Side Project',
-        techStack: 'JavaScript, Thymeleaf, jQuery, Java, Spring Boot',
-        category: 'Automation / Internal Tool',
-        start: '2025-01',
-        end: '2025-03',
+        slug: 'woori42',
+        title: '우리42 — 대화 분석과 AI 리포트',
+        summary: '카카오톡 대화의 통계와 근거를 바탕으로 서로 다른 상담 관점의 리포트를 만드는 ha-e.company 서비스입니다.',
+        role: '제품 기획 · AI 리포트 · 개발 협업 설계',
+        techStack: 'JavaScript, Node.js, Gemini, Vercel Blob, Vercel Queues, Resend',
+        category: 'Business / Product',
+        end: 'present',
         details: [
           {
-            title: 'Summary',
-            bullets: ['도면 데이터 검증을 위한 시각화 도구를 설계하고 구현했습니다.'],
+            title: '제품과 구현',
+            bullets: [
+              '대화 업로드, 근거 기반 분석, 미리보기와 리포트 공유·PDF 흐름을 구성했습니다.',
+              '역할별 인계와 QA·평가 기준을 갖춘 개발 하네스를 구축하고, 상담사별 리포트 품질과 완료 후 복귀 경험을 개선 과제로 정리했습니다.',
+            ],
           },
           {
-            title: 'Highlights',
-            bullets: ['실시간 도면 렌더링으로 데이터 품질 검증 효율 향상', '사내 업무에 적용해 도면 검증 프로세스 개선'],
+            title: '검증 범위',
+            bullets: [
+              '실제 받은편지함 전달과 운영 결제·접근 복구는 별도 검증 과제로 관리합니다.',
+            ],
           },
         ],
       },
-    ] satisfies PortfolioProjectConfig[],
+      {
+        slug: 'leadbase',
+        title: '리드베이스 — 사업장 데이터 탐색',
+        summary: '업종·지역 조건으로 사업장 데이터를 찾고 건수·견적·CSV 제공 흐름을 구성한 ha-e.company의 서비스 미리보기입니다.',
+        role: '서비스 기획 · 웹앱·데이터 파이프라인 개발',
+        techStack: 'Next.js, TypeScript, PostgreSQL, Python',
+        category: 'Business / Product',
+        details: [
+          {
+            title: '구현 범위',
+            bullets: [
+              '조건 선택부터 서버의 건수·견적 계산, 주문 내역과 다운로드 시점 CSV 생성까지 연결했습니다.',
+              '데이터 수집·정제 영역과 주문·회원 영역을 분리하고 이용 조건과 수신거부를 조회 조건에 반영하는 구조입니다.',
+            ],
+          },
+          {
+            title: '현재 단계',
+            bullets: [
+              '서비스 미리보기와 구현 범위를 소개하며, 실결제나 판매 성과를 확정한 단계는 아닙니다.',
+            ],
+          },
+        ],
+      },
+      {
+        slug: 'gear72-content',
+        title: 'Gear 72 — 장비 브랜드와 숏폼 제작',
+        summary: '생존 장비 브랜드의 콘텐츠 기획·제작·검수·예약 발행과 지표 추적을 연결합니다.',
+        role: '브랜딩 · 콘텐츠 기획 · 제작·발행 자동화',
+        techStack: 'Python, FFmpeg, YouTube API, Instagram API',
+        category: 'Business / Product',
+        end: 'present',
+        details: [
+          {
+            title: '제작과 운영',
+            bullets: [
+              'ha-e.company의 Gear 72 브랜드 안에서 숏폼 제작 파이프라인과 채널별 발행 작업을 관리합니다.',
+              '대본·영상·검수·예약 정보를 연결하고 데이터 경로 오류와 세션 중단 시 실행이 끊기는 문제를 정리했습니다.',
+            ],
+          },
+          {
+            title: '이어가는 작업',
+            bullets: [
+              'Instagram은 주기 실행과 자동 예약을 연결했으며, 예약 접수와 실제 게시 결과를 구분해 확인합니다.',
+              'YouTube는 세션과 독립적인 상시 실행·복구 구조를 보완하는 단계입니다.',
+            ],
+          },
+        ],
+      },
+      {
+        slug: 'survival-guide',
+        title: '생존지침서 — 생활 재난 대비 콘텐츠와 도구',
+        summary: '상황별 지침, 준비물과 대비 진단을 제공하고 공식 자료에 근거한 아티클을 편집·발행하는 ha-e.company 웹사이트입니다.',
+        role: '서비스 기획 · 웹 개발 · 아티클 편집·운영',
+        techStack: 'Next.js, TypeScript, PostgreSQL, Drizzle, Vercel',
+        category: 'Business / Product',
+        end: 'present',
+        details: [
+          {
+            title: '콘텐츠와 사용 경험',
+            bullets: [
+              '독자가 집과 생활 여건에 맞춰 준비할 수 있도록 상황별 글과 점검 도구를 연결했습니다.',
+              '공식 자료·공개 링크를 확인하는 원고 검수와 예약 발행 절차를 운영합니다.',
+            ],
+          },
+        ],
+      },
+      {
+        slug: 'sonkkeut',
+        title: '손끝의휴식 — 감각 휴식 서비스 기획',
+        summary: '손끝의 접촉과 감각을 중심으로 휴식 경험을 만드는 공동 사업의 서비스와 브랜드를 기획하고 있습니다.',
+        role: '공동 사업 기획 · 서비스 구성 · 브랜딩',
+        techStack: '고객 경험, 상담·세션 설계, 브랜드 가이드',
+        category: 'Business / Product',
+        details: [
+          {
+            title: '준비한 내용',
+            bullets: [
+              '상담에서 선호 감각·도구·부위를 고르고 세션을 구성하는 경험을 정리했습니다.',
+              '공간과 운영 방식, 가격 초안, 로고·컬러·표현을 검토했습니다. 개점·매출 실적과 구분한 기획 단계입니다.',
+            ],
+          },
+        ],
+      },
+      {
+        slug: 'my-brain-harness',
+        title: 'My Brain — 옵시디언 기반 경험 기록 하네스',
+        summary: '여러 프로젝트에서 기존 경험을 참고하고, 작업 결과를 주제 문서에 반영한 뒤 독립 검수하는 기록 흐름을 구축했습니다.',
+        role: '기록 체계 설계 · 에이전트 연동·검증',
+        techStack: 'Python, Obsidian, Markdown, Codex, Claude Code',
+        category: 'Automation / Internal Tool',
+        start: '2026-11',
+        end: 'present',
+        details: [
+          {
+            title: '설계와 구현',
+            bullets: [
+              '회사·사업·학업·개인 경험을 맥락별로 유지하고 각 프로젝트를 해당 문서에 연결했습니다.',
+              '기존 주제 갱신과 새 주제 생성, 상단 속성·도식 판단, 작성 후 독립 검수와 변경 해시 확인을 연결했습니다.',
+              '단순 질문은 직접 답하고 새 경험·결정·실제 변경이 있을 때 기록하도록 Codex와 Claude의 공통 규칙을 구성했습니다.',
+            ],
+          },
+        ],
+      },
+      {
+        slug: 'harness-book',
+        title: '처음 만나는 하네스 — 비개발자를 위한 AI 입문서',
+        summary: 'AI가 실제 업무를 끝내는 데 필요한 자료·도구·기억·승인·검증을 서문과 16개 장으로 집필해 위키독스에 공개했습니다.',
+        role: '기획 · 집필 · 공식 자료 조사 · 편집',
+        techStack: 'Markdown, WikiDocs, GitHub',
+        category: 'Writing / Publishing',
+        href: 'https://wikidocs.net/book/21451',
+        details: [
+          {
+            title: '집필 내용',
+            bullets: [
+              '기획자·마케터·운영 담당자가 코드를 전제하지 않고 읽을 수 있도록 업무 장면, 비교표, 도식과 점검표로 구성했습니다.',
+              '에이전트의 실행·중단·복구와 역할 분담, 결과 검증을 설명하고 제품 사례와 교육용 예시를 구분했습니다.',
+            ],
+          },
+          {
+            title: '발행과 다음 단계',
+            bullets: [
+              '온라인 원고는 공개되어 있으며 종이책 출판용 구조 편집과 샘플 원고 준비는 별도 단계로 진행합니다.',
+            ],
+          },
+        ],
+      },
+      {
+        slug: 'hae02y-blog',
+        title: 'Hae02y Blog — 기술 경험과 글을 발행하는 사이트',
+        summary: '기술 아티클·에세이·이력과 포트폴리오, 앱 런처를 한 사이트에 연결해 직접 개발·운영합니다.',
+        role: '웹 설계·개발 · 콘텐츠 발행·운영',
+        techStack: 'Next.js, React, TypeScript, Tailwind CSS, PostgreSQL, Vercel',
+        category: 'Side Project',
+        end: 'present',
+        details: [
+          {
+            title: '만든 기능',
+            bullets: [
+              '한국어·영어 소개와 포트폴리오, 기술 글과 에세이의 탐색·발행 흐름을 구성했습니다.',
+              '앱 런처의 다중 페이지·터치·드래그 동작을 모바일 에뮬레이션으로 확인하고 구현과 검증 과정을 글로 남겼습니다.',
+            ],
+          },
+        ],
+      },
+      {
+        slug: 'local-rag-experiment',
+        title: '내 블로그로 만든 로컬 RAG 실험',
+        summary: 'DNS·TLS 글을 검색 근거로 사용하고 검색 성공과 생성 답변의 정확성을 나누어 평가했습니다.',
+        role: '검색·생성 실험 · 평가 · 기술 글 작성',
+        techStack: 'Node.js, Ollama, Embeddings, RAG',
+        category: 'Side Project',
+        start: '2026-11',
+        href: 'https://blog.hae02y.me/blog/local-rag-ollama/',
+        details: [
+          {
+            title: '실험과 배운 점',
+            bullets: [
+              '문서를 분할·임베딩하고 검색한 근거를 로컬 모델에 전달하는 CLI를 구성했습니다.',
+              '검색이 맞아도 답변이 틀릴 수 있음을 확인하고, 문서에 없는 정보와 주제 밖 질문을 평가에 포함했습니다.',
+            ],
+          },
+        ],
+      },
+    ],
   },
 };

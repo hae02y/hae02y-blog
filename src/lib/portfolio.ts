@@ -98,6 +98,7 @@ const koCategoryLabels: Record<string, string> = {
   'Business / Product': '개인 사업',
   'Freelance / Client Work': '외주 개발',
   'Side Project': '사이드 프로젝트',
+  'Writing / Publishing': '집필·출판',
 };
 
 const koRoleLabels: Record<string, string> = {
