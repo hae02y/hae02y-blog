@@ -307,7 +307,7 @@ export const meConfig = {
         company: '맨인블록',
         period: '2026-03 ~ 현재',
         role: '선임연구원 · 백엔드/AI 개발',
-        summary: '러닝·건강 관리와 AI 임상진료 실습 서비스의 백엔드, AI 연동, 인증과 운영 도구를 개발합니다.',
+        summary: '러닝·건강 관리, AI 진료 실습과 인도네시아 호흡기 문진 서비스를 개발하고, 현장 구축과 ISO 인증 업무를 수행합니다.',
         projects: [
           {
             slug: 'meninblox-medical-ai-backend',
@@ -360,6 +360,56 @@ export const meConfig = {
                 bullets: [
                   '무료·유료 잔액을 분리하고 스토어 영수증 검증, 거래 기록과 이용권 지급을 연결했습니다.',
                   'FCM HTTP v1 호출로 푸시 연동을 전환했습니다.',
+                ],
+              },
+            ],
+          },
+          {
+            slug: 'bmq-breathecheck-indonesia',
+            title: 'BMQ / BreatheCheck — 인도네시아 호흡기 문진',
+            summary: '인도네시아 병원의 호흡기 문진·기침 녹음 서비스를 개발하고 GB10 기반 현장 설치와 통합 동작 확인을 수행했습니다.',
+            role: '문진 서비스 개발 · 현장 구축·실증',
+            techStack: 'Next.js, TypeScript, FastAPI, PostgreSQL, Redis, Docker, Traefik, Ollama, GB10',
+            category: 'AI / Healthcare',
+            details: [
+              {
+                title: '환자 이용 흐름과 서비스 구성',
+                bullets: [
+                  '병원에서 QR로 시작하는 증상 문진, 기침 녹음과 분석 결과 안내를 연결하는 서비스를 개발했습니다.',
+                  'Next.js 환자 화면과 FastAPI, 문진 규칙·Ollama 및 Waycen의 기침 분석 모델을 연결하는 현장 구성을 다뤘습니다.',
+                  '의료진 안내와 위험 신호 대응을 포함한 스크리닝 보조 서비스로 구성했습니다.',
+                ],
+              },
+              {
+                title: '인도네시아 현장 설치와 협업',
+                bullets: [
+                  '2026년 6월 출장에서 RSUI 시연과 RS Pura Raharja의 GB10 설치·통합 동작 확인을 수행했습니다.',
+                  '현지 Wi-Fi 네트워크와 Tailscale 원격 접속을 확인하고 병원 환경에 맞춰 서비스 운영을 연결했습니다.',
+                  '병원·임상·모델 공급 파트너와 협업하며 서비스 구현과 현장 운영의 접점을 다뤘습니다.',
+                ],
+              },
+            ],
+          },
+          {
+            slug: 'iso-certification',
+            title: 'ISO 인증 — 사내 실무 단독 담당·취득',
+            summary: '사내 ISO 인증 실무를 단독으로 맡아 준비·심사 대응부터 인증 취득까지 수행했습니다.',
+            role: '인증 실무 단독 담당 · 심사 대응',
+            techStack: 'ISMS, PIMS, BIA, Risk Assessment, Audit Evidence',
+            category: 'Security / Operations',
+            details: [
+              {
+                title: '인증 준비와 문서 체계',
+                bullets: [
+                  '정보보호·개인정보 관리 체계를 심사에서 설명할 수 있도록 규정·지침과 증적을 정리했습니다.',
+                  '인증 범위, 자산·위험평가, 업무 연속성과 복구 기준, 개인정보 처리 흐름을 검토하고 관련 문서를 연결했습니다.',
+                ],
+              },
+              {
+                title: '담당 범위와 결과',
+                bullets: [
+                  '심사 지적에 대한 보완 문서와 제출 자료를 정리하며 대응했습니다.',
+                  '사내 인증 실무를 단독으로 맡아 인증 취득까지 수행했습니다.',
                 ],
               },
             ],
