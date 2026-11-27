@@ -1,12 +1,12 @@
 ---
 title: About Haeyoung Jeong
-description: Haeyoung Jeong’s résumé and portfolio covering backend and AI services, field deployment, ISO certification work, business planning, branding, and writing.
+description: Meet Haeyoung Jeong, a Software Weaver connecting technology and ideas and exploring how AI can expand what he builds.
 ---
 
-I design for the journey from code to product—and for the work that keeps it running.
+Software Weaver — weaving software, ideas, and possibilities together.
 
-I am Haeyoung Jeong, a developer working across Java and Spring Boot backends, service operations, and field deployments.
+I’m Haeyoung Jeong, a developer who connects technology and ideas to make useful things. I want to turn everyday frustrations and early ideas into services and tools that people can actually use.
 
-At Meninblox, I have developed Roopin, CPX, and BMQ/BreatheCheck and handled the company’s ISO certification work as the sole internal lead through certification. My experience also includes parking and monitoring services at VEStellaLab and public control-center infrastructure at Joeun Technology.
+With AI, I want to bring more ideas to life, explore unfamiliar fields, and expand what I can build. Building quickly is only part of that process: I value checking the results, making improvements, and refining the work until it is ready to use.
 
-I plan and build services, brands, and content for ha-e.company, and turn practical experience into AI workflow harnesses, technical articles, and a book for non-developers.
+Technology keeps changing, but the value I want to create remains the same: bringing different tools and knowledge together to make complex tasks easier and give good ideas a place in people’s everyday lives.
