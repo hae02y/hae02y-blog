@@ -2,7 +2,7 @@ import { meConfig } from '@/config/me';
 import type { Locale } from './config';
 
 const en = new Map<string, string>([
-  ["저는 기술과 아이디어를 연결해 쓸모 있는 것을 만드는 개발자 정해영입니다. 일상의 불편함이나 막연한 아이디어에서 출발해, 실제로 사용할 수 있는 서비스와 도구로 완성하는 일을 지향합니다.", "I’m Haeyoung Jeong, a developer who connects technology and ideas to make useful things. I want to turn everyday frustrations and early ideas into services and tools that people can actually use."],
+  ["저는 기술과 아이디어를 연결해 쓸모 있는 것을 만드는 개발자 정해영입니다. 소프트웨어를 만들고, AI로 일하는 방식을 개선하며, 서비스가 안정적으로 운영될 수 있는 체계까지 설계합니다. 일상의 불편함이나 막연한 아이디어에서 출발해, 실제로 사용할 수 있는 서비스와 도구로 완성하는 일을 지향합니다.", "I’m Haeyoung Jeong, a developer who connects technology and ideas to make useful things. I build software, improve how people work with AI, and design the systems that keep services running reliably. I want to turn everyday frustrations and early ideas into services and tools that people can actually use."],
   ["AI를 활용해 더 많은 아이디어를 구현하고, 낯선 분야도 직접 배우며 시도할 수 있는 범위를 넓히고자 합니다. 빠르게 만드는 데서 그치지 않고, 결과를 확인하고 고쳐 실제로 쓸 수 있는 수준까지 다듬는 일을 중요하게 생각합니다.", "With AI, I want to bring more ideas to life, explore unfamiliar fields, and expand what I can build. Building quickly is only part of that process: I value checking the results, making improvements, and refining the work until it is ready to use."],
   ["기술은 계속 바뀌지만 제가 만들고 싶은 가치는 같습니다. 서로 다른 도구와 지식을 엮어 복잡한 일을 조금 더 쉽게 만들고, 좋은 아이디어가 누군가의 일상에서 쓰이도록 하는 것입니다.", "Technology keeps changing, but the value I want to create remains the same: bringing different tools and knowledge together to make complex tasks easier and give good ideas a place in people’s everyday lives."],
   ['프로젝트 상세 보기', 'View project details'],

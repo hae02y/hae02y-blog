@@ -60,9 +60,6 @@ export default function ProjectTimeline({projects}: ProjectTimelineProps) {
                 />
                 {project.title}
               </div>
-              {project.techStack ? (
-                <div className="resume-project-techstack">{project.techStack}</div>
-              ) : null}
             </div>
             {project.period ? <div className="resume-project-period">{project.period}</div> : null}
           </div>
@@ -85,6 +82,9 @@ export default function ProjectTimeline({projects}: ProjectTimelineProps) {
                 <li key={bullet}>{renderBullet(bullet)}</li>
               ))}
             </ul>
+          ) : null}
+          {project.techStack ? (
+            <div className="resume-project-techstack">{project.techStack}</div>
           ) : null}
         </article>
       ))}

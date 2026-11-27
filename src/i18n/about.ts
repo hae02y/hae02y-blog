@@ -85,8 +85,9 @@ export const aboutI18n: Record<Locale, AboutI18nConfig> = {
       exportPdf: 'PDF로 내보내기',
       resumeHeadings: {
         experience: '경력',
-        keyWork: '주요 업무',
-        automation: '개발 생산성 · 업무 자동화',
+        keyWork: '주요 기여',
+        contributionAreas: { product: '제품·서비스 개발', ax: 'AX·업무 체계 구축', assurance: '보안·인증 체계', operations: '인프라·현장 운영' },
+        axSummary: '사내 AX 구축을 추진하며, AI 활용과 반복 업무 개선을 함께 다룹니다.',
         activities: '활동',
         education: '교육',
         certifications: '자격증',
@@ -143,8 +144,9 @@ export const aboutI18n: Record<Locale, AboutI18nConfig> = {
       exportPdf: 'Export PDF',
       resumeHeadings: {
         experience: 'Experience',
-        keyWork: 'Key Work',
-        automation: 'Productivity & Automation',
+        keyWork: 'Key Contributions',
+        contributionAreas: { product: 'Product & Service Development', ax: 'AI Transformation & Workflows', assurance: 'Security & Certification', operations: 'Infrastructure & Field Operations' },
+        axSummary: 'Work on internal AI transformation alongside AI adoption and improvements to recurring tasks.',
         activities: 'Activities',
         education: 'Education',
         certifications: 'Certifications',

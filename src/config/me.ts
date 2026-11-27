@@ -10,7 +10,10 @@ export type ExperienceItem = {
   description?: string;
 };
 
+export type ContributionArea = 'product' | 'ax' | 'assurance' | 'operations';
+
 export type ResumeProject = {
+  contributionArea: ContributionArea;
   org: string;
   period: string;
   title: string;
@@ -81,7 +84,7 @@ export const meConfig = {
     name: '정해영',
     email: 'godud1118@gmail.com',
     summary: [
-      "저는 기술과 아이디어를 연결해 쓸모 있는 것을 만드는 개발자 정해영입니다. 일상의 불편함이나 막연한 아이디어에서 출발해, 실제로 사용할 수 있는 서비스와 도구로 완성하는 일을 지향합니다.",
+      "저는 기술과 아이디어를 연결해 쓸모 있는 것을 만드는 개발자 정해영입니다. 소프트웨어를 만들고, AI로 일하는 방식을 개선하며, 서비스가 안정적으로 운영될 수 있는 체계까지 설계합니다. 일상의 불편함이나 막연한 아이디어에서 출발해, 실제로 사용할 수 있는 서비스와 도구로 완성하는 일을 지향합니다.",
       "AI를 활용해 더 많은 아이디어를 구현하고, 낯선 분야도 직접 배우며 시도할 수 있는 범위를 넓히고자 합니다. 빠르게 만드는 데서 그치지 않고, 결과를 확인하고 고쳐 실제로 쓸 수 있는 수준까지 다듬는 일을 중요하게 생각합니다.",
       "기술은 계속 바뀌지만 제가 만들고 싶은 가치는 같습니다. 서로 다른 도구와 지식을 엮어 복잡한 일을 조금 더 쉽게 만들고, 좋은 아이디어가 누군가의 일상에서 쓰이도록 하는 것입니다.",
     ],
@@ -112,6 +115,7 @@ export const meConfig = {
         org: '(주)맨인블록',
         period: '현재',
         title: 'Roopin — 러닝·건강 데이터와 AI 코칭',
+        contributionArea: 'product',
         techStack: 'Java, Spring Boot, JPA, SSE, React, TypeScript',
         bullets: [
           '러닝·활동·일정·채팅을 다루는 API와 AI 서버의 계약을 분리하고 서비스 데이터를 연결했습니다.',
@@ -125,6 +129,7 @@ export const meConfig = {
         org: '(주)맨인블록',
         period: '',
         title: 'CPX — AI 진료 실습 대화와 이용권',
+        contributionArea: 'product',
         techStack: 'Java, Spring Boot, JPA, SSE, Apple IAP, Google Play Billing, FCM',
         bullets: [
           'AI 프록시와 SSE 응답을 연결하고 세션·턴·사용자 발화·AI 발화를 나누어 저장했습니다.',
@@ -138,6 +143,7 @@ export const meConfig = {
         org: '(주)맨인블록',
         period: '',
         title: 'BMQ / BreatheCheck — 인도네시아 호흡기 문진',
+        contributionArea: 'product',
         techStack: 'Next.js, TypeScript, FastAPI, PostgreSQL, Redis, Docker, Traefik, Ollama, GB10',
         bullets: [
           '병원에서 QR로 시작하는 증상 문진, 기침 녹음과 분석 결과 안내를 연결하는 서비스를 개발했습니다.',
@@ -151,6 +157,7 @@ export const meConfig = {
         org: '(주)맨인블록',
         period: '',
         title: 'ISO 인증 — 사내 실무 단독 담당·취득',
+        contributionArea: 'assurance',
         techStack: 'ISMS, PIMS, BIA, Risk Assessment, Audit Evidence',
         bullets: [
           '사내 ISO 인증 실무를 단독으로 맡아 준비·심사 대응부터 인증 취득까지 수행했습니다.',
@@ -163,6 +170,7 @@ export const meConfig = {
         org: '(주)베스텔라랩',
         period: '2024.06 - 2026.03',
         title: '워치마일(주차내비게이션) 서비스 백엔드 개발',
+        contributionArea: 'product',
         techStack: 'Java, Spring Boot, Spring Security, MyBatis, MySQL, Thymeleaf, Python, FastAPI, AWS',
         bullets: [
           '온프레미스/PHP 레거시를 AWS 기반 클라우드 아키텍처로 마이그레이션하며 표준 API와 운영 대시보드를 구축했습니다.',
@@ -176,6 +184,7 @@ export const meConfig = {
         org: '(주)베스텔라랩',
         period: '',
         title: '안산도시공사 주차관리 시스템',
+        contributionArea: 'product',
         techStack: 'Java, Spring Boot, Spring Security, MyBatis, MySQL, Thymeleaf, NCP, Kubernetes, GitHub Actions',
         bullets: [
           '현장 조사와 실무자 협의를 통해 만공정보, 미납·감면, 결제와 세외수입 처리 요구를 정리했습니다.',
@@ -189,6 +198,7 @@ export const meConfig = {
         org: '(주)베스텔라랩',
         period: '2024.09 - 2025.01',
         title: '아이코딩 톡벗(디지털 교과서) 백엔드 개발',
+        contributionArea: 'product',
         techStack: 'Java, Spring Boot, Spring Security, JPA, MySQL, MyBatis, TypeScript, React, Zustand, TanStack Query, Docker, NCP',
         bullets: [
           'JWT 인증·세션 관리와 WebSocket 퀴즈 진행·브로드캐스트를 구현하고, R2DBC 기반 비동기 DB 연동을 모듈화했습니다.',
@@ -202,6 +212,7 @@ export const meConfig = {
         org: '(주)베스텔라랩',
         period: '2024.02 - 2024.06',
         title: 'LA Joe’s Auto Park — 주차 관제 PoC',
+        contributionArea: 'product',
         techStack: 'Java, Spring Boot, MySQL, JavaScript, jQuery, Bootstrap, Hls.js, Nginx, FFmpeg',
         bullets: [
           'SVG 기반 도면 시각화와 실시간 스트리밍 통합 관제 UI를 구현했습니다.',
@@ -214,6 +225,7 @@ export const meConfig = {
         org: '(주)베스텔라랩',
         period: '2024.04 - 2024.10',
         title: '파크옵스(다국화 주차장 모니터링) 대시보드 개발',
+        contributionArea: 'product',
         techStack: 'React, TypeScript, Axios, TailwindCSS, Redux, Nginx, MySQL, Directus',
         bullets: [
           'SVG 기반 주차 도면 시각화 및 상태 모니터링 UI를 구현했습니다.',
@@ -227,6 +239,7 @@ export const meConfig = {
         org: '(주)조은기술',
         period: '2020.08 - 2023.04',
         title: '통합관제센터 데이터센터 구축 및 운영',
+        contributionArea: 'operations',
         techStack: 'Linux, Cisco Switch, Firewall, VPN, Storage, Hyper-V',
         bullets: [
           '논산시청을 비롯한 지자체 관제센터의 서버·네트워크 구축과 Cisco L3/L2 스위치·방화벽 운영을 담당했습니다.',
@@ -242,6 +255,7 @@ export const meConfig = {
         org: '(주)베스텔라랩',
         period: '',
         title: 'Figma 도면 검증과 등록 상태 대시보드',
+        contributionArea: 'ax',
         techStack: 'Figma Plugin, Java, Spring Boot, JavaScript',
         bullets: [
           'Figma 산출물을 데이터로 변환하는 과정에 오류 검증 플러그인을 적용했습니다.',
@@ -255,6 +269,7 @@ export const meConfig = {
         org: '(주)베스텔라랩',
         period: '2025.10 - 2026.03',
         title: 'TIG 스택 기반 모니터링 프로세스 구축',
+        contributionArea: 'operations',
         techStack: 'Telegraf, InfluxDB, Grafana',
         bullets: [
           'Telegraf + InfluxDB + Grafana 스택으로 모니터링 시스템을 구축했습니다.',
@@ -265,6 +280,7 @@ export const meConfig = {
         org: '개인 프로젝트',
         period: '2026.11 - 현재',
         title: 'My Brain — 옵시디언 기반 경험 기록 하네스',
+        contributionArea: 'ax',
         techStack: 'Python, Obsidian, Markdown, Codex, Claude Code',
         bullets: [
           '회사·사업·학업·개인 경험을 맥락별로 유지하고 각 프로젝트를 해당 문서에 연결했습니다.',

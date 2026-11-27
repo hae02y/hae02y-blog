@@ -9,14 +9,15 @@ import ActivitySection from '@/components/Resume/ActivitySection';
 import ResumeLinks from '@/components/Resume/ResumeLinks';
 import EducationSection from '@/components/Resume/EducationSection';
 import CertificationSection from '@/components/Resume/CertificationSection';
-import { meConfig } from '@/config/me';
+import { meConfig, type ContributionArea } from '@/config/me';
 import type { Locale } from '@/i18n/config';
 import { MarkdownRenderer } from '@/lib/markdown-renderer';
 
 export type ResumePageLabels = {
   experience: string;
   keyWork: string;
-  automation: string;
+  contributionAreas: Record<ContributionArea, string>;
+  axSummary: string;
   activities: string;
   education: string;
   certifications: string;
@@ -36,8 +37,9 @@ export default function ResumePage({
   locale = 'ko',
   labels = {
     experience: '경력',
-    keyWork: '주요 업무',
-    automation: '개발 생산성 · 업무 자동화',
+    keyWork: '주요 기여',
+    contributionAreas: { product: '제품·서비스 개발', ax: 'AX·업무 체계 구축', assurance: '보안·인증 체계', operations: '인프라·현장 운영' },
+    axSummary: '사내 AX 구축을 추진하며, AI 활용과 반복 업무 개선을 함께 다룹니다.',
     activities: '활동',
     education: '교육',
     certifications: '자격증',
@@ -45,6 +47,8 @@ export default function ResumePage({
   },
 }: ResumePageProps) {
   const { profile, resume } = data;
+  const projects = [...resume.projects, ...resume.automation];
+  const areas: ContributionArea[] = ['product', 'ax', 'assurance', 'operations'];
 
   return (
     <div className="resume-document">
@@ -78,10 +82,13 @@ export default function ResumePage({
       <ExperienceTimeline items={resume.experiences} />
 
       <h2>{labels.keyWork}</h2>
-      <ProjectTimeline projects={resume.projects} />
-
-      <h3>{labels.automation}</h3>
-      <ProjectTimeline projects={resume.automation} />
+      {areas.map(area => (
+        <section key={area} className="resume-contribution" aria-labelledby={`contribution-${area}`}>
+          <h3 id={`contribution-${area}`}>{labels.contributionAreas[area]}</h3>
+          {area === 'ax' && <p className="resume-contribution-summary">{labels.axSummary}</p>}
+          <ProjectTimeline projects={projects.filter(project => project.contributionArea === area)} />
+        </section>
+      ))}
 
       <h2>{labels.education}</h2>
       <EducationSection items={resume.education} />
