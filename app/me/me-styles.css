@@ -347,3 +347,10 @@
 @media screen and (max-width: 1280px) {
   .portfolio-toc-wrapper { display: none; }
 }
+
+/* Semantic print hooks do not introduce new screen layout boxes. */
+.resume-profile,
+.resume-identity,
+.resume-introduction {
+  display: contents;
+}

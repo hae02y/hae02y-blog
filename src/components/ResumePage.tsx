@@ -45,16 +45,22 @@ export default function ResumePage({
   const { profile, resume } = data;
 
   return (
-    <div>
-      <h1>{profile.name}</h1>
-      <p>{profile.email}</p>
-      {aboutContent ? (
-        <MarkdownRenderer content={aboutContent} />
-      ) : (
-        profile.summary.map(paragraph => (
-          <p key={paragraph}>{paragraph}</p>
-        ))
-      )}
+    <div className="resume-document">
+      <header className="resume-profile">
+        <div className="resume-identity">
+          <h1>{profile.name}</h1>
+          <p>{profile.email}</p>
+        </div>
+        <div className={`resume-introduction${aboutContent ? ' resume-introduction-authored' : ''}`}>
+          {aboutContent ? (
+            <MarkdownRenderer content={aboutContent} />
+          ) : (
+            profile.summary.map(paragraph => (
+              <p key={paragraph}>{paragraph}</p>
+            ))
+          )}
+        </div>
+      </header>
 
       <h2>{labels.experience} <ExperienceSummary items={resume.experiences} locale={locale} /></h2>
       <ExperienceTimeline items={resume.experiences} />

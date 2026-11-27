@@ -1,312 +1,179 @@
-/* PDF layout is independent of the responsive screen layout. */
+/* Print is a document layout, independent of screen breakpoints and cards. */
 @page resume {
   size: A4 portrait;
-  margin: 12mm 14mm 14mm;
+  margin: 15mm 16mm 18mm;
+
+  @bottom-left {
+    content: "Software Weaver";
+    font-family: Arial, sans-serif;
+    font-size: 8pt;
+    color: #64748b;
+  }
+
+  @bottom-right {
+    content: counter(page) " / " counter(pages);
+    font-family: Arial, sans-serif;
+    font-size: 8pt;
+    color: #64748b;
+  }
 }
 
 @media print {
   html:has(.resume-page),
   body:has(.resume-page) {
-    width: auto !important;
-    min-width: 0 !important;
     margin: 0 !important;
     padding: 0 !important;
-    color: #172033 !important;
+    width: auto !important;
+    min-width: 0 !important;
     background: #fff !important;
-    font-size: 9pt !important;
+    color: #243247 !important;
+    font-size: 10pt !important;
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
   }
 
-  .main-wrapper:has(.resume-page) {
-    padding: 0 !important;
-  }
-
+  .main-wrapper:has(.resume-page) { padding: 0 !important; }
   .resume-page {
     page: resume;
     display: block;
     min-height: 0;
     padding: 0;
     overflow: visible;
-    color: #172033 !important;
     background: #fff !important;
+    color: #243247 !important;
+    letter-spacing: 0;
   }
+  .resume-container { width: 100%; max-width: none; margin: 0; padding: 0; }
+  .about-topbar, .me-tabs, .portfolio-toc-wrapper, .portfolio-toggle { display: none !important; }
 
-  .resume-container {
-    width: 100%;
-    max-width: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .about-topbar,
-  .me-tabs,
-  .portfolio-toc-wrapper,
-  .portfolio-toggle {
-    display: none !important;
-  }
-
-  .resume-page h1 {
-    margin: 0 0 3mm;
-    font-size: 24pt;
-    line-height: 1.12;
-  }
-
-  .resume-page h2 {
-    margin: 4mm 0 2mm;
-    font-size: 15pt;
-    line-height: 1.22;
-    break-after: avoid-page;
-    page-break-after: avoid;
-  }
-
-  .resume-page h3,
-  .resume-page h4 {
-    margin: 4mm 0 2mm;
-    font-size: 11.5pt;
-    line-height: 1.25;
-    break-after: avoid-page;
-    page-break-after: avoid;
-  }
-
-  .resume-page h5 {
-    font-size: 10pt;
-  }
-
-  .resume-page p,
-  .resume-page ul,
-  .resume-project-list,
-  .resume-activity-list,
-  .resume-timeline-summary {
-    font-size: 9pt;
-    line-height: 1.4;
-  }
-
-  .resume-page p {
-    margin-bottom: 2mm;
-  }
-
-  .resume-page a {
-    color: #245da8 !important;
-    text-decoration: none !important;
-  }
-
-  .resume-experience-total {
-    font-size: 8pt;
-  }
-
-  .resume-timeline,
-  .resume-projects,
-  .resume-activities {
-    gap: 3mm;
-  }
-
-  .resume-experience-timeline .resume-timeline-item {
+  /* Identity, contact, and statement form a distinct document masthead. */
+  .resume-profile {
+    display: block;
+    border-top: 1.2mm solid #183b50;
+    padding-top: 5mm;
     padding-bottom: 3mm;
+    break-inside: avoid;
+  }
+  .resume-identity {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 6mm;
+    margin-bottom: 4mm;
+  }
+  .resume-page h1 { margin: 0; font-size: 27pt; line-height: 1.15; letter-spacing: -0.6pt; }
+  .resume-identity > p { flex: none; margin: 0; font-size: 9pt; color: #526175 !important; }
+  .resume-introduction { display: block; }
+  .resume-page .resume-introduction-authored > p:first-child {
+    font-size: 12pt;
+    line-height: 1.4;
+    font-weight: 700;
+    color: #183b50 !important;
+    margin-bottom: 3mm;
   }
 
-  .resume-timeline-company,
-  .resume-project-title,
-  .resume-activity-title,
-  .resume-education-school,
-  .resume-certification-name {
-    font-size: 9.2pt;
+  /* Section rules and a restrained type scale replace screen card chrome. */
+  .resume-page h2 {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 4mm;
+    margin: 6mm 0 3mm;
+    padding-bottom: 2mm;
+    border-bottom: 0.35mm solid #183b50;
+    font-size: 13pt;
+    line-height: 1.25;
+    color: #183b50 !important;
   }
-
-  .resume-timeline-role,
-  .resume-timeline-period,
-  .resume-project-org,
-  .resume-project-period,
-  .resume-project-techstack,
-  .resume-project-group-title,
-  .resume-activity-subtitle,
-  .resume-activity-group-title,
-  .resume-education-program,
-  .resume-education-period,
-  .resume-certification-meta,
-  .resume-link-item {
-    font-size: 8pt;
+  .resume-page h3, .resume-page h4 {
+    margin: 5mm 0 3mm;
+    padding-bottom: 2mm;
+    border-bottom: 0.2mm solid #cbd5e1;
+    font-size: 11.5pt;
+    line-height: 1.3;
   }
+  .resume-page h2, .resume-page h3, .resume-page h4,
+  .resume-project-header, .resume-activity-header,
+  .resume-project-group-title, .resume-activity-group-title {
+    break-after: avoid;
+    break-inside: avoid;
+    page-break-after: avoid;
+  }
+  .resume-page h5 { font-size: 10pt; }
+  .resume-experience-total { margin: 0; font-size: 8.5pt; font-weight: 400; }
+  .resume-page p, .resume-page ul, .resume-timeline-summary {
+    font-size: 9.5pt;
+    line-height: 1.5;
+  }
+  .resume-page p, .resume-page li, .resume-timeline-summary { color: #243247 !important; }
+  .resume-page p { margin: 0 0 2.5mm; orphans: 2; widows: 2; }
+  .resume-page ul { margin: 2mm 0 0; padding: 0; }
+  .resume-page ul > li { padding: 0 0 0 3mm; margin: 0 0 1mm; orphans: 2; widows: 2; break-inside: avoid; }
+  .resume-page ul > li::before { color: #53677c; }
+  .resume-page p, .resume-page li { overflow-wrap: anywhere; }
+  .resume-page a { color: #24506c !important; text-decoration: none !important; }
 
+  /* Each current project is a short, readable unit. Oversize future entries may fragment. */
+  .resume-projects, .resume-project-group-list, .resume-activities,
+  .resume-activity-group-list, .resume-experience-timeline { display: block; }
   .resume-project-card {
-    gap: 2mm;
-    border-radius: 2.5mm;
-    padding: 3mm 3.5mm;
-  }
-
-  .resume-project-group-list,
-  .resume-activity-group-list {
-    gap: 2mm;
-  }
-
-  .resume-activity-item {
-    gap: 1mm;
-  }
-
-  .resume-activity-tags {
-    gap: 1mm;
-  }
-
-  .resume-activity-tag {
-    padding: 0.5mm 1.5mm;
-    font-size: 7pt;
-  }
-
-  .resume-page .resume-activity-list li {
-    margin-bottom: 0;
-    padding-top: 0;
-    padding-bottom: 0;
-  }
-
-  .resume-education,
-  .resume-certifications {
-    gap: 2.5mm 4mm;
-  }
-
-  .resume-certifications {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .resume-education-item,
-  .resume-certification-item {
-    border-radius: 2.5mm;
-    padding: 2.5mm 3mm;
-  }
-
-  .resume-links {
-    gap: 2.5mm 5mm;
-  }
-
-  .resume-timeline-item,
-  .resume-education-item,
-  .resume-certification-item,
-  .resume-link-item {
-    break-inside: avoid-page;
+    display: block;
+    margin: 0 0 4mm;
+    padding: 0 0 3mm;
+    border: 0;
+    border-bottom: 0.2mm solid #dce2e8;
+    border-radius: 0;
+    background: #fff !important;
+    break-inside: avoid;
     page-break-inside: avoid;
   }
-
-  .resume-inline-icon,
-  .resume-timeline-icon,
-  .resume-link-icon {
-    color: #245da8 !important;
-  }
-  .resume-projects,
-  .resume-activities,
-  .resume-project-card,
-  .resume-project-group-list,
-  .resume-activity-item,
-  .resume-activity-group-list {
-    display: block;
-    break-inside: auto;
-    page-break-inside: auto;
-  }
-
-  .resume-project-card {
-    margin: 0 0 3mm;
-    padding: 3mm 0 0;
-    border: 0;
-    border-top: 0.2mm solid #cbd5e1;
-    border-radius: 0;
-  }
-
-  .resume-project-header,
-  .resume-activity-header,
-  .resume-education-header {
+  .resume-project-card:last-child { margin-bottom: 0; }
+  .resume-project-header, .resume-activity-header, .resume-education-header {
+    display: flex;
     flex-direction: row;
     align-items: baseline;
+    justify-content: space-between;
+    gap: 4mm;
   }
-
-  .resume-project-header > div:first-child,
-  .resume-activity-header > div:first-child {
-    min-width: 0;
-  }
-
-  .resume-project-period,
-  .resume-education-period {
-    flex: none;
-    white-space: nowrap;
-  }
-
-  .resume-project-header,
-  .resume-activity-header,
-  .resume-project-group-title,
-  .resume-activity-group-title {
-    break-inside: avoid;
-    break-after: avoid;
-    page-break-after: avoid;
-  }
-
-  .resume-project-group,
-  .resume-activity-group {
-    margin-top: 2mm;
-    break-inside: auto;
-    page-break-inside: auto;
-  }
-
-  .resume-activity-item {
-    margin-bottom: 2mm;
-  }
-
-  .resume-page p,
-  .resume-page li {
-    orphans: 2;
-    widows: 2;
-    overflow-wrap: anywhere;
-  }
-
-  .resume-page li {
-    break-inside: avoid;
-  }
-
-  .resume-project-title,
-  .resume-activity-title {
-    font-size: 10pt;
+  .resume-project-header > div:first-child, .resume-activity-header > div:first-child { min-width: 0; }
+  .resume-project-period, .resume-education-period { flex: none; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .resume-project-title, .resume-activity-title, .resume-timeline-company {
+    font-size: 10.5pt;
     line-height: 1.35;
+    font-weight: 700;
+    color: #15293b !important;
   }
+  .resume-project-org { margin-bottom: 1mm; font-size: 8.5pt; line-height: 1.3; color: #526175; }
+  .resume-project-techstack { margin-top: 1.5mm; font-size: 8pt; line-height: 1.4; color: #526175; }
+  .resume-project-period, .resume-timeline-period, .resume-education-period,
+  .resume-certification-meta { font-size: 8pt; line-height: 1.4; color: #526175; }
+  .resume-project-group, .resume-activity-group { margin-top: 2mm; }
+  .resume-project-group-title, .resume-activity-group-title { margin: 0; font-size: 8.5pt; line-height: 1.4; color: #526175; }
+  .resume-inline-icon, .resume-timeline-icon, .resume-education-icon,
+  .portfolio-company-marker { display: none; }
 
-  .resume-project-link {
-    font-size: 8pt;
-  }
-  /* Compact reference details without shrinking the resume body text. */
-  .resume-education-item,
-  .resume-certification-item {
-    border: 0;
-    border-radius: 0;
-    padding: 1mm 0;
-  }
-
-  .resume-education-item {
-    grid-template-columns: 5mm minmax(0, 1fr);
-    gap: 2mm;
-  }
-
-  .resume-education-icon {
-    width: 5mm;
-    height: 5mm;
-    border: 0;
-  }
-
-  .resume-education-content,
-  .resume-certification-item {
-    gap: 0.5mm;
-  }
-
-  .resume-education,
-  .resume-certifications {
-    gap: 1.5mm 4mm;
-  }
-
-  .resume-activity-group {
-    margin-top: 1mm;
-  }
-  .resume-project-card > .resume-project-list,
-  .resume-certifications,
-  .resume-links {
+  /* Compact, aligned career and reference information. */
+  .resume-experience-timeline .resume-timeline-item {
+    display: block;
+    margin: 0 0 3mm;
+    padding: 0;
     break-inside: avoid;
-    page-break-inside: avoid;
   }
-  .resume-page h2:has(+ .resume-links) {
-    margin: 3mm 0 1mm;
-    font-size: 11pt;
-  }
+  .resume-timeline-meta { gap: 1mm; }
+  .resume-timeline-company-row { justify-content: space-between; gap: 4mm; }
+  .resume-timeline-role { font-size: 8.5pt; font-weight: 500; line-height: 1.4; color: #526175; }
+  .resume-activity-item { display: block; margin-bottom: 4mm; break-inside: avoid; }
+  .resume-activity-subtitle { font-size: 8.5pt; line-height: 1.4; color: #526175; }
+  .resume-activity-tags { gap: 1mm; }
+  .resume-activity-tag { padding: 0; border-radius: 0; background: none; color: #526175; font-size: 7.5pt; font-weight: 400; }
+  .resume-education { display: block; break-inside: avoid; }
+  .resume-education-item { display: block; margin-bottom: 3mm; padding: 0; border: 0; border-radius: 0; break-inside: avoid; }
+  .resume-education-content { gap: 1mm; }
+  .resume-education-school, .resume-certification-name { font-size: 9.5pt; line-height: 1.4; font-weight: 600; }
+  .resume-education-program { font-size: 8.5pt; line-height: 1.4; }
+  .resume-certifications { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 3mm 6mm; break-inside: avoid; }
+  .resume-certification-item { padding: 0; border: 0; border-radius: 0; gap: 1mm; break-inside: avoid; }
+  .resume-links { gap: 3mm 6mm; break-inside: avoid; }
+  .resume-link-item { font-size: 9pt; }
+  .resume-link-icon { width: 3mm; height: 3mm; color: #526175; }
 }

@@ -1,5 +1,4 @@
 import React from 'react';
-import Link from 'next/link';
 import {FolderKanban} from 'lucide-react';
 import type {ResumeProject} from '@/config/me';
 
@@ -86,11 +85,6 @@ export default function ProjectTimeline({projects}: ProjectTimelineProps) {
                 <li key={bullet}>{renderBullet(bullet)}</li>
               ))}
             </ul>
-          ) : null}
-          {project.linkLabel && project.linkUrl ? (
-            <Link className="resume-project-link" href={project.linkUrl}>
-              {project.linkLabel}
-            </Link>
           ) : null}
         </article>
       ))}
