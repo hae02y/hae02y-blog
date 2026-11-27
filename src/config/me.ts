@@ -168,6 +168,19 @@ export const meConfig = {
       },
       {
         org: '(주)베스텔라랩',
+        period: '',
+        title: '파크옵스 GS 1등급 인증 — 요구사항·결함 대응',
+        contributionArea: 'assurance',
+        techStack: 'GS Grade 1, Accessibility, Security, Functional Suitability, Defect Resolution',
+        bullets: [
+          'GS 인증 요구사항을 프론트엔드 관점에서 분석하고 접근성·보안·기능 적합성에 맞춰 화면과 동작을 개선했습니다.',
+          '시험 과정에서 발견된 관리자 화면 결함을 수정하고 백엔드 권한 문제를 담당자와 조율해 GS 1등급 인증 취득에 기여했습니다.',
+        ],
+        linkLabel: '프로젝트 상세 보기',
+        linkUrl: '/about/parkops-dashboard-i18n/',
+      },
+      {
+        org: '(주)베스텔라랩',
         period: '2024.06 - 2026.03',
         title: '워치마일(주차내비게이션) 서비스 백엔드 개발',
         contributionArea: 'product',
@@ -230,7 +243,7 @@ export const meConfig = {
         bullets: [
           'SVG 기반 주차 도면 시각화 및 상태 모니터링 UI를 구현했습니다.',
           '다국어 전환과 리소스 lazy load 국제화 시스템을 구축했습니다.',
-          '역할별 화면 접근 제어와 Directus 연동, 웹 접근성·보안·시맨틱 마크업을 개선해 GS 1등급 인증에 대응했습니다.',
+          '역할별 화면 접근 제어와 Directus API 연동을 구현했습니다.',
         ],
         linkLabel: '프로젝트 상세 보기',
         linkUrl: '/about/parkops-dashboard-i18n/',
