@@ -1,0 +1,21 @@
+.canvas {
+  --particle-fill: #475569;
+  --particle-outline: #f8fafc;
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+:global([data-theme='dark']) .canvas {
+  --particle-fill: #e2e8f0;
+  --particle-outline: #334155;
+}
+
+@media print, (prefers-reduced-motion: reduce), (any-hover: none) {
+  .canvas {
+    display: none;
+  }
+}

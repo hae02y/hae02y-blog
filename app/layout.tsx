@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import ThemeProvider from '@/components/ThemeProvider';
 import Navbar from '@/components/Navbar';
+import PointerParticles from '@/components/PointerParticles';
 import { siteConfig } from '@/config/site';
 import { defaultSocialImage, serializeJsonLd } from '@/lib/seo';
 import './globals.css';
@@ -146,6 +147,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeProvider>
           <Navbar />
           <div className="main-wrapper">{children}</div>
+          <PointerParticles />
         </ThemeProvider>
       </body>
     </html>
