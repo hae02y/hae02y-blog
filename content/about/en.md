@@ -1,12 +1,12 @@
 ---
 title: About Haeyoung Jeong
-description: Haeyoung Jeong, also known as hae02y, is a backend developer working across Java, Spring Boot, cloud infrastructure, DevOps, AI automation, operational systems, and a broader portfolio of practical work.
+description: Haeyoung Jeong’s résumé and portfolio covering backend and AI services, field deployment, ISO certification work, business planning, branding, and writing.
 ---
 
-Haeyoung Jeong, also known as hae02y, is a backend developer focused on building reliable backend systems with Java and Spring Boot.
+I design for the journey from code to product—and for the work that keeps it running.
 
-I work across API design, data processing, cloud infrastructure, deployment automation, and production operations using technologies such as AWS, NCP, Docker, Kubernetes, and CI/CD pipelines.
+I am Haeyoung Jeong, a developer working across Java and Spring Boot backends, service operations, and field deployments.
 
-My portfolio is not limited to software development projects. I also care about AI automation, operational workflows, technical documentation, product experiments, and practical systems that solve real problems.
+At Meninblox, I have developed Roopin, CPX, and BMQ/BreatheCheck and handled the company’s ISO certification work as the sole internal lead through certification. My experience also includes parking and monitoring services at VEStellaLab and public control-center infrastructure at Joeun Technology.
 
-I value clear structure, maintainable decisions, and written context that helps teams understand not only what was built, but why it was built that way.
+I plan and build services, brands, and content for ha-e.company, and turn practical experience into AI workflow harnesses, technical articles, and a book for non-developers.

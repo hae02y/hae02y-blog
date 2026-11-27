@@ -81,9 +81,9 @@ export const meConfig = {
     name: '정해영',
     email: 'godud1118@gmail.com',
     summary: [
-      '정해영(hae02y)은 Java와 Spring Boot를 중심으로 백엔드 시스템을 설계하고 운영해온 백엔드 개발자입니다.',
-      'AWS, NCP, Docker, Kubernetes 기반 인프라와 DevOps 환경에서 API 개발, 데이터 처리, 배포 자동화, 운영 안정화 경험을 쌓아왔습니다.',
-      '실무에 적용 가능한 AI 기술과 백엔드/인프라 전반을 함께 다루며, 문제의 본질을 이해하고 구조적으로 해결하는 개발을 지향합니다.',
+      'Java와 Spring Boot를 중심으로 백엔드를 개발하고, 서비스 운영과 현장 구축까지 이어온 개발자 정해영입니다.',
+      '맨인블록에서 Roopin·CPX·BMQ/BreatheCheck를 개발하며 ISO 인증 실무를 단독으로 맡아 취득까지 수행했습니다. 베스텔라랩의 주차·관제 서비스 개발과 조은기술의 공공 관제센터 인프라 운영 경험도 갖고 있습니다.',
+      'ha-e.company의 서비스·브랜드와 콘텐츠를 기획하고 개발하며, 경험을 AI 작업 하네스와 기술 아티클, 비개발자를 위한 책으로 정리하고 있습니다.',
     ],
   },
   resume: {
@@ -92,158 +92,258 @@ export const meConfig = {
         company: '(주)맨인블록',
         role: '선임연구원 · 백엔드/AI 개발',
         period: '2026.03 - 재직중',
-        description: 'MENINBLOX는 의료 특화 LLM MediKoGPT와 초개인화 운동 관리 플랫폼 Ailix를 기반으로 의료 행정 자동화와 글로벌 헬스케어 서비스를 확장하는 의료 AI 스타트업입니다.',
+        description: '러닝·건강 관리, AI 진료 실습과 인도네시아 호흡기 문진 서비스를 개발하고, 현장 구축과 ISO 인증 업무를 수행합니다.',
       },
       {
         company: '(주)베스텔라랩',
         role: '선임연구원 · 백엔드 개발',
         period: '2024.01 - 2026.03',
-        description: 'Vision-AI 기반 실내 정밀 측위 및 Non-GPS 주차 내비게이션을 서비스하는 스마트 모빌리티 스타트업입니다.',
+        description: '워치마일·안산 주차관리·디지털 교과서의 백엔드와 관제 화면을 개발하고 배포·모니터링·도면 검증 업무를 개선했습니다.',
       },
       {
         company: '(주)조은기술',
         role: '주임 · 네트워크엔지니어',
         period: '2020.08 - 2023.04',
-        description: '전국 50여 곳 이상의 지자체와 공공기관에 관제·스마트시티 솔루션을 공급해온 IT 전문기업입니다.',
+        description: '지자체 통합관제센터의 서버·네트워크를 구축·운영하고, 망 고도화와 방화벽·VPN 정책 및 장애 이력을 관리했습니다.',
       },
     ] satisfies ExperienceItem[],
     projects: [
       {
-        org: '(주)베스텔라랩',
-        period: '2024.05 - 2026.03',
-        title: '워치마일(주차내비게이션) 서비스 백엔드 개발',
-        techStack: 'Java, Spring Boot, Spring Security, Mybatis, MySQL, Thymeleaf, NCP',
-        bulletGroups: [
-          {
-            title: '워치마일 서비스 백엔드 팀 리딩',
-            bullets: [
-              '통합워치마일 도입 및 확산 과정에서 백엔드 표준 개발 프로세스를 수립하고 아키텍처·배포·운영 가이드를 문서화하여, 비개발 인력(인턴 포함)도 기능 확장 및 운영 대응이 가능하도록 온보딩 기간을 평균 50% 이상 단축하였습니다.',
-              '프로젝트 전반 아키텍처 설계, 도메인 모델링, 배포 전략 수립을 주도하고, 운영 중 발생한 장애·성능 이슈를 RCA(근본 원인 분석) 기반으로 체계화하여 재발률을 60% 이상 감소시켰습니다.',
-              '주차장 차단기(Barrier Gate) 장비와의 연동을 설계·구현하여 차량 입·출차 이벤트 발생 시 FCM 기반 푸시 알림을 실시간으로 전송하는 이벤트 처리 구조를 구축하고, 현장 관제 반응 시간을 평균 3초 이내로 단축하였습니다.',
-              '실시간 AI 영상분석 데이터 수집 과정에서 발생하는 동시성 및 트래픽 급증 문제를 해결하기 위해 RabbitMQ 기반 메시지 큐 아키텍처를 도입하고, 장비 데이터 수신과 비즈니스 처리 로직을 분리하여 피크 시간대 처리 안정성을 확보하였습니다.',
-              '모든 외부·내부 연계 API를 OpenAPI 3.0 규격에 맞춰 설계하고 Swagger 기반 문서화를 적용하여, 계약·대외기관 제출 및 협력사 연동 시 명확한 인터페이스 표준을 제공하였습니다.',
-            ],
-          },
-          {
-            title: '레거시 워치마일 서비스 마이그레이션',
-            bullets: [
-              '현장별로 분산되어 운영되던 구조를 통합된 백엔드 구조로 설계·적용했습니다.',
-              '실시간 상태 갱신과 트래픽 특성을 고려해 동기 처리와 비동기 처리 흐름을 분리하고, 조회 API와 상태 반영 로직을 명확히 분리해 대용량 트래픽 상황에서도 안정적인 응답을 제공하도록 개선했습니다.',
-            ],
-          },
-          {
-            title: '컨테이너 기반 배포 전략 및 CI/CD 구축',
-            bullets: [
-              'EC2 직접 접속 기반의 수동 배포로 인한 지연 및 휴먼에러 문제를 개선하기 위해 Jenkins를 구축하고 GitLab과 연동한 CI/CD 파이프라인을 설계·적용하여, 배포 리드타임을 dev 평균 20분 → 10분, prod 평균 25분 → 11분으로 단축했습니다.',
-              '분산된 서비스 구조를 Docker-compose 기반 단일 스택으로 표준화하고, Traefik 기반 리버스 프록시 아키텍처를 설계하여 배포·롤백 프로세스를 단순화했습니다. 이를 통해 환경 간 설정 불일치와 수동 운영 과정에서 발생하던 문제를 구조적으로 제거했습니다.',
-            ],
-          },
+        org: '(주)맨인블록',
+        period: '현재',
+        title: 'Roopin — 러닝·건강 데이터와 AI 코칭',
+        techStack: 'Java, Spring Boot, JPA, SSE, React, TypeScript',
+        bullets: [
+          '러닝·활동·일정·채팅을 다루는 API와 AI 서버의 계약을 분리하고 서비스 데이터를 연결했습니다.',
+          'SSE 응답의 중복 누적과 대화 컨텍스트 동기화 문제를 다뤘습니다.',
+          '관리자 TOTP 인증, 약관 발행 버전과 동의 유형, 이미지 표시용 변형을 구현했습니다.',
         ],
+        linkLabel: '프로젝트 상세 보기',
+        linkUrl: '/about/meninblox-medical-ai-backend/',
+      },
+      {
+        org: '(주)맨인블록',
+        period: '',
+        title: 'CPX — AI 진료 실습 대화와 이용권',
+        techStack: 'Java, Spring Boot, JPA, SSE, Apple IAP, Google Play Billing, FCM',
+        bullets: [
+          'AI 프록시와 SSE 응답을 연결하고 세션·턴·사용자 발화·AI 발화를 나누어 저장했습니다.',
+          '대화 재개에 필요한 이력과 시간 정보를 반환하고 AI context ID 저장·만료 처리를 보완했습니다.',
+          '무료·유료 이용권 잔액과 거래 이력을 분리하고 Apple·Google 스토어 영수증 검증부터 이용권 지급까지 연결했습니다.',
+        ],
+        linkLabel: '프로젝트 상세 보기',
+        linkUrl: '/about/cpx-clinical-training/',
+      },
+      {
+        org: '(주)맨인블록',
+        period: '',
+        title: 'BMQ / BreatheCheck — 인도네시아 호흡기 문진',
+        techStack: 'Next.js, TypeScript, FastAPI, PostgreSQL, Redis, Docker, Traefik, Ollama, GB10',
+        bullets: [
+          '병원에서 QR로 시작하는 증상 문진, 기침 녹음과 분석 결과 안내를 연결하는 서비스를 개발했습니다.',
+          'Next.js·FastAPI·Ollama와 Waycen 기침 분석 모델을 연결하는 현장 구성을 다뤘으며, 의료진 안내를 포함한 스크리닝 보조 서비스로 구현했습니다.',
+          '2026년 6월 인도네시아 출장에서 RSUI 데모, RS Pura Raharja의 GB10 설치와 통합 동작 확인, 현장 Wi-Fi·Tailscale 원격 지원 환경 구성을 수행했습니다.',
+        ],
+        linkLabel: '프로젝트 상세 보기',
+        linkUrl: '/about/bmq-breathecheck-indonesia/',
+      },
+      {
+        org: '(주)맨인블록',
+        period: '',
+        title: 'ISO 인증 — 사내 실무 단독 담당·취득',
+        techStack: 'ISMS, PIMS, BIA, Risk Assessment, Audit Evidence',
+        bullets: [
+          '사내 ISO 인증 실무를 단독으로 맡아 준비·심사 대응부터 인증 취득까지 수행했습니다.',
+          'ISMS·PIMS 규정과 절차, 자산·위험 평가, BIA·개인정보 흐름 및 심사 증적을 정리하고 보완·제출 업무를 수행했습니다.',
+        ],
+        linkLabel: '프로젝트 상세 보기',
+        linkUrl: '/about/iso-certification/',
       },
       {
         org: '(주)베스텔라랩',
-        period: '2025.06 - 2026.03',
-        title: '안산도시공사 주차관리 시스템 백엔드 개발',
-        techStack: 'Java, Spring Boot, Spring Security, Mybatis, MySQL, Thymeleaf, NCP',
-        bulletGroups: [
-          {
-            title: '주차업체 통합 API 전환',
-            bullets: ['5개 주차업체별로 분산되어 있던 DB프로시저 직접연동 방식에서 단일 통합 API 게이트웨이 구조로 표준화하고, 공통 도메인 모델을 설계하여 확장성과 유지보수성을 확보했습니다.'],
-          },
-          {
-            title: '클라우드 전환',
-            bullets: ['기존 On-Premise로 사용되던 서비스를 NCP 기반 NKS로 전환했습니다.'],
-          },
-          {
-            title: '주차 관제 관리자 및 대민 서비스 개발',
-            bullets: [
-              '현장별로 분산되어 운영되던 구조를 통합된 백엔드 구조로 설계·적용했습니다.',
-              '실시간 상태 갱신과 트래픽 특성을 고려해 동기 처리와 비동기 처리 흐름을 분리하고, 조회 API와 상태 반영 로직을 명확히 분리해 대용량 트래픽 상황에서도 안정적인 응답을 제공하도록 개선했습니다.',
-            ],
-          },
+        period: '2024.06 - 2026.03',
+        title: '워치마일(주차내비게이션) 서비스 백엔드 개발',
+        techStack: 'Java, Spring Boot, Spring Security, MyBatis, MySQL, Thymeleaf, Python, FastAPI, AWS',
+        bullets: [
+          '온프레미스/PHP 레거시를 AWS 기반 클라우드 아키텍처로 마이그레이션하며 표준 API와 운영 대시보드를 구축했습니다.',
+          '외부 주차 관제 API와 인증을 표준화하고, FCM 알림·운영사 배포 대시보드·신규 현장 데이터 등록 흐름을 구현했습니다.',
+          'RabbitMQ로 장비 데이터 수신과 처리를 분리하고, Jenkins·GitLab CI/CD와 Docker Compose·Traefik 배포 구성을 적용했습니다.',
         ],
+        linkLabel: '프로젝트 상세 보기',
+        linkUrl: '/about/watchmile-backend-ops/',
+      },
+      {
+        org: '(주)베스텔라랩',
+        period: '',
+        title: '안산도시공사 주차관리 시스템',
+        techStack: 'Java, Spring Boot, Spring Security, MyBatis, MySQL, Thymeleaf, NCP, Kubernetes, GitHub Actions',
+        bullets: [
+          '현장 조사와 실무자 협의를 통해 만공정보, 미납·감면, 결제와 세외수입 처리 요구를 정리했습니다.',
+          '주차업체별 연동을 공통 API로 정리하고 회원·본인인증·결제·정산 기능을 개발했습니다.',
+          'NCP·NKS와 VPN 연결, 배포 환경과 QA 이슈를 함께 다뤘습니다.',
+        ],
+        linkLabel: '프로젝트 상세 보기',
+        linkUrl: '/about/ansan-parking-system/',
       },
       {
         org: '(주)베스텔라랩',
         period: '2024.09 - 2025.01',
-        title: '아이코딩톡벗(디지털교과서) 백엔드 개발',
-        techStack: 'Java, Spring Boot, Spring Security, Mybatis, MySQL, Thymeleaf, NCP',
+        title: '아이코딩 톡벗(디지털 교과서) 백엔드 개발',
+        techStack: 'Java, Spring Boot, Spring Security, JPA, MySQL, MyBatis, TypeScript, React, Zustand, TanStack Query, Docker, NCP',
         bullets: [
-          'JWT 기반 인증/인가 로직과 사용자 세션 상태 관리, 공통 유틸리티 모듈을 설계·구현했습니다.',
-          'WebSocket 기반 실시간 퀴즈 진행 로직과 참여자 브로드캐스트 처리 로직을 개발했습니다.',
-          '공통 계정 관리 REST API와 R2DBC 기반 비동기 DB 연동을 모듈화하고 트랜잭션을 최적화했습니다.',
-          'Nexus3 + Bitbucket Pipeline을 활용해 NCP 쿠버네티스 환경 자동 배포 파이프라인을 구축했습니다.',
-          '서비스별 독립 Spring Boot 애플리케이션 모듈화와 MSA 지향 아키텍처를 설계·적용했습니다.',
+          'JWT 인증·세션 관리와 WebSocket 퀴즈 진행·브로드캐스트를 구현하고, R2DBC 기반 비동기 DB 연동을 모듈화했습니다.',
+          '서비스별 Spring Boot 모듈과 Nexus3·Bitbucket Pipeline 기반 NCP Kubernetes 자동 배포 환경을 구축했습니다.',
+          'K-PaaS 클라우드 서비스 확인제 인증 통과',
         ],
+        linkLabel: '프로젝트 상세 보기',
+        linkUrl: '/about/icoding-talkbot-textbook/',
       },
       {
         org: '(주)베스텔라랩',
-        period: '2024.01 - 2024.06',
-        title: '파크옵스(주차장 모니터링) 대시보드 개발',
-        techStack: 'Java, Spring Boot, Spring Security, Mybatis, MySQL, Thymeleaf, NCP',
+        period: '2024.02 - 2024.06',
+        title: 'LA Joe’s Auto Park — 주차 관제 PoC',
+        techStack: 'Java, Spring Boot, MySQL, JavaScript, jQuery, Bootstrap, Hls.js, Nginx, FFmpeg',
         bullets: [
-          'GS 인증 요구사항을 프론트엔드 관점에서 분석·해석하고, 접근성(WA)·보안·기능적합성 항목을 충족하도록 UI 구조와 렌더링 방식을 전면 재설계했습니다.',
-          '다국어(i18n) 아키텍처를 설계·구축하여 한국어/영어/일본어/중국어/독일어 등 5개국 로케일을 지원하도록 번역 리소스와 키 구조를 표준화했고, lazy load 적용으로 초기 로딩 리소스 사용량을 약 30% 절감했습니다.',
-          '통계 대시보드 UI를 구현하여 ApexCharts 기반 시각화와 DataGrid를 결합해 점유율·회전율·체류시간 등 핵심 운영 지표를 정확히 표출했으며, 운영자가 통계 화면을 통해 의사결정에 소요하는 시간을 체감 기준 약 40% 이상 단축했습니다.',
-          'FFmpeg 기반 CCTV 스트리밍 서버를 구현하여 RTSP 영상을 HLS(.m3u8)로 변환·중계함으로써 다중 클라이언트 환경에서도 안정적인 실시간 영상 제공이 가능하도록 구성했고, 관제 대시보드에서의 영상 지연 및 재연결 이슈를 운영 허용 범위 내로 안정화했습니다.',
+          'SVG 기반 도면 시각화와 실시간 스트리밍 통합 관제 UI를 구현했습니다.',
+          'RTSP 영상을 HLS로 변환·중계하는 서버와 HLS.js 재생·오류 복구 흐름을 구현해 LPR·스트리밍 통합 관제 PoC를 지원했습니다.',
         ],
+        linkLabel: '프로젝트 상세 보기',
+        linkUrl: '/about/la-joes-auto-park-poc/',
+      },
+      {
+        org: '(주)베스텔라랩',
+        period: '2024.04 - 2024.10',
+        title: '파크옵스(다국화 주차장 모니터링) 대시보드 개발',
+        techStack: 'React, TypeScript, Axios, TailwindCSS, Redux, Nginx, MySQL, Directus',
+        bullets: [
+          'SVG 기반 주차 도면 시각화 및 상태 모니터링 UI를 구현했습니다.',
+          '다국어 전환과 리소스 lazy load 국제화 시스템을 구축했습니다.',
+          '역할별 화면 접근 제어와 Directus 연동, 웹 접근성·보안·시맨틱 마크업을 개선해 GS 1등급 인증에 대응했습니다.',
+        ],
+        linkLabel: '프로젝트 상세 보기',
+        linkUrl: '/about/parkops-dashboard-i18n/',
+      },
+      {
+        org: '(주)조은기술',
+        period: '2020.08 - 2023.04',
+        title: '통합관제센터 데이터센터 구축 및 운영',
+        techStack: 'Linux, Cisco Switch, Firewall, VPN, Storage, Hyper-V',
+        bullets: [
+          '논산시청을 비롯한 지자체 관제센터의 서버·네트워크 구축과 Cisco L3/L2 스위치·방화벽 운영을 담당했습니다.',
+          '1Gbps 폐쇄망을 10Gbps로 고도화하고 장비 구성과 트래픽 운영 정책을 정비했습니다.',
+          '방화벽·VPN·포트 정책과 장애 이력을 기록하고 현장 운영 표준을 정리했습니다.',
+        ],
+        linkLabel: '프로젝트 상세 보기',
+        linkUrl: '/about/noc-datacenter-ops/',
       },
     ] satisfies ResumeProject[],
     automation: [
       {
         org: '(주)베스텔라랩',
-        period: '2025.10 - 2026.03',
-        title: '도면 데이터 변경 자동화 프로세스 구축',
-        techStack: 'Java, Spring Boot, Spring Security, Mybatis, MySQL, Thymeleaf, NCP',
-        bulletGroups: [
-          {
-            title: 'Figma 플러그인 기반 오류 검증 자동화',
-            bullets: ['디자이너가 Figma로 작업한 도면을 데이터로 변환하는 과정에서 오류를 검증하는 플러그인을 설계·구현해 실무에 적용했고, 휴먼 에러 발생률을 평균 20%에서 0%로 감소시켰습니다.'],
-          },
-          {
-            title: '도면·내비게이션 데이터 검증 대시보드 구축',
-            bullets: [
-              '도면과 내비게이션 데이터의 등록 상태를 시각화해 확인할 수 있는 페이지를 설계·구현하여 비개발 인력도 가장 먼저 확인하는 내부 검증 화면을 구축했습니다.',
-              '오류 인지 및 정상화까지 5일 이상 걸리던 프로세스를 5분으로 단축했습니다.',
-            ],
-          },
+        period: '',
+        title: 'Figma 도면 검증과 등록 상태 대시보드',
+        techStack: 'Figma Plugin, Java, Spring Boot, JavaScript',
+        bullets: [
+          'Figma 산출물을 데이터로 변환하는 과정에 오류 검증 플러그인을 적용했습니다.',
+          '비개발 인력도 도면과 내비게이션 데이터 등록 상태를 확인할 수 있도록 내부 검증 화면을 구현했습니다.',
+          '도면 요소를 실시간으로 시각화하는 별도 내부 도구도 단독 개발해 데이터 검증 업무에 적용했습니다.',
         ],
+        linkLabel: '프로젝트 상세 보기',
+        linkUrl: '/about/drawing-validation-automation/',
       },
       {
         org: '(주)베스텔라랩',
         period: '2025.10 - 2026.03',
         title: 'TIG 스택 기반 모니터링 프로세스 구축',
-        techStack: 'Java, Spring Boot, Spring Security, Mybatis, MySQL, Thymeleaf, NCP',
+        techStack: 'Telegraf, InfluxDB, Grafana',
         bullets: [
           'Telegraf + InfluxDB + Grafana 스택으로 모니터링 시스템을 구축했습니다.',
-          '현장별 장애 상태를 파악할 수 있는 Infra Operation System을 설계하여 사내에서 운영하고 있습니다.',
+          '현장별 장애 상태를 확인할 수 있는 Infra Operation System을 설계하고 사내 운영에 적용했습니다.',
         ],
+      },
+      {
+        org: '개인 프로젝트',
+        period: '2026.11 - 현재',
+        title: 'My Brain — 옵시디언 기반 경험 기록 하네스',
+        techStack: 'Python, Obsidian, Markdown, Codex, Claude Code',
+        bullets: [
+          '회사·사업·학업·개인 경험을 맥락별로 유지하고 각 프로젝트를 해당 문서에 연결했습니다.',
+          '기존 주제 갱신과 새 주제 생성, 상단 속성·도식 판단, 작성 후 독립 검수와 변경 해시 확인을 연결했습니다.',
+          '단순 질문은 직접 답하고 새 경험·결정·실제 변경이 있을 때 기록하도록 Codex와 Claude의 공통 규칙을 구성했습니다.',
+        ],
+        linkLabel: '프로젝트 상세 보기',
+        linkUrl: '/about/my-brain-harness/',
       },
     ] satisfies ResumeProject[],
     activities: [
       {
-        title: 'Codestates Software Developer 부트캠프',
-        tags: ['부트캠프'],
+        title: 'ha-e.company — 사업·제품·콘텐츠',
+        tags: [
+          '사업',
+          '브랜딩',
+        ],
+        bullets: [
+          '서비스 기획·개발과 외주, 브랜드·콘텐츠 운영을 함께 진행합니다. [ha-e.company 상세](/about/independent-business-ops/)',
+          '[우리42](/about/woori42/)의 대화 분석·AI 리포트, [리드베이스](/about/leadbase/)의 사업장 데이터 서비스 미리보기를 기획·개발했습니다.',
+          '[Gear 72](/about/gear72-content/)의 숏폼 제작·발행 흐름과 [생존지침서](/about/survival-guide/)의 아티클·생활 대비 도구를 운영하며 채널별 자동화를 개선하고 있습니다.',
+        ],
+      },
+      {
+        title: '손끝의휴식 — 감각 휴식 서비스 기획',
+        tags: [
+          '공동 사업 기획',
+        ],
+        bullets: [
+          '손끝의 접촉과 감각을 중심으로 휴식 경험을 만드는 공동 사업의 서비스와 브랜드를 기획하고 있습니다.',
+          '상담·세션 경험, 공간·가격 초안과 브랜드 표현을 설계하는 기획 단계입니다. [기획 내용](/about/sonkkeut/)',
+        ],
+      },
+      {
+        title: '처음 만나는 하네스 — 비개발자를 위한 AI 입문서',
+        tags: [
+          '집필',
+        ],
+        bullets: [
+          'AI가 실제 업무를 끝내는 데 필요한 자료·도구·기억·승인·검증을 서문과 16개 장으로 집필해 위키독스에 공개했습니다.',
+          '기획자·마케터·운영 담당자를 위한 업무 사례와 도식·점검표로 구성했으며 종이책 출판 준비를 진행합니다. [위키독스에서 읽기](https://wikidocs.net/book/21451)',
+        ],
+      },
+      {
+        title: '블로그 활동',
+        tags: [
+          '블로그',
+        ],
         bulletGroups: [
           {
-            title: '부트캠프 수료',
-            bullets: ['JAVA, Spring 기반 객체 지향 프로그래밍 학습 및 회고 작성', '알고리즘 문제 풀이와 수행 과제 및 페어 프로그래밍, 코드 리뷰 경험'],
+            title: '블로그 운영',
+            bullets: [
+              'Next.js 기반 [기술 블로그](https://blog.hae02y.me/)를 직접 개발·운영하며 한국어·영어 소개, 기술 아티클·에세이와 앱 런처를 연결했습니다.',
+              '누적 25만 방문의 [IT 기술 블로그](https://togll.tistory.com/)를 운영하고 있습니다.',
+              '[브런치스토리](https://brunch.co.kr/@hae02y) 작가로 활동하며, 일상과 생각을 글로 기록하고 있습니다.',
+              '자신의 DNS·TLS 글로 [로컬 RAG 실험](/about/local-rag-experiment/)을 구성하고 검색 성공과 답변 정확성을 나누어 평가한 과정을 기술 글로 발행했습니다.',
+            ],
           },
         ],
       },
       {
         title: '오픈소스 활동',
-        tags: ['오픈소스'],
+        tags: [
+          '오픈소스',
+        ],
         bulletGroups: [
           {
             title: 'Google A2A',
-            bullets: ['Google A2A(a2a-java) listTasks status wire string 처리 버그 수정 기여 [PR #578](https://github.com/a2aproject/a2a-java/pull/578)'],
+            bullets: [
+              'Google A2A(a2a-java) listTasks status wire string 처리 버그 수정 기여 [PR #578](https://github.com/a2aproject/a2a-java/pull/578)',
+            ],
           },
         ],
       },
       {
         title: '스터디 활동',
-        tags: ['스터디'],
+        tags: [
+          '스터디',
+        ],
         bulletGroups: [
           {
             title: '스터디 참여',
@@ -256,26 +356,17 @@ export const meConfig = {
         ],
       },
       {
-        title: '블로그 활동',
-        tags: ['블로그'],
-        bulletGroups: [
-          {
-            title: '블로그 운영',
-            bullets: [
-              'Next.js와 Markdown 기반으로 [개발 기술 블로그](https://blog.hae02y.me/)를 직접 구축하고, 기술 콘텐츠를 기록하고 있습니다.',
-              '누적 25만 방문의 [IT 기술 블로그](https://togll.tistory.com/)를 운영하고 있습니다.',
-              '[브런치스토리](https://brunch.co.kr/@hae02y) 작가로 활동하며, 일상과 생각을 글로 기록하고 있습니다.',
-            ],
-          },
+        title: 'Codestates Software Developer 부트캠프',
+        tags: [
+          '부트캠프',
         ],
-      },
-      {
-        title: '사이드 프로젝트',
-        tags: ['프로젝트'],
         bulletGroups: [
           {
-            title: '사이드 프로젝트 진행',
-            bullets: ['다양한 사이드 프로젝트 진행'],
+            title: '부트캠프 수료',
+            bullets: [
+              'JAVA, Spring 기반 객체 지향 프로그래밍 학습 및 회고 작성',
+              '알고리즘 문제 풀이와 수행 과제 및 페어 프로그래밍, 코드 리뷰 경험',
+            ],
           },
         ],
       },

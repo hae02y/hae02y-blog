@@ -65,7 +65,7 @@ export default function ProjectTimeline({projects}: ProjectTimelineProps) {
                 <div className="resume-project-techstack">{project.techStack}</div>
               ) : null}
             </div>
-            <div className="resume-project-period">{project.period}</div>
+            {project.period ? <div className="resume-project-period">{project.period}</div> : null}
           </div>
           {project.bulletGroups?.length ? (
             <div className="resume-project-group-list">

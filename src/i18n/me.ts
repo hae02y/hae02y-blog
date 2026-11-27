@@ -2,6 +2,41 @@ import { meConfig } from '@/config/me';
 import type { Locale } from './config';
 
 const en = new Map<string, string>([
+  ['프로젝트 상세 보기', 'View project details'],
+  ['Java와 Spring Boot를 중심으로 백엔드를 개발하고, 서비스 운영과 현장 구축까지 이어온 개발자 정해영입니다.', 'I am Haeyoung Jeong, a developer working across Java and Spring Boot backends, service operations, and field deployments.'],
+  ['맨인블록에서 Roopin·CPX·BMQ/BreatheCheck를 개발하며 ISO 인증 실무를 단독으로 맡아 취득까지 수행했습니다. 베스텔라랩의 주차·관제 서비스 개발과 조은기술의 공공 관제센터 인프라 운영 경험도 갖고 있습니다.', 'At Meninblox, I have developed Roopin, CPX, and BMQ/BreatheCheck and handled the company’s ISO certification work as the sole internal lead through certification. My experience also includes parking and monitoring services at VEStellaLab and public control-center infrastructure at Joeun Technology.'],
+  ['ha-e.company의 서비스·브랜드와 콘텐츠를 기획하고 개발하며, 경험을 AI 작업 하네스와 기술 아티클, 비개발자를 위한 책으로 정리하고 있습니다.', 'I plan and build services, brands, and content for ha-e.company, and turn practical experience into AI workflow harnesses, technical articles, and a book for non-developers.'],
+  ['워치마일·안산 주차관리·디지털 교과서의 백엔드와 관제 화면을 개발하고 배포·모니터링·도면 검증 업무를 개선했습니다.', 'Developed backends and monitoring interfaces for Watchmile, Ansan parking management, and a digital textbook, and improved deployment, monitoring, and drawing validation workflows.'],
+  ['지자체 통합관제센터의 서버·네트워크를 구축·운영하고, 망 고도화와 방화벽·VPN 정책 및 장애 이력을 관리했습니다.', 'Built and operated servers and networks for public control centers, upgraded network capacity, and managed firewall/VPN policies and incident records.'],
+  ['무료·유료 이용권 잔액과 거래 이력을 분리하고 Apple·Google 스토어 영수증 검증부터 이용권 지급까지 연결했습니다.', 'Separated free and paid credits and transaction history, connecting Apple and Google store receipt verification to credit issuance.'],
+  ['Next.js·FastAPI·Ollama와 Waycen 기침 분석 모델을 연결하는 현장 구성을 다뤘으며, 의료진 안내를 포함한 스크리닝 보조 서비스로 구현했습니다.', 'Worked on the field architecture connecting Next.js, FastAPI, Ollama, and Waycen’s cough-analysis model, implementing a screening support service with guidance to medical staff.'],
+  ['2026년 6월 인도네시아 출장에서 RSUI 데모, RS Pura Raharja의 GB10 설치와 통합 동작 확인, 현장 Wi-Fi·Tailscale 원격 지원 환경 구성을 수행했습니다.', 'During a June 2026 visit to Indonesia, delivered an RSUI demo, installed GB10 and checked integration at RS Pura Raharja, and configured on-site Wi-Fi and Tailscale remote support.'],
+  ['ISMS·PIMS 규정과 절차, 자산·위험 평가, BIA·개인정보 흐름 및 심사 증적을 정리하고 보완·제출 업무를 수행했습니다.', 'Organized ISMS/PIMS policies and procedures, asset and risk assessments, BIA, personal-data flows, and audit evidence, and handled remediation and submissions.'],
+  ['외부 주차 관제 API와 인증을 표준화하고, FCM 알림·운영사 배포 대시보드·신규 현장 데이터 등록 흐름을 구현했습니다.', 'Standardized external parking-control APIs and authentication, and implemented FCM notifications, an operator deployment dashboard, and new-site data registration flows.'],
+  ['RabbitMQ로 장비 데이터 수신과 처리를 분리하고, Jenkins·GitLab CI/CD와 Docker Compose·Traefik 배포 구성을 적용했습니다.', 'Separated device ingestion from processing with RabbitMQ, and applied Jenkins/GitLab CI/CD and Docker Compose/Traefik deployment configurations.'],
+  ['JWT 인증·세션 관리와 WebSocket 퀴즈 진행·브로드캐스트를 구현하고, R2DBC 기반 비동기 DB 연동을 모듈화했습니다.', 'Implemented JWT authentication, session management, and WebSocket quiz broadcasting, and modularized asynchronous database access with R2DBC.'],
+  ['서비스별 Spring Boot 모듈과 Nexus3·Bitbucket Pipeline 기반 NCP Kubernetes 자동 배포 환경을 구축했습니다.', 'Built service-specific Spring Boot modules and automated NCP Kubernetes deployments with Nexus3 and Bitbucket Pipeline.'],
+  ['RTSP 영상을 HLS로 변환·중계하는 서버와 HLS.js 재생·오류 복구 흐름을 구현해 LPR·스트리밍 통합 관제 PoC를 지원했습니다.', 'Implemented an RTSP-to-HLS relay server and HLS.js playback/error recovery to support a combined LPR and streaming monitoring PoC.'],
+  ['역할별 화면 접근 제어와 Directus 연동, 웹 접근성·보안·시맨틱 마크업을 개선해 GS 1등급 인증에 대응했습니다.', 'Improved role-based access, Directus integration, accessibility, security, and semantic markup for GS Grade 1 certification.'],
+  ['논산시청을 비롯한 지자체 관제센터의 서버·네트워크 구축과 Cisco L3/L2 스위치·방화벽 운영을 담당했습니다.', 'Handled server and network deployment for public control centers, including Nonsan City Hall, and operated Cisco L3/L2 switches and firewalls.'],
+  ['1Gbps 폐쇄망을 10Gbps로 고도화하고 장비 구성과 트래픽 운영 정책을 정비했습니다.', 'Upgraded a closed network from 1 Gbps to 10 Gbps and refined device configurations and traffic policies.'],
+  ['방화벽·VPN·포트 정책과 장애 이력을 기록하고 현장 운영 표준을 정리했습니다.', 'Documented firewall, VPN, and port policies and incident history, and established field-operation standards.'],
+  ['도면 요소를 실시간으로 시각화하는 별도 내부 도구도 단독 개발해 데이터 검증 업무에 적용했습니다.', 'Also independently built a separate internal tool for real-time visualization of drawing elements and applied it to data validation.'],
+  ['현장별 장애 상태를 확인할 수 있는 Infra Operation System을 설계하고 사내 운영에 적용했습니다.', 'Designed an Infra Operation System for checking site-specific incident status and applied it to internal operations.'],
+  ['개인 프로젝트', 'Independent Project'],
+  ['ha-e.company — 사업·제품·콘텐츠', 'ha-e.company — Business, Products, and Content'],
+  ['사업', 'Business'],
+  ['브랜딩', 'Branding'],
+  ['서비스 기획·개발과 외주, 브랜드·콘텐츠 운영을 함께 진행합니다. [ha-e.company 상세](/about/independent-business-ops/)', 'Work across service planning, development, client projects, branding, and content operations. [About ha-e.company](/en/about/independent-business-ops/)'],
+  ['[우리42](/about/woori42/)의 대화 분석·AI 리포트, [리드베이스](/about/leadbase/)의 사업장 데이터 서비스 미리보기를 기획·개발했습니다.', 'Planned and built [Woori42](/en/about/woori42/) conversation analysis and AI reports, and the [Leadbase](/en/about/leadbase/) business-data service preview.'],
+  ['[Gear 72](/about/gear72-content/)의 숏폼 제작·발행 흐름과 [생존지침서](/about/survival-guide/)의 아티클·생활 대비 도구를 운영하며 채널별 자동화를 개선하고 있습니다.', 'Operate [Gear 72](/en/about/gear72-content/) short-form production and publishing workflows and [Survival Guide](/en/about/survival-guide/) articles and preparedness tools, while improving channel automation.'],
+  ['공동 사업 기획', 'Joint Business Planning'],
+  ['상담·세션 경험, 공간·가격 초안과 브랜드 표현을 설계하는 기획 단계입니다. [기획 내용](/about/sonkkeut/)', 'Currently planning consultation and session experiences, space and pricing drafts, and brand expression. [Planning details](/en/about/sonkkeut/)'],
+  ['집필', 'Writing'],
+  ['기획자·마케터·운영 담당자를 위한 업무 사례와 도식·점검표로 구성했으며 종이책 출판 준비를 진행합니다. [위키독스에서 읽기](https://wikidocs.net/book/21451)', 'Uses workplace examples, diagrams, and checklists for planners, marketers, and operators; print-publication preparation is ongoing. [Read on WikiDocs](https://wikidocs.net/book/21451)'],
+  ['Next.js 기반 [기술 블로그](https://blog.hae02y.me/)를 직접 개발·운영하며 한국어·영어 소개, 기술 아티클·에세이와 앱 런처를 연결했습니다.', 'Develop and operate a [Next.js technical blog](https://blog.hae02y.me/) combining Korean and English profiles, technical articles, essays, and an app launcher.'],
+  ['자신의 DNS·TLS 글로 [로컬 RAG 실험](/about/local-rag-experiment/)을 구성하고 검색 성공과 답변 정확성을 나누어 평가한 과정을 기술 글로 발행했습니다.', 'Built a [local RAG experiment](/en/about/local-rag-experiment/) using my DNS and TLS articles, evaluated retrieval success separately from answer accuracy, and published the process.'],
+  ['코드가 제품이 되고, 제품이 오래 살아남는 순간까지 설계합니다.', 'I design for the journey from code to product—and for the work that keeps it running.'],
   ['러닝·건강 관리, AI 진료 실습과 인도네시아 호흡기 문진 서비스를 개발하고, 현장 구축과 ISO 인증 업무를 수행합니다.', 'Develop running and health management, AI clinical training, and respiratory questionnaire services in Indonesia, alongside field deployments and ISO certification work.'],
   ['BMQ / BreatheCheck — 인도네시아 호흡기 문진', 'BMQ / BreatheCheck — Respiratory Questionnaires in Indonesia'],
   ['인도네시아 병원의 호흡기 문진·기침 녹음 서비스를 개발하고 GB10 기반 현장 설치와 통합 동작 확인을 수행했습니다.', 'Developed a respiratory questionnaire and cough-recording service for Indonesian hospitals, and carried out GB10 field installation and integration checks.'],
@@ -384,5 +419,13 @@ function translateValue<T>(value: T, locale: Locale): T {
 }
 
 export function getLocalizedMeConfig(locale: Locale = 'ko'): typeof meConfig {
-  return translateValue(meConfig, locale);
+  const localized = translateValue(meConfig, locale);
+  if (locale === 'en') {
+    for (const project of [...localized.resume.projects, ...localized.resume.automation]) {
+      if (project.linkUrl?.startsWith('/about/')) {
+        project.linkUrl = project.linkUrl.replace('/about/', '/en/about/');
+      }
+    }
+  }
+  return localized;
 }
